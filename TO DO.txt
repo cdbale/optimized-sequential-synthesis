@@ -1,0 +1,6 @@
+- currently running code with correct training data. Just revised code for holdout data.
+- need to re-run mostly.ai synthesis with correct variable types
+- adapt privacy and utility analysis files to use the date variable
+- Decide and write up on use case. Need a decent section of the paper that describes the data and exactly what it could be used for. Potentially convert the state variable to only the last location of individuals who passed away. The synthetic data can be aggregated into different levels depending on the analysis you want to do. Could preserve the primary use case of alerting individuals about potential proximity to diseased individuals (use case for the granular data) and then aggregation for mortality modeling.
+
+Email Michael Platzer. One concern is that I got the privacy criteria right, another concern is the difference between measuring the privacy criteria within the training data itself vs. holdout data generated from the same distribution.

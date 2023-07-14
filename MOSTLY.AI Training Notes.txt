@@ -1,0 +1,9 @@
+MOSTLY.AI Training Notes
+
+One data set.
+
+Indicated that DATE was a date-time variable, and that latitude and longitude were latitude/longitude, i.e., we used the specific options for these variables. No smart imputation was needed and extreme value protection was turned off.
+
+For training, we used the default options, Training goal was set to accuracy, with a maximum of 100 training epochs, medium model size, and Auto batch size.
+
+Generated 67,120 records which were randomly divided into 20 synthetic data sets.
