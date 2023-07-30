@@ -4,3 +4,6 @@
 - Decide and write up on use case. Need a decent section of the paper that describes the data and exactly what it could be used for. Potentially convert the state variable to only the last location of individuals who passed away. The synthetic data can be aggregated into different levels depending on the analysis you want to do. Could preserve the primary use case of alerting individuals about potential proximity to diseased individuals (use case for the granular data) and then aggregation for mortality modeling.
 
 Email Michael Platzer. One concern is that I got the privacy criteria right, another concern is the difference between measuring the privacy criteria within the training data itself vs. holdout data generated from the same distribution.
+
+
+** Need to run synthesis models on full data set. Then backtransform the data for the use cases. Then compare results for the spBayes model (and figure out what the model is actually doing).
