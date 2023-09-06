@@ -142,8 +142,10 @@ lami = lami[,,1001:nsims]
 #################
 #Get posterior samples
 #of the age-adjusted rates
+
+
 #################
-aalami=array(dim=c(Ns,nsims-1000))
+aalami=array(dim=c(Ns, nsims-1000))
 for(i in 1:Ns){
   aalami[i,]=  pi %*% lami[,i,]
 }
