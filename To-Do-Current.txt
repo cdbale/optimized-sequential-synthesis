@@ -1,0 +1,42 @@
+Outline for Paper with Harrison
+
+- Introduction
+- Literature Review
+- Methods
+- MOSTLY.AI Criteria (and Proof)
+- Simulation Study
+- Empirical Applications
+	- South Korean COVID-19 Location Data
+	- IPUMS data used in the other JASA paper
+- Compare the generated data sets on the privacy (legal criteria and criteria often used in the literature, specifically, attribute disclosure risk and membership inference risk)
+- Compare the generated data sets on the utility (use pMSE as a global measure and focus on the use case-specific measures, the one from the JASA paper is good)
+- Conclusions
+
+
+Look at new data for paper with Harrison.
+* Need to do the synthesis using the MOSTLY.AI synthesizer as well.
+* Need to turn off extreme value protection!
+
+- run synthesis (M = 20) for both data sets with both metrics for optimization
+	- use GMM on continuous variables with MNL for categorical variables*
+	- use GMM on continuous variables with CART for categorical variables*
+	- use Lasso regression for all variables
+	- use CART for all variables
+This means there will be 2x2x4 = 16 cases.
+
+Privacy Measures
+- MOSTLY.AI metrics
+- Membership inference attack
+- Attribute disclosure attacks (one continuous, one categorical?)
+
+Utility Measures
+
+2 Global measures
+- pMSE score
+- Hellinger distance
+
+1 Analysis specific measure
+- the location based measure Harrison discussed with me
+- the regression from the JASA paper
+
+- use appropriate combining rules for both and discuss results in depth
