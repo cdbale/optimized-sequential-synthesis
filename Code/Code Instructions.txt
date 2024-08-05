@@ -1,0 +1,11 @@
+Code Instructions for "Optimized Sequential Synthesis with an Application to Legal Anonymization".
+
+1. Navigate to the `04_cps_female-regression.Rmd` file in the `Formal Privacy Feasibility Study Code` directory. This code comes from the 
+	JASA paper:
+
+	Barrientos, A. F., Williams, A. R., Snoke, J., & Bowen, C. M. (2024). A Feasibility Study of Differentially Private Summary Statistics and Regression 	Analyses with Evaluations on Administrative and Survey Data. Journal of the American Statistical Association, 119(545), 52-65.
+
+	Run all cells in the markdown file until you get to
+
+	
+
