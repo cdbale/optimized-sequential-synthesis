@@ -1,5 +1,7 @@
 Outline for Paper with Harrison
 
+-cite IPUMS - condition for data usage
+
 - Introduction
 - Literature Review
 - Methods
