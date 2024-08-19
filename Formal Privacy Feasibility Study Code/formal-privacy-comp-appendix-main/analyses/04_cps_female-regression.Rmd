@@ -251,7 +251,9 @@ asec_subset <- asec %>%
 
 ## save the subset of IPUMS data
 
-write.csv("../../../Data/IPUMS/")
+dir.create(file.path("../../..", "Data/IPUMS"), recursive=TRUE)
+
+write.csv(asec_subset, "../../../Data/IPUMS/ipums_data.csv", row.names=FALSE)
 ```
 
 ```{r}

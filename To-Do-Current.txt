@@ -1,6 +1,7 @@
 Outline for Paper with Harrison
 
 -cite IPUMS - condition for data usage
+- include citation for my paper (if it gets published and includes the IPUMS data) in the IPUMS bibliography. See info using ipums_conditions() command in R.
 
 - Introduction
 - Literature Review

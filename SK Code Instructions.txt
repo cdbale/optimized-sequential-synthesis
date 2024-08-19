@@ -1,0 +1,9 @@
+Code Instructions for South Korean COVID-19 Patient Data
+
+1. Download the data. Place data in a folder `SK` in the `Data` directory of the repository.
+
+2. Create a new folder, `Synthetic Datasets` inside the `Data/SK/` directory.
+
+3. Run all cells in the `Data Cleaning - South Korean COVID-19 Data` file.
+
+4. Run all cells in the `SK - GMM and CART Synthesis`. The synthetic data sets (created using GMM and CART models) are saved in the `Data/SK/Synthetic Datasets/` directory.

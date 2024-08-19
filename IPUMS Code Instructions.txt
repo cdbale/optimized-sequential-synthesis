@@ -1,0 +1,28 @@
+Code Instructions for "Optimized Sequential Synthesis with an Application to Legal Anonymization".
+
+Obtain the IPUMS data files from the following link:
+
+Place the files in a new `data` folder in the `Formal Privacy Feasibility Study Code/formal-privacy-comp-appendix-main/` directory.
+
+1. Navigate to the `04_cps_female-regression.Rmd` file in the `analysis` folder of the `Formal Privacy Feasibility Study Code` directory. This code comes from the 
+	JASA paper:
+
+	Barrientos, A. F., Williams, A. R., Snoke, J., & Bowen, C. M. (2024). A Feasibility Study of Differentially Private Summary Statistics and Regression 	Analyses with Evaluations on Administrative and Survey Data. Journal of the American Statistical Association, 119(545), 52-65.
+
+	Run all cells through line 57 in the markdown file. This creates a new file `ipums_data.csv` in the `Data` directory of the main repository.
+
+2. Create a new folder, `Synthetic Datasets` inside the `Data/IPUMS/` directory.
+
+3. Run all code in the `IPUMS - GMM and CART Synthesis` Jupyter notebook. This notebook produces 20 synthetic versions of the IPUMS data in the `Data/IPUMS/Synthetic Datasets/`
+	directory. Synthesis models used are the GMM for continuous variables (`incwage`, `years_of_educ`, and `potential_experience`. `years_of_educ` and `potential_experience`
+	are technically discrete, but we treat them as continuous for simplicity sake) and the CART for categorical variables `non_white` and `sex`.
+
+4. Run all code in the `IPUMS - GMM and MNL Synthesis` Jupyter notebook. This notebook produces 20 synthetic versions of the IPUMS data in the `Data/IPUMS/Synthetic Datasets/`
+	directory. Synthesis models used are the GMM for continuous variables (`incwage`, `years_of_educ`, and `potential_experience`. `years_of_educ` and `potential_experience`
+	are technically discrete, but we treat them as continuous for simplicity sake) and logistic regression for categorical variables `non_white` and `sex`.
+
+
+
+
+	
+
