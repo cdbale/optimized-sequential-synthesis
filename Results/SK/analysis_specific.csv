@@ -1,0 +1,2501 @@
+Data Type,Measure,Variable,value
+MNL,L1 Distance,Intercept,1.5966753530110935
+MNL,L1 Distance,Intercept,1.3256788746797472
+MNL,L1 Distance,Intercept,1.1819966007928242
+MNL,L1 Distance,Intercept,1.3099396508710868
+MNL,L1 Distance,Intercept,0.7822884273225315
+MNL,L1 Distance,Intercept,1.283937356221366
+MNL,L1 Distance,Intercept,1.1896300872529428
+MNL,L1 Distance,Intercept,1.595938091612764
+MNL,L1 Distance,Intercept,0.8395935180428662
+MNL,L1 Distance,Intercept,0.12642531217556296
+MNL,L1 Distance,Intercept,1.226972285730433
+MNL,L1 Distance,Intercept,1.563346351010515
+MNL,L1 Distance,Intercept,0.9425046823766969
+MNL,L1 Distance,Intercept,0.5251124337986015
+MNL,L1 Distance,Intercept,1.0372814989362595
+MNL,L1 Distance,Intercept,0.5967663320009713
+MNL,L1 Distance,Intercept,0.9914262672731669
+MNL,L1 Distance,Intercept,0.7029230490659826
+MNL,L1 Distance,Intercept,0.8598646509889738
+MNL,L1 Distance,Intercept,0.13083516608309242
+MNL,CI Ratio,Intercept,0.6171130950642338
+MNL,CI Ratio,Intercept,0.720253692145684
+MNL,CI Ratio,Intercept,0.7314984891797889
+MNL,CI Ratio,Intercept,0.7138032292485517
+MNL,CI Ratio,Intercept,0.8093554922120649
+MNL,CI Ratio,Intercept,0.7663158615767073
+MNL,CI Ratio,Intercept,0.6959420832811047
+MNL,CI Ratio,Intercept,0.6578319550098967
+MNL,CI Ratio,Intercept,0.7934783062754597
+MNL,CI Ratio,Intercept,0.9834782277513366
+MNL,CI Ratio,Intercept,0.7252713297994662
+MNL,CI Ratio,Intercept,0.6336786411380139
+MNL,CI Ratio,Intercept,0.8223373021582819
+MNL,CI Ratio,Intercept,0.86597335782368
+MNL,CI Ratio,Intercept,0.7530804185623448
+MNL,CI Ratio,Intercept,0.8455532774116665
+MNL,CI Ratio,Intercept,0.7581464115681547
+MNL,CI Ratio,Intercept,0.8435248778320408
+MNL,CI Ratio,Intercept,0.7250700447063336
+MNL,CI Ratio,Intercept,1.0352671260954955
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Sign Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,Significance Match,Intercept,1.0
+MNL,CI Overlap,Intercept,0.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,0.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,0.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+MNL,CI Overlap,Intercept,1.0
+AD - MNL,L1 Distance,Intercept,1.8598272900484876
+AD - MNL,L1 Distance,Intercept,1.4171386972433764
+AD - MNL,L1 Distance,Intercept,1.3284605701279393
+AD - MNL,L1 Distance,Intercept,1.4329267714860379
+AD - MNL,L1 Distance,Intercept,0.9390834316101104
+AD - MNL,L1 Distance,Intercept,1.3344410635374198
+AD - MNL,L1 Distance,Intercept,1.3335624133855504
+AD - MNL,L1 Distance,Intercept,1.6144645184908981
+AD - MNL,L1 Distance,Intercept,1.015690091667703
+AD - MNL,L1 Distance,Intercept,0.33813870544469093
+AD - MNL,L1 Distance,Intercept,1.4722145928423398
+AD - MNL,L1 Distance,Intercept,1.6447610324510116
+AD - MNL,L1 Distance,Intercept,1.0097969985090813
+AD - MNL,L1 Distance,Intercept,0.6890762664446015
+AD - MNL,L1 Distance,Intercept,1.2008197622766623
+AD - MNL,L1 Distance,Intercept,1.1026622246061146
+AD - MNL,L1 Distance,Intercept,1.1032155087173505
+AD - MNL,L1 Distance,Intercept,0.9687449753833546
+AD - MNL,L1 Distance,Intercept,1.1203897408852077
+AD - MNL,L1 Distance,Intercept,0.2354431485735633
+AD - MNL,CI Ratio,Intercept,0.5871615283277853
+AD - MNL,CI Ratio,Intercept,0.7070177056053879
+AD - MNL,CI Ratio,Intercept,0.7172703606010699
+AD - MNL,CI Ratio,Intercept,0.7034825012697632
+AD - MNL,CI Ratio,Intercept,0.7907690143971002
+AD - MNL,CI Ratio,Intercept,0.759063550652505
+AD - MNL,CI Ratio,Intercept,0.6802682450868449
+AD - MNL,CI Ratio,Intercept,0.6551788247485141
+AD - MNL,CI Ratio,Intercept,0.7695470433593684
+AD - MNL,CI Ratio,Intercept,0.9605639404686218
+AD - MNL,CI Ratio,Intercept,0.7019121551416563
+AD - MNL,CI Ratio,Intercept,0.6231699096626793
+AD - MNL,CI Ratio,Intercept,0.8162270364813564
+AD - MNL,CI Ratio,Intercept,0.8657297600691657
+AD - MNL,CI Ratio,Intercept,0.7375273706025806
+AD - MNL,CI Ratio,Intercept,0.7996770065129232
+AD - MNL,CI Ratio,Intercept,0.7481004921864746
+AD - MNL,CI Ratio,Intercept,0.8252935500523884
+AD - MNL,CI Ratio,Intercept,0.7091379883847507
+AD - MNL,CI Ratio,Intercept,1.0342371790005405
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Sign Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,Significance Match,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,0.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,0.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,0.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+AD - MNL,CI Overlap,Intercept,1.0
+CART,L1 Distance,Intercept,0.4062855708130044
+CART,L1 Distance,Intercept,0.3903372439759156
+CART,L1 Distance,Intercept,0.05087656766293858
+CART,L1 Distance,Intercept,0.23945466286756734
+CART,L1 Distance,Intercept,0.25562326372406385
+CART,L1 Distance,Intercept,0.5431346251879106
+CART,L1 Distance,Intercept,0.4677723573153312
+CART,L1 Distance,Intercept,0.3680658357820574
+CART,L1 Distance,Intercept,0.03601061599465005
+CART,L1 Distance,Intercept,0.2222872667520086
+CART,L1 Distance,Intercept,0.1810148475174973
+CART,L1 Distance,Intercept,0.9312296052566627
+CART,L1 Distance,Intercept,0.565720990975505
+CART,L1 Distance,Intercept,0.3087955554916526
+CART,L1 Distance,Intercept,0.5924241838867221
+CART,L1 Distance,Intercept,0.2640792426391041
+CART,L1 Distance,Intercept,0.4381920089233544
+CART,L1 Distance,Intercept,0.052421220502986365
+CART,L1 Distance,Intercept,0.1703934989574405
+CART,L1 Distance,Intercept,0.02538116081251829
+CART,CI Ratio,Intercept,0.967272568482232
+CART,CI Ratio,Intercept,1.2854694398412905
+CART,CI Ratio,Intercept,1.2604853989039577
+CART,CI Ratio,Intercept,1.1321767303148873
+CART,CI Ratio,Intercept,1.0345453512220188
+CART,CI Ratio,Intercept,1.0005336576506376
+CART,CI Ratio,Intercept,1.2951728151451305
+CART,CI Ratio,Intercept,1.0013907461962748
+CART,CI Ratio,Intercept,1.1665374759088183
+CART,CI Ratio,Intercept,1.1394426910033826
+CART,CI Ratio,Intercept,1.1456335934709403
+CART,CI Ratio,Intercept,0.8483170551998633
+CART,CI Ratio,Intercept,0.9440311207874201
+CART,CI Ratio,Intercept,1.2976461628392257
+CART,CI Ratio,Intercept,0.9058726067375016
+CART,CI Ratio,Intercept,1.0304600846384233
+CART,CI Ratio,Intercept,0.8673462314385584
+CART,CI Ratio,Intercept,1.0732844611207262
+CART,CI Ratio,Intercept,1.0283578261564532
+CART,CI Ratio,Intercept,1.2560433860347353
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Sign Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,Significance Match,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+CART,CI Overlap,Intercept,1.0
+AD - CART,L1 Distance,Intercept,0.43318974903010865
+AD - CART,L1 Distance,Intercept,0.27927214464095584
+AD - CART,L1 Distance,Intercept,0.08481084819258378
+AD - CART,L1 Distance,Intercept,0.24747750914832434
+AD - CART,L1 Distance,Intercept,0.36103676206431157
+AD - CART,L1 Distance,Intercept,0.6375233456515277
+AD - CART,L1 Distance,Intercept,0.4196717882512395
+AD - CART,L1 Distance,Intercept,0.4744044482781966
+AD - CART,L1 Distance,Intercept,0.09844823791284352
+AD - CART,L1 Distance,Intercept,0.02434558930592079
+AD - CART,L1 Distance,Intercept,0.04030515881567798
+AD - CART,L1 Distance,Intercept,1.0001543442576404
+AD - CART,L1 Distance,Intercept,0.5928185634670191
+AD - CART,L1 Distance,Intercept,0.15674396321851347
+AD - CART,L1 Distance,Intercept,0.7545211943087198
+AD - CART,L1 Distance,Intercept,0.36633041340734795
+AD - CART,L1 Distance,Intercept,0.6500168564149984
+AD - CART,L1 Distance,Intercept,0.19385553411558387
+AD - CART,L1 Distance,Intercept,0.30091932735767557
+AD - CART,L1 Distance,Intercept,0.1034216316222416
+AD - CART,CI Ratio,Intercept,0.9696647188053255
+AD - CART,CI Ratio,Intercept,1.2931531021585942
+AD - CART,CI Ratio,Intercept,1.2586902905875217
+AD - CART,CI Ratio,Intercept,1.136245761311667
+AD - CART,CI Ratio,Intercept,1.0430969564106127
+AD - CART,CI Ratio,Intercept,1.0027785573086803
+AD - CART,CI Ratio,Intercept,1.3062763439952911
+AD - CART,CI Ratio,Intercept,1.0025810536286293
+AD - CART,CI Ratio,Intercept,1.1675269526370406
+AD - CART,CI Ratio,Intercept,1.1428896488236253
+AD - CART,CI Ratio,Intercept,1.1577213378021622
+AD - CART,CI Ratio,Intercept,0.8535412412658232
+AD - CART,CI Ratio,Intercept,0.9573733953682838
+AD - CART,CI Ratio,Intercept,1.3129514052239433
+AD - CART,CI Ratio,Intercept,0.8942047929416662
+AD - CART,CI Ratio,Intercept,1.0446108345854064
+AD - CART,CI Ratio,Intercept,0.8833801563072922
+AD - CART,CI Ratio,Intercept,1.0772776887179942
+AD - CART,CI Ratio,Intercept,1.0373763967946603
+AD - CART,CI Ratio,Intercept,1.2522165456242909
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Sign Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,Significance Match,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+AD - CART,CI Overlap,Intercept,1.0
+MOSTLY.AI,L1 Distance,Intercept,0.14590739615043002
+MOSTLY.AI,L1 Distance,Intercept,0.4900827070742402
+MOSTLY.AI,L1 Distance,Intercept,0.3509409283324292
+MOSTLY.AI,L1 Distance,Intercept,0.5607771600634468
+MOSTLY.AI,L1 Distance,Intercept,0.5324871891626382
+MOSTLY.AI,L1 Distance,Intercept,0.9473893653888972
+MOSTLY.AI,L1 Distance,Intercept,0.6946661112415633
+MOSTLY.AI,L1 Distance,Intercept,0.19113862536305248
+MOSTLY.AI,L1 Distance,Intercept,0.7741236381932053
+MOSTLY.AI,L1 Distance,Intercept,0.29687386954803685
+MOSTLY.AI,L1 Distance,Intercept,0.40315108912006803
+MOSTLY.AI,L1 Distance,Intercept,0.025234721332936694
+MOSTLY.AI,L1 Distance,Intercept,0.2969987260308713
+MOSTLY.AI,L1 Distance,Intercept,1.010678183812308
+MOSTLY.AI,L1 Distance,Intercept,0.3281319499951323
+MOSTLY.AI,L1 Distance,Intercept,0.5762706239297346
+MOSTLY.AI,L1 Distance,Intercept,0.13562122755690975
+MOSTLY.AI,L1 Distance,Intercept,0.22415539958394426
+MOSTLY.AI,L1 Distance,Intercept,0.09399662667179687
+MOSTLY.AI,L1 Distance,Intercept,0.3089700901253476
+MOSTLY.AI,CI Ratio,Intercept,1.0281321554276748
+MOSTLY.AI,CI Ratio,Intercept,1.311428796797462
+MOSTLY.AI,CI Ratio,Intercept,0.9445701246678883
+MOSTLY.AI,CI Ratio,Intercept,1.3041713698049284
+MOSTLY.AI,CI Ratio,Intercept,0.878268823511139
+MOSTLY.AI,CI Ratio,Intercept,0.750052945066502
+MOSTLY.AI,CI Ratio,Intercept,1.5251811819171612
+MOSTLY.AI,CI Ratio,Intercept,1.2574440856523006
+MOSTLY.AI,CI Ratio,Intercept,0.8356286091948852
+MOSTLY.AI,CI Ratio,Intercept,0.9623200045269358
+MOSTLY.AI,CI Ratio,Intercept,0.8785204603883321
+MOSTLY.AI,CI Ratio,Intercept,0.9884684138774505
+MOSTLY.AI,CI Ratio,Intercept,0.9097974369963957
+MOSTLY.AI,CI Ratio,Intercept,0.7880340729263384
+MOSTLY.AI,CI Ratio,Intercept,1.0209567479142185
+MOSTLY.AI,CI Ratio,Intercept,0.9024734307368115
+MOSTLY.AI,CI Ratio,Intercept,1.1310641050692531
+MOSTLY.AI,CI Ratio,Intercept,1.0374328629907614
+MOSTLY.AI,CI Ratio,Intercept,0.9980137594401549
+MOSTLY.AI,CI Ratio,Intercept,0.9101761063707873
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Sign Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,Significance Match,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MOSTLY.AI,CI Overlap,Intercept,1.0
+MNL,L1 Distance,Latitude,0.1803475197755372
+MNL,L1 Distance,Latitude,0.30410735074533074
+MNL,L1 Distance,Latitude,0.2300617386987317
+MNL,L1 Distance,Latitude,0.32888568150675823
+MNL,L1 Distance,Latitude,0.0017271954858616295
+MNL,L1 Distance,Latitude,0.13783218776073203
+MNL,L1 Distance,Latitude,0.26955531962905976
+MNL,L1 Distance,Latitude,0.1059405812853994
+MNL,L1 Distance,Latitude,0.062397949748681056
+MNL,L1 Distance,Latitude,0.09846421197154127
+MNL,L1 Distance,Latitude,0.27885297405726034
+MNL,L1 Distance,Latitude,0.2917867075733337
+MNL,L1 Distance,Latitude,0.4333150714043841
+MNL,L1 Distance,Latitude,0.07024512311566695
+MNL,L1 Distance,Latitude,0.11633923362878751
+MNL,L1 Distance,Latitude,0.1954638236199593
+MNL,L1 Distance,Latitude,0.23840151180009667
+MNL,L1 Distance,Latitude,0.31887085356022504
+MNL,L1 Distance,Latitude,0.24938894475082835
+MNL,L1 Distance,Latitude,0.296362868002609
+MNL,CI Ratio,Latitude,0.8200126116326376
+MNL,CI Ratio,Latitude,0.9940921691020398
+MNL,CI Ratio,Latitude,0.8814871138579422
+MNL,CI Ratio,Latitude,1.0680629558259898
+MNL,CI Ratio,Latitude,1.178583732496062
+MNL,CI Ratio,Latitude,1.059963299971827
+MNL,CI Ratio,Latitude,0.7956006857690994
+MNL,CI Ratio,Latitude,1.1424043681844893
+MNL,CI Ratio,Latitude,0.9897272507738414
+MNL,CI Ratio,Latitude,1.1077237940291513
+MNL,CI Ratio,Latitude,0.8965579505502838
+MNL,CI Ratio,Latitude,0.8241853691201441
+MNL,CI Ratio,Latitude,0.8072119186838382
+MNL,CI Ratio,Latitude,1.052288358612989
+MNL,CI Ratio,Latitude,0.9600867778494654
+MNL,CI Ratio,Latitude,0.8633986579688673
+MNL,CI Ratio,Latitude,0.8430727976720822
+MNL,CI Ratio,Latitude,0.9067796831839219
+MNL,CI Ratio,Latitude,0.7490319555127509
+MNL,CI Ratio,Latitude,0.921484512816385
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,1.0
+MNL,Sign Match,Latitude,1.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,1.0
+MNL,Sign Match,Latitude,1.0
+MNL,Sign Match,Latitude,1.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,1.0
+MNL,Sign Match,Latitude,1.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,0.0
+MNL,Sign Match,Latitude,0.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,Significance Match,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+MNL,CI Overlap,Latitude,1.0
+AD - MNL,L1 Distance,Latitude,0.2543289456716456
+AD - MNL,L1 Distance,Latitude,0.373781373675025
+AD - MNL,L1 Distance,Latitude,0.2981518879540792
+AD - MNL,L1 Distance,Latitude,0.3715397303813708
+AD - MNL,L1 Distance,Latitude,0.036330654065686196
+AD - MNL,L1 Distance,Latitude,0.15140888700499439
+AD - MNL,L1 Distance,Latitude,0.34535191833436213
+AD - MNL,L1 Distance,Latitude,0.15060811683693148
+AD - MNL,L1 Distance,Latitude,0.10623099931503341
+AD - MNL,L1 Distance,Latitude,0.06439290594724793
+AD - MNL,L1 Distance,Latitude,0.39228914948831733
+AD - MNL,L1 Distance,Latitude,0.34441955453479495
+AD - MNL,L1 Distance,Latitude,0.467420055932957
+AD - MNL,L1 Distance,Latitude,0.02441156767673648
+AD - MNL,L1 Distance,Latitude,0.20592065451535058
+AD - MNL,L1 Distance,Latitude,0.37370138453107166
+AD - MNL,L1 Distance,Latitude,0.2941767861109425
+AD - MNL,L1 Distance,Latitude,0.40848333996593356
+AD - MNL,L1 Distance,Latitude,0.3745738758180582
+AD - MNL,L1 Distance,Latitude,0.35626141815323603
+AD - MNL,CI Ratio,Latitude,0.8886381889041902
+AD - MNL,CI Ratio,Latitude,1.0015704030511832
+AD - MNL,CI Ratio,Latitude,0.9194801166390707
+AD - MNL,CI Ratio,Latitude,1.1202648869934346
+AD - MNL,CI Ratio,Latitude,1.2180319430720943
+AD - MNL,CI Ratio,Latitude,1.0806209230214596
+AD - MNL,CI Ratio,Latitude,0.8119706703611569
+AD - MNL,CI Ratio,Latitude,1.1357267441734051
+AD - MNL,CI Ratio,Latitude,1.032205736816948
+AD - MNL,CI Ratio,Latitude,1.1814322037161225
+AD - MNL,CI Ratio,Latitude,0.9566362073277156
+AD - MNL,CI Ratio,Latitude,0.8225563771473019
+AD - MNL,CI Ratio,Latitude,0.8192211862060712
+AD - MNL,CI Ratio,Latitude,1.1416477050013432
+AD - MNL,CI Ratio,Latitude,1.0061371817936593
+AD - MNL,CI Ratio,Latitude,0.9202183610842836
+AD - MNL,CI Ratio,Latitude,0.8641894278764352
+AD - MNL,CI Ratio,Latitude,0.9791415579605832
+AD - MNL,CI Ratio,Latitude,0.7988532543978897
+AD - MNL,CI Ratio,Latitude,0.9620854439349315
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,1.0
+AD - MNL,Sign Match,Latitude,1.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,1.0
+AD - MNL,Sign Match,Latitude,1.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,1.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Sign Match,Latitude,0.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,0.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,Significance Match,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+AD - MNL,CI Overlap,Latitude,1.0
+CART,L1 Distance,Latitude,0.11255763219790212
+CART,L1 Distance,Latitude,0.08388148686843218
+CART,L1 Distance,Latitude,0.0817558261113228
+CART,L1 Distance,Latitude,0.23706150451307412
+CART,L1 Distance,Latitude,0.20174086770276062
+CART,L1 Distance,Latitude,0.06281158373844994
+CART,L1 Distance,Latitude,0.3032897024646287
+CART,L1 Distance,Latitude,0.21557281438241693
+CART,L1 Distance,Latitude,0.14147585644585497
+CART,L1 Distance,Latitude,0.06603131997596859
+CART,L1 Distance,Latitude,0.23683686309581076
+CART,L1 Distance,Latitude,0.19012124525837926
+CART,L1 Distance,Latitude,0.3141699157337206
+CART,L1 Distance,Latitude,0.21129205161893627
+CART,L1 Distance,Latitude,0.0889957361256163
+CART,L1 Distance,Latitude,0.06386764012075032
+CART,L1 Distance,Latitude,0.1649154752981555
+CART,L1 Distance,Latitude,0.24320543261482563
+CART,L1 Distance,Latitude,0.3688250702986313
+CART,L1 Distance,Latitude,0.053703769912909746
+CART,CI Ratio,Latitude,0.9853048906564897
+CART,CI Ratio,Latitude,1.0126837848465142
+CART,CI Ratio,Latitude,1.0962797414447485
+CART,CI Ratio,Latitude,1.1540621738345962
+CART,CI Ratio,Latitude,1.003761718471705
+CART,CI Ratio,Latitude,1.0441147493223655
+CART,CI Ratio,Latitude,0.9565784175909949
+CART,CI Ratio,Latitude,0.899760673966245
+CART,CI Ratio,Latitude,1.1764417704913246
+CART,CI Ratio,Latitude,0.9627977610237592
+CART,CI Ratio,Latitude,1.1118343953950542
+CART,CI Ratio,Latitude,0.9004188831184581
+CART,CI Ratio,Latitude,0.9926288961393764
+CART,CI Ratio,Latitude,1.0125431732163357
+CART,CI Ratio,Latitude,1.0525580959630416
+CART,CI Ratio,Latitude,1.1109088145537622
+CART,CI Ratio,Latitude,0.9013571193464053
+CART,CI Ratio,Latitude,0.94811176828492
+CART,CI Ratio,Latitude,0.8211489870859969
+CART,CI Ratio,Latitude,1.1228932342432254
+CART,Sign Match,Latitude,1.0
+CART,Sign Match,Latitude,1.0
+CART,Sign Match,Latitude,1.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,1.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,1.0
+CART,Sign Match,Latitude,1.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,1.0
+CART,Sign Match,Latitude,1.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,0.0
+CART,Sign Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,Significance Match,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+CART,CI Overlap,Latitude,1.0
+AD - CART,L1 Distance,Latitude,0.11789186587426996
+AD - CART,L1 Distance,Latitude,0.07125816425912791
+AD - CART,L1 Distance,Latitude,0.0024805652336320344
+AD - CART,L1 Distance,Latitude,0.24413782680961155
+AD - CART,L1 Distance,Latitude,0.29230899594397897
+AD - CART,L1 Distance,Latitude,0.036510247290981415
+AD - CART,L1 Distance,Latitude,0.3856618639931217
+AD - CART,L1 Distance,Latitude,0.265372278569733
+AD - CART,L1 Distance,Latitude,0.11895313936160691
+AD - CART,L1 Distance,Latitude,0.27181363289909094
+AD - CART,L1 Distance,Latitude,0.15426991563107284
+AD - CART,L1 Distance,Latitude,0.2721716145115291
+AD - CART,L1 Distance,Latitude,0.41569557555134484
+AD - CART,L1 Distance,Latitude,0.33120741834996115
+AD - CART,L1 Distance,Latitude,0.016439180594719258
+AD - CART,L1 Distance,Latitude,0.05578957701365499
+AD - CART,L1 Distance,Latitude,0.38847204879104236
+AD - CART,L1 Distance,Latitude,0.3701269813971794
+AD - CART,L1 Distance,Latitude,0.554503110586412
+AD - CART,L1 Distance,Latitude,0.018234121132106637
+AD - CART,CI Ratio,Latitude,1.021433502682725
+AD - CART,CI Ratio,Latitude,1.1136993889562172
+AD - CART,CI Ratio,Latitude,1.16549595099747
+AD - CART,CI Ratio,Latitude,1.1710085343059184
+AD - CART,CI Ratio,Latitude,1.1114158855210572
+AD - CART,CI Ratio,Latitude,1.147448889729718
+AD - CART,CI Ratio,Latitude,1.0676231548916817
+AD - CART,CI Ratio,Latitude,0.9925837600673804
+AD - CART,CI Ratio,Latitude,1.2761372134013487
+AD - CART,CI Ratio,Latitude,1.0902690902680834
+AD - CART,CI Ratio,Latitude,1.2335439465117506
+AD - CART,CI Ratio,Latitude,0.9593944215392914
+AD - CART,CI Ratio,Latitude,1.0512951752625115
+AD - CART,CI Ratio,Latitude,1.1731716425663732
+AD - CART,CI Ratio,Latitude,1.1328891984513427
+AD - CART,CI Ratio,Latitude,1.2590765716166357
+AD - CART,CI Ratio,Latitude,1.0368488458651466
+AD - CART,CI Ratio,Latitude,1.0091115930864751
+AD - CART,CI Ratio,Latitude,0.8929981983343258
+AD - CART,CI Ratio,Latitude,1.1644012609397065
+AD - CART,Sign Match,Latitude,1.0
+AD - CART,Sign Match,Latitude,1.0
+AD - CART,Sign Match,Latitude,1.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,1.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,1.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,1.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,1.0
+AD - CART,Sign Match,Latitude,1.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,0.0
+AD - CART,Sign Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,Significance Match,Latitude,0.0
+AD - CART,Significance Match,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+AD - CART,CI Overlap,Latitude,1.0
+MOSTLY.AI,L1 Distance,Latitude,0.33774552211509945
+MOSTLY.AI,L1 Distance,Latitude,0.40602113544965884
+MOSTLY.AI,L1 Distance,Latitude,0.00022075436144296245
+MOSTLY.AI,L1 Distance,Latitude,0.058701121229088674
+MOSTLY.AI,L1 Distance,Latitude,0.11125486971706941
+MOSTLY.AI,L1 Distance,Latitude,0.01732091941396245
+MOSTLY.AI,L1 Distance,Latitude,0.10178931158409309
+MOSTLY.AI,L1 Distance,Latitude,0.19238588359627334
+MOSTLY.AI,L1 Distance,Latitude,0.20047884528764065
+MOSTLY.AI,L1 Distance,Latitude,0.18886178394913633
+MOSTLY.AI,L1 Distance,Latitude,0.06738932717491342
+MOSTLY.AI,L1 Distance,Latitude,0.16522369281774754
+MOSTLY.AI,L1 Distance,Latitude,0.1348155475339977
+MOSTLY.AI,L1 Distance,Latitude,0.2593495429807879
+MOSTLY.AI,L1 Distance,Latitude,0.31339692350232795
+MOSTLY.AI,L1 Distance,Latitude,0.20418608892544637
+MOSTLY.AI,L1 Distance,Latitude,0.22460527610797312
+MOSTLY.AI,L1 Distance,Latitude,0.1075936232470201
+MOSTLY.AI,L1 Distance,Latitude,0.39466082978330175
+MOSTLY.AI,L1 Distance,Latitude,0.1795374130546991
+MOSTLY.AI,CI Ratio,Latitude,0.8072634655585971
+MOSTLY.AI,CI Ratio,Latitude,0.8706742462646672
+MOSTLY.AI,CI Ratio,Latitude,0.855544865378872
+MOSTLY.AI,CI Ratio,Latitude,0.9274411726318211
+MOSTLY.AI,CI Ratio,Latitude,0.7549185139080558
+MOSTLY.AI,CI Ratio,Latitude,0.8866285449345799
+MOSTLY.AI,CI Ratio,Latitude,0.9577184477497687
+MOSTLY.AI,CI Ratio,Latitude,0.8049437029929821
+MOSTLY.AI,CI Ratio,Latitude,0.733283924488968
+MOSTLY.AI,CI Ratio,Latitude,0.8361956390468628
+MOSTLY.AI,CI Ratio,Latitude,0.9262944353612756
+MOSTLY.AI,CI Ratio,Latitude,0.807882644468425
+MOSTLY.AI,CI Ratio,Latitude,0.7499422703155941
+MOSTLY.AI,CI Ratio,Latitude,0.8435315055576724
+MOSTLY.AI,CI Ratio,Latitude,0.8989065442864129
+MOSTLY.AI,CI Ratio,Latitude,0.9272161110573777
+MOSTLY.AI,CI Ratio,Latitude,0.8259248267393429
+MOSTLY.AI,CI Ratio,Latitude,0.8870153041407718
+MOSTLY.AI,CI Ratio,Latitude,0.7683483997894767
+MOSTLY.AI,CI Ratio,Latitude,0.8033109020353554
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,1.0
+MOSTLY.AI,Sign Match,Latitude,1.0
+MOSTLY.AI,Sign Match,Latitude,1.0
+MOSTLY.AI,Sign Match,Latitude,1.0
+MOSTLY.AI,Sign Match,Latitude,1.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,1.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,1.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Sign Match,Latitude,0.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,Significance Match,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MOSTLY.AI,CI Overlap,Latitude,1.0
+MNL,L1 Distance,Longitude,0.48122289405432783
+MNL,L1 Distance,Longitude,0.5601944009004252
+MNL,L1 Distance,Longitude,0.4240646958638168
+MNL,L1 Distance,Longitude,0.1550784735238298
+MNL,L1 Distance,Longitude,0.3930690931461115
+MNL,L1 Distance,Longitude,0.4178676033611176
+MNL,L1 Distance,Longitude,0.5762375101235131
+MNL,L1 Distance,Longitude,0.28658438281100296
+MNL,L1 Distance,Longitude,0.5486859750496798
+MNL,L1 Distance,Longitude,0.31717301009538895
+MNL,L1 Distance,Longitude,0.5138110940412329
+MNL,L1 Distance,Longitude,0.5634813938017478
+MNL,L1 Distance,Longitude,0.4357418169028089
+MNL,L1 Distance,Longitude,0.02211621683487991
+MNL,L1 Distance,Longitude,0.3477479262415332
+MNL,L1 Distance,Longitude,0.7473139318037876
+MNL,L1 Distance,Longitude,0.5476867795090155
+MNL,L1 Distance,Longitude,0.562228844498452
+MNL,L1 Distance,Longitude,0.5207972932626999
+MNL,L1 Distance,Longitude,0.25801260535443454
+MNL,CI Ratio,Longitude,0.8349558802919382
+MNL,CI Ratio,Longitude,1.0117078426846313
+MNL,CI Ratio,Longitude,0.8983425556847613
+MNL,CI Ratio,Longitude,1.0208161588843756
+MNL,CI Ratio,Longitude,1.1331913354904337
+MNL,CI Ratio,Longitude,1.0338363889393947
+MNL,CI Ratio,Longitude,0.832077935311696
+MNL,CI Ratio,Longitude,1.1118982491290426
+MNL,CI Ratio,Longitude,1.0041918785723862
+MNL,CI Ratio,Longitude,1.0709389143089283
+MNL,CI Ratio,Longitude,0.8990559801892816
+MNL,CI Ratio,Longitude,0.8559385715483566
+MNL,CI Ratio,Longitude,0.8398090609675096
+MNL,CI Ratio,Longitude,1.0330905675399782
+MNL,CI Ratio,Longitude,0.9611300124360809
+MNL,CI Ratio,Longitude,0.9016584846539468
+MNL,CI Ratio,Longitude,0.8542190181819826
+MNL,CI Ratio,Longitude,0.9323441983030883
+MNL,CI Ratio,Longitude,0.7762917971141106
+MNL,CI Ratio,Longitude,0.9331311984551116
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,1.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,1.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,0.0
+MNL,Sign Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,0.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,Significance Match,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+MNL,CI Overlap,Longitude,1.0
+AD - MNL,L1 Distance,Longitude,0.35691221627267655
+AD - MNL,L1 Distance,Longitude,0.5461770805594358
+AD - MNL,L1 Distance,Longitude,0.35691669276133053
+AD - MNL,L1 Distance,Longitude,0.31116146229121083
+AD - MNL,L1 Distance,Longitude,0.32245812296032034
+AD - MNL,L1 Distance,Longitude,0.39690571271189473
+AD - MNL,L1 Distance,Longitude,0.5338114661231156
+AD - MNL,L1 Distance,Longitude,0.3054029473824466
+AD - MNL,L1 Distance,Longitude,0.48163974257489706
+AD - MNL,L1 Distance,Longitude,0.18612873926414608
+AD - MNL,L1 Distance,Longitude,0.40471910129066807
+AD - MNL,L1 Distance,Longitude,0.5605044375075876
+AD - MNL,L1 Distance,Longitude,0.4121334884925101
+AD - MNL,L1 Distance,Longitude,0.192145490448143
+AD - MNL,L1 Distance,Longitude,0.28718489029044725
+AD - MNL,L1 Distance,Longitude,0.5829721911102838
+AD - MNL,L1 Distance,Longitude,0.5300625092177296
+AD - MNL,L1 Distance,Longitude,0.4361972627818358
+AD - MNL,L1 Distance,Longitude,0.40114778485203073
+AD - MNL,L1 Distance,Longitude,0.19294280619240292
+AD - MNL,CI Ratio,Longitude,0.8932319262490226
+AD - MNL,CI Ratio,Longitude,1.0239400609438527
+AD - MNL,CI Ratio,Longitude,0.9346572248527203
+AD - MNL,CI Ratio,Longitude,1.0513942346021745
+AD - MNL,CI Ratio,Longitude,1.173229799666916
+AD - MNL,CI Ratio,Longitude,1.0524197468842746
+AD - MNL,CI Ratio,Longitude,0.85354273278885
+AD - MNL,CI Ratio,Longitude,1.1061649977568624
+AD - MNL,CI Ratio,Longitude,1.0415644633650898
+AD - MNL,CI Ratio,Longitude,1.1362514217463255
+AD - MNL,CI Ratio,Longitude,0.9610232592825377
+AD - MNL,CI Ratio,Longitude,0.8608931271359728
+AD - MNL,CI Ratio,Longitude,0.850327804937557
+AD - MNL,CI Ratio,Longitude,1.1176098179054064
+AD - MNL,CI Ratio,Longitude,1.006199942805812
+AD - MNL,CI Ratio,Longitude,0.9618075881435052
+AD - MNL,CI Ratio,Longitude,0.8777146922413621
+AD - MNL,CI Ratio,Longitude,0.995456675597732
+AD - MNL,CI Ratio,Longitude,0.826976240542445
+AD - MNL,CI Ratio,Longitude,0.9741299730674027
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,1.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,1.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,1.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,0.0
+AD - MNL,Sign Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,0.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,Significance Match,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+AD - MNL,CI Overlap,Longitude,1.0
+CART,L1 Distance,Longitude,0.2422220669512572
+CART,L1 Distance,Longitude,0.35328975922863254
+CART,L1 Distance,Longitude,0.0611258260428037
+CART,L1 Distance,Longitude,0.13439353535704662
+CART,L1 Distance,Longitude,0.009969635912018271
+CART,L1 Distance,Longitude,0.25343687251800057
+CART,L1 Distance,Longitude,0.05992618060372584
+CART,L1 Distance,Longitude,0.08112822419710025
+CART,L1 Distance,Longitude,0.24355518819711325
+CART,L1 Distance,Longitude,0.006624974345788293
+CART,L1 Distance,Longitude,0.23532490733516725
+CART,L1 Distance,Longitude,0.007870475140658473
+CART,L1 Distance,Longitude,0.05167638145831527
+CART,L1 Distance,Longitude,0.14369260271607978
+CART,L1 Distance,Longitude,0.10780686887736779
+CART,L1 Distance,Longitude,0.2671512760284696
+CART,L1 Distance,Longitude,0.022240384552597636
+CART,L1 Distance,Longitude,0.08139467843350015
+CART,L1 Distance,Longitude,0.13577906118857844
+CART,L1 Distance,Longitude,0.0772648027451697
+CART,CI Ratio,Longitude,1.0136422611161842
+CART,CI Ratio,Longitude,1.0538083561772382
+CART,CI Ratio,Longitude,1.09950084712274
+CART,CI Ratio,Longitude,1.183932991490345
+CART,CI Ratio,Longitude,1.005863287705569
+CART,CI Ratio,Longitude,1.0539126065174123
+CART,CI Ratio,Longitude,1.0012235330206707
+CART,CI Ratio,Longitude,0.9299913349670061
+CART,CI Ratio,Longitude,1.2232497478731963
+CART,CI Ratio,Longitude,0.9940976678512987
+CART,CI Ratio,Longitude,1.0743783992571145
+CART,CI Ratio,Longitude,0.9267867843495095
+CART,CI Ratio,Longitude,1.027676946513464
+CART,CI Ratio,Longitude,1.040908342915177
+CART,CI Ratio,Longitude,1.0559774679866816
+CART,CI Ratio,Longitude,1.087290415518754
+CART,CI Ratio,Longitude,0.9104776012090485
+CART,CI Ratio,Longitude,0.9899657576731413
+CART,CI Ratio,Longitude,0.824984830553982
+CART,CI Ratio,Longitude,1.1050909258235102
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Sign Match,Longitude,1.0
+CART,Significance Match,Longitude,0.0
+CART,Significance Match,Longitude,0.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,0.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,0.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,0.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,Significance Match,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+CART,CI Overlap,Longitude,1.0
+AD - CART,L1 Distance,Longitude,0.2716615370972358
+AD - CART,L1 Distance,Longitude,0.5071657529904807
+AD - CART,L1 Distance,Longitude,0.14713463610668281
+AD - CART,L1 Distance,Longitude,0.10601194591531671
+AD - CART,L1 Distance,Longitude,0.057987297322532605
+AD - CART,L1 Distance,Longitude,0.25092366232002
+AD - CART,L1 Distance,Longitude,0.10932045037753518
+AD - CART,L1 Distance,Longitude,0.10567331156067628
+AD - CART,L1 Distance,Longitude,0.28566059408523176
+AD - CART,L1 Distance,Longitude,0.1225673877976674
+AD - CART,L1 Distance,Longitude,0.39401352291731245
+AD - CART,L1 Distance,Longitude,0.017399058892015373
+AD - CART,L1 Distance,Longitude,0.08451362829426012
+AD - CART,L1 Distance,Longitude,0.015213622294531437
+AD - CART,L1 Distance,Longitude,0.03143683181862192
+AD - CART,L1 Distance,Longitude,0.442544572978911
+AD - CART,L1 Distance,Longitude,0.15048086504247316
+AD - CART,L1 Distance,Longitude,0.00381536951761019
+AD - CART,L1 Distance,Longitude,0.07030226837423315
+AD - CART,L1 Distance,Longitude,0.07235616794672059
+AD - CART,CI Ratio,Longitude,1.045142827177616
+AD - CART,CI Ratio,Longitude,1.1687762618091813
+AD - CART,CI Ratio,Longitude,1.16425099989583
+AD - CART,CI Ratio,Longitude,1.2061328199073316
+AD - CART,CI Ratio,Longitude,1.1257971569735004
+AD - CART,CI Ratio,Longitude,1.1800971466405787
+AD - CART,CI Ratio,Longitude,1.0926223122132015
+AD - CART,CI Ratio,Longitude,1.0207317922934132
+AD - CART,CI Ratio,Longitude,1.3287555409185754
+AD - CART,CI Ratio,Longitude,1.1389195608769187
+AD - CART,CI Ratio,Longitude,1.1971337729448281
+AD - CART,CI Ratio,Longitude,0.9816702301726181
+AD - CART,CI Ratio,Longitude,1.0876562701707961
+AD - CART,CI Ratio,Longitude,1.2149480739745306
+AD - CART,CI Ratio,Longitude,1.1408395173256505
+AD - CART,CI Ratio,Longitude,1.2444557969518584
+AD - CART,CI Ratio,Longitude,1.0630519117888302
+AD - CART,CI Ratio,Longitude,1.0620197062369754
+AD - CART,CI Ratio,Longitude,0.9205242823559852
+AD - CART,CI Ratio,Longitude,1.161363675252431
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Sign Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,0.0
+AD - CART,Significance Match,Longitude,0.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,0.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,0.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,0.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,Significance Match,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+AD - CART,CI Overlap,Longitude,1.0
+MOSTLY.AI,L1 Distance,Longitude,0.37951675349029623
+MOSTLY.AI,L1 Distance,Longitude,0.32793645667692484
+MOSTLY.AI,L1 Distance,Longitude,0.22849906586601904
+MOSTLY.AI,L1 Distance,Longitude,0.05110134060912039
+MOSTLY.AI,L1 Distance,Longitude,0.15183867183099925
+MOSTLY.AI,L1 Distance,Longitude,0.1684606780055964
+MOSTLY.AI,L1 Distance,Longitude,0.018622352543990583
+MOSTLY.AI,L1 Distance,Longitude,0.17504138948179643
+MOSTLY.AI,L1 Distance,Longitude,0.6198875760414513
+MOSTLY.AI,L1 Distance,Longitude,0.18705650542129856
+MOSTLY.AI,L1 Distance,Longitude,0.10219283732149279
+MOSTLY.AI,L1 Distance,Longitude,0.002420866330771043
+MOSTLY.AI,L1 Distance,Longitude,0.24824588466415745
+MOSTLY.AI,L1 Distance,Longitude,0.1622425070533322
+MOSTLY.AI,L1 Distance,Longitude,0.20890280790437543
+MOSTLY.AI,L1 Distance,Longitude,0.017096298526298848
+MOSTLY.AI,L1 Distance,Longitude,0.42238772520295864
+MOSTLY.AI,L1 Distance,Longitude,0.23900304448261234
+MOSTLY.AI,L1 Distance,Longitude,0.29900168210857964
+MOSTLY.AI,L1 Distance,Longitude,0.44880644262013436
+MOSTLY.AI,CI Ratio,Longitude,0.8461745186041129
+MOSTLY.AI,CI Ratio,Longitude,0.9417380356834956
+MOSTLY.AI,CI Ratio,Longitude,0.8738991424757468
+MOSTLY.AI,CI Ratio,Longitude,0.9686535720369172
+MOSTLY.AI,CI Ratio,Longitude,0.7846387337178313
+MOSTLY.AI,CI Ratio,Longitude,0.9085427552446048
+MOSTLY.AI,CI Ratio,Longitude,0.9457636799246278
+MOSTLY.AI,CI Ratio,Longitude,0.8735924746377538
+MOSTLY.AI,CI Ratio,Longitude,0.8144851481465719
+MOSTLY.AI,CI Ratio,Longitude,0.8841045956702047
+MOSTLY.AI,CI Ratio,Longitude,0.9494788493309486
+MOSTLY.AI,CI Ratio,Longitude,0.8677440283353155
+MOSTLY.AI,CI Ratio,Longitude,0.7820998612050688
+MOSTLY.AI,CI Ratio,Longitude,0.879022158493034
+MOSTLY.AI,CI Ratio,Longitude,0.9354210214903043
+MOSTLY.AI,CI Ratio,Longitude,0.9917065701540605
+MOSTLY.AI,CI Ratio,Longitude,0.8587170249504155
+MOSTLY.AI,CI Ratio,Longitude,0.945992749785
+MOSTLY.AI,CI Ratio,Longitude,0.8330082483091157
+MOSTLY.AI,CI Ratio,Longitude,0.84364273394988
+MOSTLY.AI,Sign Match,Longitude,0.0
+MOSTLY.AI,Sign Match,Longitude,0.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,0.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,0.0
+MOSTLY.AI,Sign Match,Longitude,1.0
+MOSTLY.AI,Sign Match,Longitude,0.0
+MOSTLY.AI,Sign Match,Longitude,0.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,Significance Match,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MOSTLY.AI,CI Overlap,Longitude,1.0
+MNL,L1 Distance,Sex,0.7603455784673284
+MNL,L1 Distance,Sex,0.9008170127079761
+MNL,L1 Distance,Sex,0.7623740546335028
+MNL,L1 Distance,Sex,1.0505103276732215
+MNL,L1 Distance,Sex,0.22878752515814593
+MNL,L1 Distance,Sex,1.3211876928834587
+MNL,L1 Distance,Sex,0.44366984478556537
+MNL,L1 Distance,Sex,0.9104746353730937
+MNL,L1 Distance,Sex,0.3221371063556935
+MNL,L1 Distance,Sex,0.20655498198651
+MNL,L1 Distance,Sex,0.8600378655313343
+MNL,L1 Distance,Sex,0.8058666716574984
+MNL,L1 Distance,Sex,0.9407357139990309
+MNL,L1 Distance,Sex,0.009200532077771273
+MNL,L1 Distance,Sex,0.5682701449947309
+MNL,L1 Distance,Sex,0.4942603139370084
+MNL,L1 Distance,Sex,0.674254476899921
+MNL,L1 Distance,Sex,0.5751789679809818
+MNL,L1 Distance,Sex,0.17226610005385656
+MNL,L1 Distance,Sex,0.43014182129315337
+MNL,CI Ratio,Sex,0.8280171318489783
+MNL,CI Ratio,Sex,0.9830650234587117
+MNL,CI Ratio,Sex,0.8987163716504425
+MNL,CI Ratio,Sex,0.8922557880958076
+MNL,CI Ratio,Sex,1.0233595606075874
+MNL,CI Ratio,Sex,0.9709459095629602
+MNL,CI Ratio,Sex,0.8848634205750086
+MNL,CI Ratio,Sex,0.9701461673782819
+MNL,CI Ratio,Sex,0.9781718206961582
+MNL,CI Ratio,Sex,1.1992994538979447
+MNL,CI Ratio,Sex,0.8751530108738363
+MNL,CI Ratio,Sex,0.877405790661611
+MNL,CI Ratio,Sex,0.9083947987731811
+MNL,CI Ratio,Sex,1.068439328181616
+MNL,CI Ratio,Sex,0.925344114875531
+MNL,CI Ratio,Sex,0.8609040657974462
+MNL,CI Ratio,Sex,0.8405786090576886
+MNL,CI Ratio,Sex,0.8771305130145532
+MNL,CI Ratio,Sex,0.9322728846608512
+MNL,CI Ratio,Sex,0.9296030703869267
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Sign Match,Sex,1.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,0.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,0.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,0.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,0.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,0.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,1.0
+MNL,Significance Match,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,0.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+MNL,CI Overlap,Sex,1.0
+AD - MNL,L1 Distance,Sex,1.1987850061803327
+AD - MNL,L1 Distance,Sex,1.0592462416997097
+AD - MNL,L1 Distance,Sex,1.017344397508144
+AD - MNL,L1 Distance,Sex,1.3137630096288317
+AD - MNL,L1 Distance,Sex,0.4230745392324522
+AD - MNL,L1 Distance,Sex,1.4204601745350314
+AD - MNL,L1 Distance,Sex,0.6448869145713074
+AD - MNL,L1 Distance,Sex,0.942029579924924
+AD - MNL,L1 Distance,Sex,0.5390459365630491
+AD - MNL,L1 Distance,Sex,0.03677071760300299
+AD - MNL,L1 Distance,Sex,1.3116611914331486
+AD - MNL,L1 Distance,Sex,0.9419667780376668
+AD - MNL,L1 Distance,Sex,1.075976228029666
+AD - MNL,L1 Distance,Sex,0.28681827672325433
+AD - MNL,L1 Distance,Sex,0.822713080614842
+AD - MNL,L1 Distance,Sex,1.2384891555531825
+AD - MNL,L1 Distance,Sex,0.8400650887132464
+AD - MNL,L1 Distance,Sex,0.9958987314647185
+AD - MNL,L1 Distance,Sex,0.16703987817997556
+AD - MNL,L1 Distance,Sex,0.6276848427345711
+AD - MNL,CI Ratio,Sex,0.827724121123814
+AD - MNL,CI Ratio,Sex,0.9834789546557207
+AD - MNL,CI Ratio,Sex,0.9013623679321497
+AD - MNL,CI Ratio,Sex,0.8943986669925128
+AD - MNL,CI Ratio,Sex,1.0222297553560005
+AD - MNL,CI Ratio,Sex,0.9691672695410019
+AD - MNL,CI Ratio,Sex,0.8851297609587037
+AD - MNL,CI Ratio,Sex,0.9694216558264549
+AD - MNL,CI Ratio,Sex,0.9739547419215282
+AD - MNL,CI Ratio,Sex,1.1991020471681855
+AD - MNL,CI Ratio,Sex,0.8881004262923217
+AD - MNL,CI Ratio,Sex,0.8768103970046994
+AD - MNL,CI Ratio,Sex,0.9054623203045428
+AD - MNL,CI Ratio,Sex,1.080531979072849
+AD - MNL,CI Ratio,Sex,0.9279954191512473
+AD - MNL,CI Ratio,Sex,0.8740950442828873
+AD - MNL,CI Ratio,Sex,0.8430578751144351
+AD - MNL,CI Ratio,Sex,0.893143793643697
+AD - MNL,CI Ratio,Sex,0.9392872965285095
+AD - MNL,CI Ratio,Sex,0.9349695993608909
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Sign Match,Sex,1.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,1.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,1.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,1.0
+AD - MNL,Significance Match,Sex,1.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,1.0
+AD - MNL,Significance Match,Sex,1.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,1.0
+AD - MNL,Significance Match,Sex,0.0
+AD - MNL,Significance Match,Sex,1.0
+AD - MNL,Significance Match,Sex,1.0
+AD - MNL,CI Overlap,Sex,0.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,0.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,0.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,0.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,0.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,1.0
+AD - MNL,CI Overlap,Sex,1.0
+CART,L1 Distance,Sex,0.718583910269416
+CART,L1 Distance,Sex,0.5739288625840757
+CART,L1 Distance,Sex,0.9180551862097022
+CART,L1 Distance,Sex,1.1456255469938292
+CART,L1 Distance,Sex,0.6360311221520821
+CART,L1 Distance,Sex,1.2437384009677168
+CART,L1 Distance,Sex,0.4484030159009975
+CART,L1 Distance,Sex,0.879532590940511
+CART,L1 Distance,Sex,0.7925361043115079
+CART,L1 Distance,Sex,0.2479980245450495
+CART,L1 Distance,Sex,0.3421594597328359
+CART,L1 Distance,Sex,1.204985571182906
+CART,L1 Distance,Sex,0.9599739779554259
+CART,L1 Distance,Sex,0.5158867600430135
+CART,L1 Distance,Sex,0.5638669419104217
+CART,L1 Distance,Sex,0.7190003737904269
+CART,L1 Distance,Sex,0.24734727325635308
+CART,L1 Distance,Sex,0.35510323839890323
+CART,L1 Distance,Sex,0.5572158070238333
+CART,L1 Distance,Sex,1.0108908840992372
+CART,CI Ratio,Sex,0.9601739555028763
+CART,CI Ratio,Sex,0.9157911023004067
+CART,CI Ratio,Sex,0.9246544028565292
+CART,CI Ratio,Sex,1.0600321950890177
+CART,CI Ratio,Sex,0.9707774944837175
+CART,CI Ratio,Sex,0.9096212392715172
+CART,CI Ratio,Sex,0.9504749700447597
+CART,CI Ratio,Sex,0.8357192294476427
+CART,CI Ratio,Sex,1.126529060670845
+CART,CI Ratio,Sex,0.925649504791545
+CART,CI Ratio,Sex,0.9593624286429626
+CART,CI Ratio,Sex,0.8458052575396245
+CART,CI Ratio,Sex,0.9429446140829013
+CART,CI Ratio,Sex,1.0324582212286757
+CART,CI Ratio,Sex,0.9948162211241937
+CART,CI Ratio,Sex,0.95875958807114
+CART,CI Ratio,Sex,0.888291309100201
+CART,CI Ratio,Sex,1.0550831468840547
+CART,CI Ratio,Sex,0.9095643118034801
+CART,CI Ratio,Sex,0.9640180844987608
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Sign Match,Sex,1.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,0.0
+CART,Significance Match,Sex,0.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,0.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,0.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,0.0
+CART,Significance Match,Sex,0.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,1.0
+CART,Significance Match,Sex,0.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,0.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,0.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+CART,CI Overlap,Sex,1.0
+AD - CART,L1 Distance,Sex,0.7897317096389752
+AD - CART,L1 Distance,Sex,0.9004145851179328
+AD - CART,L1 Distance,Sex,1.2130730298019445
+AD - CART,L1 Distance,Sex,1.1377856614888127
+AD - CART,L1 Distance,Sex,0.8964815548591423
+AD - CART,L1 Distance,Sex,1.4055888768813507
+AD - CART,L1 Distance,Sex,0.6340642188841356
+AD - CART,L1 Distance,Sex,1.1164011559650988
+AD - CART,L1 Distance,Sex,0.9171101640788428
+AD - CART,L1 Distance,Sex,0.707830066509666
+AD - CART,L1 Distance,Sex,0.6548256725796394
+AD - CART,L1 Distance,Sex,1.4179382649731913
+AD - CART,L1 Distance,Sex,1.1414745096873222
+AD - CART,L1 Distance,Sex,0.878177868469285
+AD - CART,L1 Distance,Sex,0.8229887603414199
+AD - CART,L1 Distance,Sex,1.0361182335659969
+AD - CART,L1 Distance,Sex,0.8381754802279259
+AD - CART,L1 Distance,Sex,0.6826144941261931
+AD - CART,L1 Distance,Sex,0.9610204604173052
+AD - CART,L1 Distance,Sex,1.1545125383596946
+AD - CART,CI Ratio,Sex,0.9630908373189075
+AD - CART,CI Ratio,Sex,0.9223795923312516
+AD - CART,CI Ratio,Sex,0.9347631464644979
+AD - CART,CI Ratio,Sex,1.0649347412175216
+AD - CART,CI Ratio,Sex,0.9977407052452525
+AD - CART,CI Ratio,Sex,0.9272317356742363
+AD - CART,CI Ratio,Sex,0.9735357402202186
+AD - CART,CI Ratio,Sex,0.8446108098039504
+AD - CART,CI Ratio,Sex,1.130516073955098
+AD - CART,CI Ratio,Sex,0.9464502017458275
+AD - CART,CI Ratio,Sex,0.9861738063965403
+AD - CART,CI Ratio,Sex,0.8689558973140252
+AD - CART,CI Ratio,Sex,0.9614174164167756
+AD - CART,CI Ratio,Sex,1.0974701981026542
+AD - CART,CI Ratio,Sex,1.0062543945620086
+AD - CART,CI Ratio,Sex,0.9899255200158681
+AD - CART,CI Ratio,Sex,0.9248291639886158
+AD - CART,CI Ratio,Sex,1.0701131414469
+AD - CART,CI Ratio,Sex,0.9357708451256375
+AD - CART,CI Ratio,Sex,0.9776425430074286
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Sign Match,Sex,1.0
+AD - CART,Significance Match,Sex,1.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,1.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,1.0
+AD - CART,Significance Match,Sex,1.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,1.0
+AD - CART,Significance Match,Sex,1.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,Significance Match,Sex,0.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,0.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,0.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,0.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+AD - CART,CI Overlap,Sex,1.0
+MOSTLY.AI,L1 Distance,Sex,0.40056604226014736
+MOSTLY.AI,L1 Distance,Sex,0.2325635773152499
+MOSTLY.AI,L1 Distance,Sex,0.40580735479100927
+MOSTLY.AI,L1 Distance,Sex,0.12940012390830624
+MOSTLY.AI,L1 Distance,Sex,0.45800650762033523
+MOSTLY.AI,L1 Distance,Sex,0.3816193611132128
+MOSTLY.AI,L1 Distance,Sex,0.5148338001839098
+MOSTLY.AI,L1 Distance,Sex,0.6345654336383906
+MOSTLY.AI,L1 Distance,Sex,0.6588963911654255
+MOSTLY.AI,L1 Distance,Sex,0.3420470070292587
+MOSTLY.AI,L1 Distance,Sex,0.1865671754933298
+MOSTLY.AI,L1 Distance,Sex,0.0056767767463334895
+MOSTLY.AI,L1 Distance,Sex,0.11260063318585267
+MOSTLY.AI,L1 Distance,Sex,0.8378469133893997
+MOSTLY.AI,L1 Distance,Sex,0.6969071824007285
+MOSTLY.AI,L1 Distance,Sex,0.6139791773958696
+MOSTLY.AI,L1 Distance,Sex,0.2962804566858932
+MOSTLY.AI,L1 Distance,Sex,0.32381696277509153
+MOSTLY.AI,L1 Distance,Sex,0.32425338954721683
+MOSTLY.AI,L1 Distance,Sex,0.1459437528355625
+MOSTLY.AI,CI Ratio,Sex,0.9217315324901441
+MOSTLY.AI,CI Ratio,Sex,1.0625554655953278
+MOSTLY.AI,CI Ratio,Sex,0.8841816369929374
+MOSTLY.AI,CI Ratio,Sex,1.0047434272709388
+MOSTLY.AI,CI Ratio,Sex,0.8359858529526257
+MOSTLY.AI,CI Ratio,Sex,0.8781813028939283
+MOSTLY.AI,CI Ratio,Sex,0.87644916159889
+MOSTLY.AI,CI Ratio,Sex,0.8477557424794379
+MOSTLY.AI,CI Ratio,Sex,0.9001274044670943
+MOSTLY.AI,CI Ratio,Sex,0.9379753456192845
+MOSTLY.AI,CI Ratio,Sex,1.0841776541522146
+MOSTLY.AI,CI Ratio,Sex,0.927722373969308
+MOSTLY.AI,CI Ratio,Sex,0.9021383457194713
+MOSTLY.AI,CI Ratio,Sex,0.8950628160947146
+MOSTLY.AI,CI Ratio,Sex,0.961663081772521
+MOSTLY.AI,CI Ratio,Sex,0.9454255892772745
+MOSTLY.AI,CI Ratio,Sex,0.9164446123435567
+MOSTLY.AI,CI Ratio,Sex,1.0744914552980858
+MOSTLY.AI,CI Ratio,Sex,1.0949141782718723
+MOSTLY.AI,CI Ratio,Sex,0.9150877238496107
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Sign Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,Significance Match,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MOSTLY.AI,CI Overlap,Sex,1.0
+MNL,L1 Distance,Age,1.0652957982974378
+MNL,L1 Distance,Age,1.1575851037841942
+MNL,L1 Distance,Age,0.7920582194374624
+MNL,L1 Distance,Age,0.818470260718895
+MNL,L1 Distance,Age,0.8852782420700764
+MNL,L1 Distance,Age,0.7391116318881914
+MNL,L1 Distance,Age,0.9409311227442481
+MNL,L1 Distance,Age,1.5752539827724772
+MNL,L1 Distance,Age,0.8487628579228521
+MNL,L1 Distance,Age,0.6125680333235124
+MNL,L1 Distance,Age,0.7351571436481734
+MNL,L1 Distance,Age,1.1960782414996798
+MNL,L1 Distance,Age,0.41902145472539054
+MNL,L1 Distance,Age,0.8082506479075242
+MNL,L1 Distance,Age,0.7080708374132345
+MNL,L1 Distance,Age,0.08017679457158922
+MNL,L1 Distance,Age,0.40603710057901043
+MNL,L1 Distance,Age,0.18024584492290652
+MNL,L1 Distance,Age,0.7949175040811065
+MNL,L1 Distance,Age,0.18719950513342587
+MNL,CI Ratio,Age,0.6685353089246462
+MNL,CI Ratio,Age,0.7893096781611456
+MNL,CI Ratio,Age,0.784624666098355
+MNL,CI Ratio,Age,0.7860892757037015
+MNL,CI Ratio,Age,0.8035452166199306
+MNL,CI Ratio,Age,0.866369903826785
+MNL,CI Ratio,Age,0.7143533503565319
+MNL,CI Ratio,Age,0.7380988009767178
+MNL,CI Ratio,Age,0.7974382051666948
+MNL,CI Ratio,Age,0.9125735406464357
+MNL,CI Ratio,Age,0.7851085770663246
+MNL,CI Ratio,Age,0.6924298158022044
+MNL,CI Ratio,Age,0.8916550133059271
+MNL,CI Ratio,Age,0.8244612904549985
+MNL,CI Ratio,Age,0.7881009292491541
+MNL,CI Ratio,Age,0.8824038480708847
+MNL,CI Ratio,Age,0.799041161472546
+MNL,CI Ratio,Age,0.884499525710708
+MNL,CI Ratio,Age,0.6624977039817533
+MNL,CI Ratio,Age,1.0893030971130315
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Sign Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,Significance Match,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,0.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+MNL,CI Overlap,Age,1.0
+AD - MNL,L1 Distance,Age,1.4474645250312625
+AD - MNL,L1 Distance,Age,1.329934255079694
+AD - MNL,L1 Distance,Age,1.000034023297626
+AD - MNL,L1 Distance,Age,1.081817578868347
+AD - MNL,L1 Distance,Age,1.082228567710294
+AD - MNL,L1 Distance,Age,0.8095924896740496
+AD - MNL,L1 Distance,Age,1.1725728431968379
+AD - MNL,L1 Distance,Age,1.6591224086617409
+AD - MNL,L1 Distance,Age,1.0624693643564909
+AD - MNL,L1 Distance,Age,0.8807264882871024
+AD - MNL,L1 Distance,Age,1.1263959106353059
+AD - MNL,L1 Distance,Age,1.3338228718730831
+AD - MNL,L1 Distance,Age,0.5415324501752385
+AD - MNL,L1 Distance,Age,1.1343376395755604
+AD - MNL,L1 Distance,Age,0.9744033676872927
+AD - MNL,L1 Distance,Age,0.6470829755648522
+AD - MNL,L1 Distance,Age,0.5847561417193954
+AD - MNL,L1 Distance,Age,0.5670446963822293
+AD - MNL,L1 Distance,Age,1.2101117330322482
+AD - MNL,L1 Distance,Age,0.0033297617458694084
+AD - MNL,CI Ratio,Age,0.6628620450479814
+AD - MNL,CI Ratio,Age,0.7903377935942775
+AD - MNL,CI Ratio,Age,0.7835077722126114
+AD - MNL,CI Ratio,Age,0.7812666168858907
+AD - MNL,CI Ratio,Age,0.8010557346142203
+AD - MNL,CI Ratio,Age,0.8644369470820676
+AD - MNL,CI Ratio,Age,0.7110728646091286
+AD - MNL,CI Ratio,Age,0.738998089435943
+AD - MNL,CI Ratio,Age,0.7937247891442495
+AD - MNL,CI Ratio,Age,0.9104658606066673
+AD - MNL,CI Ratio,Age,0.7850778889487666
+AD - MNL,CI Ratio,Age,0.690835991921435
+AD - MNL,CI Ratio,Age,0.8899606073259159
+AD - MNL,CI Ratio,Age,0.8265105186348181
+AD - MNL,CI Ratio,Age,0.7874271136646257
+AD - MNL,CI Ratio,Age,0.8821690532303689
+AD - MNL,CI Ratio,Age,0.7981012319657106
+AD - MNL,CI Ratio,Age,0.8831411132441535
+AD - MNL,CI Ratio,Age,0.6639027403206289
+AD - MNL,CI Ratio,Age,1.0877112759646759
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Sign Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,Significance Match,Age,1.0
+AD - MNL,CI Overlap,Age,0.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,0.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+AD - MNL,CI Overlap,Age,1.0
+CART,L1 Distance,Age,0.24126873697762585
+CART,L1 Distance,Age,0.6787550208681385
+CART,L1 Distance,Age,0.5235638097441178
+CART,L1 Distance,Age,0.012858442616558552
+CART,L1 Distance,Age,0.06452380501998833
+CART,L1 Distance,Age,0.04727493669431171
+CART,L1 Distance,Age,0.6499077431134013
+CART,L1 Distance,Age,0.2697088926908777
+CART,L1 Distance,Age,0.17531039936699155
+CART,L1 Distance,Age,0.5451219751004186
+CART,L1 Distance,Age,0.3467367724507171
+CART,L1 Distance,Age,0.11523041048435267
+CART,L1 Distance,Age,0.2603199268947445
+CART,L1 Distance,Age,0.4458904906297234
+CART,L1 Distance,Age,0.501118018129044
+CART,L1 Distance,Age,0.03351993937984732
+CART,L1 Distance,Age,0.14620880860691976
+CART,L1 Distance,Age,0.1424450968346056
+CART,L1 Distance,Age,0.18421881635244874
+CART,L1 Distance,Age,0.4733831664870034
+CART,CI Ratio,Age,1.0098572303005646
+CART,CI Ratio,Age,1.3672655011940777
+CART,CI Ratio,Age,1.369174630234743
+CART,CI Ratio,Age,1.2190751535289597
+CART,CI Ratio,Age,1.092336626044155
+CART,CI Ratio,Age,1.0852209519193095
+CART,CI Ratio,Age,1.369690961168257
+CART,CI Ratio,Age,1.0764315481701237
+CART,CI Ratio,Age,1.2288586255640608
+CART,CI Ratio,Age,1.1921045638688397
+CART,CI Ratio,Age,1.2005153777505577
+CART,CI Ratio,Age,0.928213517448662
+CART,CI Ratio,Age,1.0076757834274643
+CART,CI Ratio,Age,1.3769226053660135
+CART,CI Ratio,Age,0.9484001578017498
+CART,CI Ratio,Age,1.092086954427174
+CART,CI Ratio,Age,0.877495301638601
+CART,CI Ratio,Age,1.1020726723236682
+CART,CI Ratio,Age,1.0820554631872652
+CART,CI Ratio,Age,1.3738589811927253
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Sign Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,Significance Match,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+CART,CI Overlap,Age,1.0
+AD - CART,L1 Distance,Age,0.33565498183339315
+AD - CART,L1 Distance,Age,0.3053755558060831
+AD - CART,L1 Distance,Age,0.24758423871749935
+AD - CART,L1 Distance,Age,0.15206967049631315
+AD - CART,L1 Distance,Age,0.4075719089221561
+AD - CART,L1 Distance,Age,0.39428825510027865
+AD - CART,L1 Distance,Age,0.3157009366531276
+AD - CART,L1 Distance,Age,0.06706006857720936
+AD - CART,L1 Distance,Age,0.37343917656529957
+AD - CART,L1 Distance,Age,0.1071704454471667
+AD - CART,L1 Distance,Age,0.013408211128895342
+AD - CART,L1 Distance,Age,0.40168166581578424
+AD - CART,L1 Distance,Age,0.5125758463218935
+AD - CART,L1 Distance,Age,0.006142564164624886
+AD - CART,L1 Distance,Age,0.7763289237276889
+AD - CART,L1 Distance,Age,0.35681274514531136
+AD - CART,L1 Distance,Age,0.6778028953220883
+AD - CART,L1 Distance,Age,0.46900849236025977
+AD - CART,L1 Distance,Age,0.2573483402053145
+AD - CART,L1 Distance,Age,0.3186600388655827
+AD - CART,CI Ratio,Age,1.0097077401883263
+AD - CART,CI Ratio,Age,1.367992534679514
+AD - CART,CI Ratio,Age,1.3705589719745666
+AD - CART,CI Ratio,Age,1.2186786003201948
+AD - CART,CI Ratio,Age,1.0939381570945397
+AD - CART,CI Ratio,Age,1.0829350588128002
+AD - CART,CI Ratio,Age,1.370194043340022
+AD - CART,CI Ratio,Age,1.0758906363153633
+AD - CART,CI Ratio,Age,1.2274334445378703
+AD - CART,CI Ratio,Age,1.197437784252976
+AD - CART,CI Ratio,Age,1.2048610248703346
+AD - CART,CI Ratio,Age,0.9273813176003005
+AD - CART,CI Ratio,Age,1.0087177116925903
+AD - CART,CI Ratio,Age,1.3808344965874804
+AD - CART,CI Ratio,Age,0.9490128045413169
+AD - CART,CI Ratio,Age,1.0926769923034676
+AD - CART,CI Ratio,Age,0.891638664713025
+AD - CART,CI Ratio,Age,1.1054727004554454
+AD - CART,CI Ratio,Age,1.0844837750503475
+AD - CART,CI Ratio,Age,1.3731122155389595
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Sign Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,Significance Match,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+AD - CART,CI Overlap,Age,1.0
+MOSTLY.AI,L1 Distance,Age,0.13699882335816005
+MOSTLY.AI,L1 Distance,Age,0.40560130649019355
+MOSTLY.AI,L1 Distance,Age,0.015536573087992167
+MOSTLY.AI,L1 Distance,Age,0.572278336198099
+MOSTLY.AI,L1 Distance,Age,0.08080840058314775
+MOSTLY.AI,L1 Distance,Age,0.7288758321833848
+MOSTLY.AI,L1 Distance,Age,1.1448896815920864
+MOSTLY.AI,L1 Distance,Age,0.7412470258566715
+MOSTLY.AI,L1 Distance,Age,0.4390841648285715
+MOSTLY.AI,L1 Distance,Age,0.10084895884775236
+MOSTLY.AI,L1 Distance,Age,0.7186944297861588
+MOSTLY.AI,L1 Distance,Age,0.11840306447025606
+MOSTLY.AI,L1 Distance,Age,0.09990013626166316
+MOSTLY.AI,L1 Distance,Age,0.6347560553954494
+MOSTLY.AI,L1 Distance,Age,0.06756419573536299
+MOSTLY.AI,L1 Distance,Age,0.4164262303993951
+MOSTLY.AI,L1 Distance,Age,0.4448637385282015
+MOSTLY.AI,L1 Distance,Age,0.014594376997748792
+MOSTLY.AI,L1 Distance,Age,0.2702907087730013
+MOSTLY.AI,L1 Distance,Age,0.07657937420264149
+MOSTLY.AI,CI Ratio,Age,1.0830932252382393
+MOSTLY.AI,CI Ratio,Age,1.377440515277778
+MOSTLY.AI,CI Ratio,Age,0.993623637123506
+MOSTLY.AI,CI Ratio,Age,1.3681555833920802
+MOSTLY.AI,CI Ratio,Age,0.9233519494784241
+MOSTLY.AI,CI Ratio,Age,0.7717226500869795
+MOSTLY.AI,CI Ratio,Age,1.6521807804082638
+MOSTLY.AI,CI Ratio,Age,1.361003482566796
+MOSTLY.AI,CI Ratio,Age,0.8827641784275886
+MOSTLY.AI,CI Ratio,Age,0.9965290143871453
+MOSTLY.AI,CI Ratio,Age,0.813905992629587
+MOSTLY.AI,CI Ratio,Age,0.9947643048681674
+MOSTLY.AI,CI Ratio,Age,0.9219603684568919
+MOSTLY.AI,CI Ratio,Age,0.8463118617732123
+MOSTLY.AI,CI Ratio,Age,1.093158920732989
+MOSTLY.AI,CI Ratio,Age,0.9429092254334109
+MOSTLY.AI,CI Ratio,Age,1.1931812446294663
+MOSTLY.AI,CI Ratio,Age,0.9961420889457356
+MOSTLY.AI,CI Ratio,Age,0.9440647308638409
+MOSTLY.AI,CI Ratio,Age,0.9268552423084846
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Sign Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,Significance Match,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0
+MOSTLY.AI,CI Overlap,Age,1.0

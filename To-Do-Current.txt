@@ -1,5 +1,17 @@
 Outline for Paper with Harrison
 
+- include analysis of utility of IPUMS data for a different data user model - if results are good, show that an advantage
+of a general data synthesis approach is that the data is useful for multiple analyses without the need to manage a privacy
+budget - but this comes at the cost of potentially reduced privacy for data subjects.
+
+- run MOSTLY.AI data generation in python once a day - make a note in the paper about the relative advantages and
+- disadvantages of each approach in terms of time
+
+- replace the SK 0-4 MOSTLY.AI synthetic data sets
+
+- check formatting and all references - delete extra bibtex entries
+- check that all section, table, figure, and equation references in the text are correct
+
 -cite IPUMS - condition for data usage
 - include citation for my paper (if it gets published and includes the IPUMS data) in the IPUMS bibliography. See info using ipums_conditions() command in R.
 
@@ -14,7 +26,6 @@ Outline for Paper with Harrison
 - Compare the generated data sets on the privacy (legal criteria and criteria often used in the literature, specifically, attribute disclosure risk and membership inference risk)
 - Compare the generated data sets on the utility (use pMSE as a global measure and focus on the use case-specific measures, the one from the JASA paper is good)
 - Conclusions
-
 
 Look at new data for paper with Harrison.
 * Need to do the synthesis using the MOSTLY.AI synthesizer as well.

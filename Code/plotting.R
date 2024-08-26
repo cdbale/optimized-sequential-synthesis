@@ -97,6 +97,70 @@ sk_locs %>%
   facet_wrap(~Type)
 
 ################################################################################
+
+# analysis-specific utility measurements
+
+asr <- read_csv("../Results/SK/analysis_specific.csv")
+
+# calculate mean L1 distance
+
+mean_l1 <- asr %>%
+  filter(Measure == "L1 Distance") %>%
+  group_by(`Data Type`, Variable) %>%
+  summarize(`Mean L1 Distance` = mean(value)) %>%
+  ungroup()
+
+# calculate mean CIR
+
+mean_cir <- asr %>%
+  filter(Measure == "CI Ratio") %>%
+  group_by(`Data Type`, Variable) %>%
+  summarize(`Mean CIR` = mean(value)) %>%
+  ungroup()
+
+# calculate proportion sign match
+
+prop_sign <- asr %>%
+  filter(Measure == "Sign Match") %>%
+  group_by(`Data Type`, Variable) %>%
+  summarize(`Proportion Sign Match` = mean(value)) %>%
+  ungroup()
+
+# calculate proportion significance match
+
+prop_sig <- asr %>%
+  filter(Measure == "Significance Match") %>%
+  group_by(`Data Type`, Variable) %>%
+  summarize(`Proportion Significance Match` = mean(value)) %>%
+  ungroup()
+
+# calculate proportion overlap 
+
+prop_overlap <- asr %>%
+  filter(Measure == "CI Overlap") %>%
+  group_by(`Data Type`, Variable) %>%
+  summarize(`Proportion CI Overlap` = mean(value)) %>%
+  ungroup()
+
+# compute SSO
+
+sso_data <- asr %>%
+  group_by(`Data Type`, Measure, Variable) %>%
+  mutate(id = 1:n()) %>%
+  filter(Measure %in% c("Sign Match", "Significance Match", "CI Overlap")) %>%
+  pivot_wider(names_from=Measure, values_from=value)
+
+sso_results <- sso_data %>%
+  mutate(sso_check = if_else(`Sign Match` == 1, if_else(`Significance Match` == 1, if_else(`CI Overlap` == 1, 1, 0), 0), 0)) %>%
+  group_by(`Data Type`, Variable) %>%
+  summarize(SSO = mean(sso_check))
+
+sso_results %>%
+  group_by(`Data Type`) %>%
+  summarize(mean_SSO = mean(SSO))
+
+
+################################################################################
 ################################################################################
 ################################################################################
 ################################################################################

@@ -1,6 +1,6 @@
 MOSTLY.AI Configuration Settings:
 
-For SK Patient Data (non-attribute disclosure prevention version):
+For SK Patient Data:
 
 6,712 samples.
 max training time 10 minutes
@@ -9,3 +9,14 @@ model size medium
 batch size auto
 flexible generation off
 value protection off
+
+For IPUMS Data:
+
+197,759 samples.
+max training time 10 mins
+max training epochs 100
+model size medium
+batch size auto
+flexible generation off
+value protection off
+
