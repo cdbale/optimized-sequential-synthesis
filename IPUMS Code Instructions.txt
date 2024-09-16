@@ -1,6 +1,6 @@
 Code Instructions for "Optimized Sequential Synthesis with an Application to Legal Anonymization".
 
-Obtain the IPUMS data files from the following link:
+Obtain the IPUMS data files from the following link: https://drive.google.com/drive/folders/1ad3k6XLdTMU-VltTaee1j4fmOqYZmH9O?usp=sharing
 
 Place the files in a new `data` folder in the `Formal Privacy Feasibility Study Code/formal-privacy-comp-appendix-main/` directory.
 

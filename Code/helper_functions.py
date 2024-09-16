@@ -7,6 +7,8 @@ from sklearn.preprocessing import PolynomialFeatures
 from numpy.random import default_rng
 from scipy.spatial import KDTree
 from scipy.stats import t
+from statsmodels.tools.tools import add_constant
+from statsmodels.regression.linear_model import OLS
 
 rng = np.random.RandomState(42)
 
@@ -241,7 +243,7 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
             original_data = original_data.sample(frac=1.0).reset_index(drop=True)
             # orig_1, orig_2, orig_3 = np.array_split(original_data, 3)
 
-            for subset_id, subset in enumerate(np.array_split(original_data, 3)):
+            for subset_id, subset in enumerate(np.array_split(original_data, 4)):
 
                 # compute the neighbors within radius delta based on continuous variables only
                 neighbor_indices = sX_tree.query_ball_point(subset[continuous_vars], r=delta, p=2.0)
@@ -515,6 +517,103 @@ def attribute_disclosure_evaluation(original_data, synthetic_data, continuous_va
     print("Dataset completed.")
         
     return full_ad_conds
+
+# return point estimates, estimated variance of coefficients, and confidence intervals from OLS
+def ols_param_fetcher(data, y, X):
+    predictors = data.loc[:, X]
+    predictors = add_constant(predictors)
+    state_ols = OLS(endog=data.loc[:, y], exog=predictors)
+    ols_results = state_ols.fit()
+    return {"params": ols_results.params, 
+            "l_var": np.diag(ols_results.cov_params()),
+            "CI": ols_results.conf_int().reset_index(drop=True)}
+
+# function to calculate the L1 distance, confidence interval ratio, and sign, significance, and overlap metrics
+def coef_L1_calc(original_data, synthetic_datasets, synthetic_data_type, target_variable, exog_variables, param_names):
+
+    # copy synthetic datasets so they don't get edited on a global scope
+    all_synth = synthetic_datasets.copy()
+
+    # train a logistic regression model with state as the target and lat, long, sex, age, and sex*age as predictors
+    # function returns all parameter estimates, standard errors, and confidence intervals for the training data
+    ols_train = ols_param_fetcher(data=original_data, y=target_variable, X=exog_variables)
+
+    # estimate the same logistic regression model for all synthetic data sets and save params, standard errors, and CIs
+    ols_synth = [ols_param_fetcher(data=Y, y=target_variable, X=exog_variables) for Y in synthetic_datasets]
+
+    # create a dataframe with the L1 distances for each coefficient in the columns, (rows are for each synthetic data set)
+    # and a column identifying the data type
+    l1_frame = pd.DataFrame()
+
+    # calculate L1 distance
+    for i in ols_synth:
+        l1_frame = pd.concat([l1_frame, np.abs(i['params'] - ols_train['params'])], axis=1)
+
+    l1_frame = l1_frame.T.reset_index(drop=True)
+    l1_frame.columns = param_names
+    l1_frame['Data Type'] = synthetic_data_type
+    l1_frame['Measure'] = 'L1 Distance'
+
+    # calculate CI ratio (width of synthetic / width of original)
+    # calculate confidence interval ratios
+    CI_ratio_frame = pd.DataFrame()
+    for i in ols_synth:
+        CI_ratio_frame = pd.concat([CI_ratio_frame, (i['CI'].iloc[:,1]-i['CI'].iloc[:,0]) / (ols_train['CI'].iloc[:,1]-ols_train['CI'].iloc[:,0])], axis=1)
+
+    CI_ratio_frame = CI_ratio_frame.T.reset_index(drop=True)
+    CI_ratio_frame.columns = param_names
+    CI_ratio_frame['Data Type'] = synthetic_data_type
+    CI_ratio_frame['Measure'] = 'CI Ratio'
+    
+    # calculate whether the signs of coefficients match
+    sign_frame = pd.DataFrame()
+    for i in ols_synth:
+        sign_frame = pd.concat([sign_frame, abs(ols_train['params']) + abs(i['params']) == abs(ols_train['params'] + i['params'])], axis=1)
+
+    sign_frame = sign_frame.T.reset_index(drop=True)
+    sign_frame.columns = param_names
+    sign_frame['Data Type'] = synthetic_data_type
+    sign_frame['Measure'] = 'Sign Match'
+    
+    # check whether the statistical significance of the coefficients matches
+    sig_frame = pd.DataFrame()
+    orig_sig = pd.concat([ols_train['CI'].iloc[:,0] <= 0, 0 <= ols_train['CI'].iloc[:,1]], axis=1).all(axis=1)
+    for i in ols_synth:
+        sig_frame = pd.concat([sig_frame, pd.concat([i['CI'].iloc[:,0] <= 0, 0 <= i['CI'].iloc[:,1]], axis=1).all(axis=1).eq(orig_sig, axis=0)], axis=1)
+
+    sig_frame = sig_frame.T.reset_index(drop=True)
+    sig_frame.columns = param_names
+    sig_frame['Data Type'] = synthetic_data_type
+    sig_frame['Measure'] = 'Significance Match'
+    
+    # check whether confidence intervals overlap
+    overlap_frame = pd.DataFrame()
+    for synth in ols_synth:
+        overlaps = []
+        for i,j in synth['CI'].iterrows():
+            i1 = pd.Interval(ols_train['CI'].iloc[i,0], ols_train['CI'].iloc[i,1], closed='both')
+            i2 = pd.Interval(j[0], j[1], closed='both')
+            overlaps.append(i1.overlaps(i2))
+        overlap_frame = pd.concat([overlap_frame, pd.Series(overlaps)], axis=1)
+
+    overlap_frame = overlap_frame.T.reset_index(drop=True)
+    overlap_frame.columns = param_names
+    overlap_frame['Data Type'] = synthetic_data_type
+    overlap_frame['Measure'] = 'CI Overlap'
+
+    # create dataframe with the actual point estimates and confidence intervals
+    p_and_i_full = pd.DataFrame()
+    
+    for i, Z in enumerate(ols_synth):
+        p_and_i = pd.concat([Z['params'].reset_index(), Z['CI']], axis=1)
+        p_and_i.columns = ['Parameter', 'Point Estimate', 'Lower Bound', 'Upper Bound']
+        p_and_i.loc[:,'Type'] = synthetic_data_type
+        p_and_i.loc[:,'index'] = i
+        p_and_i_full = pd.concat([p_and_i_full, p_and_i], axis=0)
+
+    p_and_i_full = p_and_i_full.reset_index(drop=True)
+
+    return pd.concat([l1_frame, CI_ratio_frame, sign_frame, sig_frame, overlap_frame], axis=0), p_and_i_full
 
 # # function to combine point estimates and confidence intervals across synthetic data sets and 
 # # compare them to those from the original data

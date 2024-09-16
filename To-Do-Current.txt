@@ -1,56 +1,47 @@
-Outline for Paper with Harrison
+To Do:
 
-- include analysis of utility of IPUMS data for a different data user model - if results are good, show that an advantage
-of a general data synthesis approach is that the data is useful for multiple analyses without the need to manage a privacy
-budget - but this comes at the cost of potentially reduced privacy for data subjects.
+Include synthpop in IPUMS privacy and utility analyses.
 
-- run MOSTLY.AI data generation in python once a day - make a note in the paper about the relative advantages and
-- disadvantages of each approach in terms of time
+When ready to do final run of the results section, re-train all of the MOSTLY.AI synthesizers on all data sets and re-generate synthetic data sets.
+The python API is incredibly inconsistent, so we will generate the data sets manually (then they will also be saved online).
 
-- replace the SK 0-4 MOSTLY.AI synthetic data sets
+Do MOSTLY.AI synthesis on the non-normalized data. Let their method do its own process.
+
+Do IPUMS synthesis on normalized data. Compute regression results on normalized, non-normalized, and non-normalized with log income and compare.
+
+Note the inconsistencies with the pMSE ratio and the analysis-specific results. What are the implications of this?
+
+- Sections to Edit:
+
+1) Empirical Section
+
+- cite IPUMS - condition for data usage
+- include citation for my paper (if it gets published and includes the IPUMS data) in the IPUMS bibliography. See info using ipums_conditions() command in R.
+
+- Privacy metrics (MOSTLY.AI measures, attribute disclosure)
+- Utility measures
+	- global (pMSE ratio)
+	- analysis-specific
+		- regression for state for SK data
+		- regression for incwage for IPUMS data, specified as in JASA paper
+		- include analysis of utility of IPUMS data for a different data user model - if results are good, show that an advantage
+			of a general data synthesis approach is that the data is useful for multiple analyses without the need to manage a privacy
+			budget - but this comes at the cost of potentially reduced privacy for data subjects.
+
+- run MOSTLY.AI data generation in python once a day - make a note in the paper about the relative advantages and disadvantages of each approach in terms of time
+
+2) Conclusion/Discussion
+2) Literature review
+3) Privacy Criteria Section
+4) Simulation Section
+5) Methods Section
+5) Introduction
+6) Abstract
 
 - check formatting and all references - delete extra bibtex entries
 - check that all section, table, figure, and equation references in the text are correct
 
--cite IPUMS - condition for data usage
-- include citation for my paper (if it gets published and includes the IPUMS data) in the IPUMS bibliography. See info using ipums_conditions() command in R.
+7) Supplementary Materials
 
-- Introduction
-- Literature Review
-- Methods
-- MOSTLY.AI Criteria (and Proof)
-- Simulation Study
-- Empirical Applications
-	- South Korean COVID-19 Location Data
-	- IPUMS data used in the other JASA paper
-- Compare the generated data sets on the privacy (legal criteria and criteria often used in the literature, specifically, attribute disclosure risk and membership inference risk)
-- Compare the generated data sets on the utility (use pMSE as a global measure and focus on the use case-specific measures, the one from the JASA paper is good)
-- Conclusions
-
-Look at new data for paper with Harrison.
-* Need to do the synthesis using the MOSTLY.AI synthesizer as well.
-* Need to turn off extreme value protection!
-
-- run synthesis (M = 20) for both data sets with both metrics for optimization
-	- use GMM on continuous variables with MNL for categorical variables*
-	- use GMM on continuous variables with CART for categorical variables*
-	- use Lasso regression for all variables
-	- use CART for all variables
-This means there will be 2x2x4 = 16 cases.
-
-Privacy Measures
-- MOSTLY.AI metrics
-- Membership inference attack
-- Attribute disclosure attacks (one continuous, one categorical?)
-
-Utility Measures
-
-2 Global measures
-- pMSE score
-- Hellinger distance
-
-1 Analysis specific measure
-- the location based measure Harrison discussed with me
-- the regression from the JASA paper
-
-- use appropriate combining rules for both and discuss results in depth
+- info on MOSTLY.AI configuration
+- any sections or material from above that is unnecessary for the main paper

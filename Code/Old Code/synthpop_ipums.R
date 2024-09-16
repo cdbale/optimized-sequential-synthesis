@@ -6,7 +6,7 @@
 library(synthpop)
 
 # import ipums data
-train <- read.csv("../Data/IPUMS/cleaned_ipums_data.csv")
+train <- read.csv("../../Data/IPUMS/cleaned_ipums_data.csv")
 
 # data is already standardized
 
@@ -21,5 +21,5 @@ synth <- syn(train, m=20)
 # save synthetic data sets
 
 for(i in 0:19){
-  write.csv(synth$syn[[i+1]], paste0("../Data/IPUMS/Synthetic Datasets/synthpop_baseline_", i, ".csv"), row.names=FALSE)
+  write.csv(synth$syn[[i+1]], paste0("../../Data/IPUMS/Synthetic Datasets/synthpop_baseline_", i, ".csv"), row.names=FALSE)
 }
