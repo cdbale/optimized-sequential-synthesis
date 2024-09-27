@@ -204,9 +204,6 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
     # number of original records
     num_records = original_data.shape[0]
 
-    # record percentages
-    print_nums = [int(np.ceil(i*num_records)) for i in [0.25, 0.5, 0.75]]
-
     # random number generator
     rng = default_rng()
 
@@ -227,8 +224,7 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
     num_loops = 1
 
     # list all categorical variables including sensitive variable
-    all_categorical = categorical_vars.copy()
-    all_categorical.append(sensitive_var)
+    all_categorical = categorical_vars + [sensitive_var]
 
     # as long as the last loop had a violator, we need to recheck all records
     while violator_count > 0:
@@ -239,11 +235,10 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
         # loop over delta values
         for delta in deltas:
 
-            # split original records in thirds to preserve memory - do computations on each portion
+            # split original records to preserve memory when doing nearest neighbor searches - do computations on each portion
             original_data = original_data.sample(frac=1.0).reset_index(drop=True)
-            # orig_1, orig_2, orig_3 = np.array_split(original_data, 3)
 
-            for subset_id, subset in enumerate(np.array_split(original_data, 4)):
+            for subset_id, subset in enumerate(np.array_split(original_data, 5)):
 
                 # compute the neighbors within radius delta based on continuous variables only
                 neighbor_indices = sX_tree.query_ball_point(subset[continuous_vars], r=delta, p=2.0)
@@ -252,10 +247,8 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
                 neighbor_records = [new_sX.loc[y, all_categorical] for y in neighbor_indices]
 
                 # calculate the proportion of non-white observations amongst the synthetic neighbors
-                prop_pos_sensitive = [np.mean(y.loc[y.loc[:, categorical_vars].eq(subset.loc[:, categorical_vars].iloc[x,:]).all(axis=1), sensitive_var]) for x,y in enumerate(neighbor_records)]
-
                 # replace NA values (there were no neighbors) with the prior probability
-                prop_pos_sensitive = np.nan_to_num(prop_pos_sensitive, nan=prior_prob)
+                prop_pos_sensitive = np.nan_to_num([np.mean(y.loc[y.loc[:, categorical_vars].eq(subset.loc[:, categorical_vars].iloc[x,:]).all(axis=1), sensitive_var]) for x,y in enumerate(neighbor_records)], nan=prior_prob)
 
                 # compute the updated probability based on the proportion of neighborhood records that match the sensitive value
                 updated_probs = np.where(subset.loc[:, sensitive_var] == 1, np.array(prop_pos_sensitive), 1-np.array(prop_pos_sensitive))
@@ -291,7 +284,6 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
                         original_record = subset.iloc[j,:]
                         original_continuous = original_record[continuous_vars]
                         original_cat = original_record[all_categorical]
-                        original_sens = original_record[sensitive_var]
 
                         # find the component with the highest responsibility for the violating record
                         component_index = np.argmax(mixture_model.predict_proba(pd.DataFrame(original_continuous).T), axis = 1)[0]
@@ -316,10 +308,7 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
                         # select the number of needed candidates and create the new records
                         new_locations = valid_candidates[:num_needed[i],:]
                         new_categorical = np.vstack([np.array(original_cat).reshape(1,-1) for k in range(num_needed[i])])
-                        new_records = pd.DataFrame(np.hstack([new_locations, new_categorical]))
-
-                        # edit column names
-                        new_records.columns = new_sX.columns
+                        new_records = pd.DataFrame(np.hstack([new_locations, new_categorical]), columns=new_sX.columns)
 
                         # edit sensitive variable value to meet the condition
                         new_records[sensitive_var] = 1.0 - original_cat[sensitive_var]

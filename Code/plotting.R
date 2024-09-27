@@ -484,7 +484,7 @@ ipums_sso_data <- ipums_all %>%
 orig_row <- ipums_sso_data %>%
   filter(`Data Type` == "Original")
 
-data_types <- c("MNL", "CART", "MOSTLY.AI")
+data_types <- c("CART", "Synthpop")
 
 new_df <- tibble()
 
@@ -494,14 +494,14 @@ for (i in seq_along(data_types)){
 }
 
 ipums_sso_data <- ipums_sso_data %>%
-  mutate(`Data Type` = factor(`Data Type`, levels=c("Original", "MNL", "CART", "MOSTLY.AI"))) %>%
+  mutate(`Data Type` = factor(`Data Type`, levels=c("Original", "CART", "Synthpop"))) %>%
   filter(`Data Type` != "Original") %>%
   bind_rows(new_df)
 
 # plot the confidence intervals
 
 ipums_sso_data <- ipums_sso_data %>%
-  mutate(`Data Type` = factor(`Data Type`, levels=c("Original", "MNL", "CART", "MOSTLY.AI"))) %>%
+  mutate(`Data Type` = factor(`Data Type`, levels=c("Original", "CART", "Synthpop"))) %>%
   group_by(Variable, `Data Type`) %>%
   arrange(`Point Estimate`) %>%
   mutate(Dataset = 1:n())
@@ -513,7 +513,7 @@ ipums_educ_plot <- ipums_sso_data %>%
   geom_errorbar(aes(ymax = `Upper Bound`, ymin = `Lower Bound`)) +
   # ylim(c(0, NA)) +
   facet_wrap(~`Data Type`, nrow=1) + 
-  scale_color_manual(values=c("#000000", "#CC0000")) +
+  scale_color_manual(values=c("#000000", "#3399FF", "#CC0000")) +
   theme(legend.position="bottom") +
   labs(y = "Estimate",
        color="Sign, Significance Match, and Overlap",
@@ -545,7 +545,7 @@ ipums_int_sso_plot <- ipums_sso_data %>%
   geom_errorbar(aes(ymax = `Upper Bound`, ymin = `Lower Bound`)) +
   # ylim(c(0, NA)) +
   facet_wrap(~`Data Type`, nrow=1) + 
-  scale_color_manual(values=c("#000000", "#CC0000")) +
+  scale_color_manual(values=c("#000000", "#3399FF", "#CC0000")) +
   theme(legend.position="bottom") +
   labs(y = "Estimate",
        color="Sign, Significance Match, and Overlap",
