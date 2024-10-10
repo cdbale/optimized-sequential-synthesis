@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 from sklearn import preprocessing
+from sklearn.mixture import GaussianMixture
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import PolynomialFeatures
 from numpy.random import default_rng
@@ -133,10 +134,14 @@ def privacy_metrics(train_data, synthetic_datasets, type_of_synthetic, delta):
     for Z in synthetic_datasets:
         
         # create scaler
-        scaler = preprocessing.StandardScaler()
-        
+        scaler = preprocessing.StandardScaler().fit(X=Z)
+
         # scale synthetic data using means and standard deviations 
-        synthetic_scaled = scaler.fit(X=train_data).transform(X=Z)
+        synthetic_scaled = scaler.transform(X=Z)
+        train_scaled = scaler.transform(X=train_data)
+    
+        # create tree for nearest neighbor searching
+        training_tree = KDTree(train_scaled)
 
         # calculate the nearest neighbor distances between synthetic and training data
         synthetic_dists, synthetic_neighbors = training_tree.query(x=synthetic_scaled, k=5, p=2)
@@ -162,6 +167,74 @@ def privacy_metrics(train_data, synthetic_datasets, type_of_synthetic, delta):
                           "DCR" : np.concatenate([[DCR_train], DCR_synthetic]), 
                           "NNDR" : np.concatenate([[NNDR_train], NNDR_synthetic])}))
 
+
+# # function to calculate privacy metrics IMS and 5th percentiles of DCR and NNDR distributions
+# def privacy_metrics(train_data, synthetic_datasets, type_of_synthetic, delta):
+
+#     # create scaler
+#     scaler = preprocessing.StandardScaler()
+
+#     # scale training data
+#     train_scaled = scaler.fit_transform(X=train_data)
+
+#     # create tree for nearest neighbor searching
+#     training_tree = KDTree(train_scaled)
+
+#     # calculate nearest neighbor distances within training data
+#     train_dists, train_neighbors = training_tree.query(x=train_scaled, k=6, p=2)
+
+#     # calculate identical match share
+#     # using the second column because we know there is at least one identical record (the record itself)
+#     # so we care about the next most similar record (the second nearest neighbor)
+#     IMS_train = np.mean(train_dists[:,1] <= delta)
+
+#     # calculate 5th percentile of DCR distribution for synthetic and train data
+#     DCR_train = np.percentile(train_dists[:,1], q=5)
+
+#     # calculate nearest neighbor distance ratios
+#     ratios_train = train_dists[:,1]/train_dists[:,-1]
+
+#     # we can encounter division by zero in the above ratios. If this occurs, neighbors 1-5 have the same distance (0)
+#     # and the ratio can be set to one.
+#     ratios_train = np.nan_to_num(ratios_train, nan=1.0)
+
+#     # calculate 5th percentile of nearest neighbor distance ratios
+#     NNDR_train = np.percentile(ratios_train, q=5)
+
+#     IMS_synthetic, DCR_synthetic, NNDR_synthetic = [], [], []
+    
+#     for Z in synthetic_datasets:
+        
+#         # create scaler
+#         scaler = preprocessing.StandardScaler()
+        
+#         # scale synthetic data using means and standard deviations 
+#         synthetic_scaled = scaler.fit(X=train_data).transform(X=Z)
+
+#         # calculate the nearest neighbor distances between synthetic and training data
+#         synthetic_dists, synthetic_neighbors = training_tree.query(x=synthetic_scaled, k=5, p=2)
+
+#         # calculate identical match share
+#         IMS_synthetic.append(np.mean(synthetic_dists[:,0] <= delta))
+
+#         # calculate 5th percentile of DCR distribution for synthetic and train data
+#         DCR_synthetic.append(np.percentile(synthetic_dists[:,0], q=5))
+
+#         # calculate nearest neighbor distance ratios
+#         ratios_synthetic = synthetic_dists[:,0]/synthetic_dists[:,-1]
+
+#         # we can encounter division by zero in the above ratios. If this occurs, neighbors 1-5 have the same distance (0)
+#         # and the ratio can be set to one.
+#         ratios_synthetic = np.nan_to_num(ratios_synthetic, nan=1.0)
+
+#         # calculate 5th percentile of nearest neighbor distance ratios
+#         NNDR_synthetic.append(np.percentile(ratios_synthetic, q=5))
+
+#     return (pd.DataFrame({"Type" : np.concatenate([["Train"], np.repeat(type_of_synthetic, len(synthetic_datasets))]), 
+#                           "IMS" : np.concatenate([[IMS_train], IMS_synthetic]), 
+#                           "DCR" : np.concatenate([[DCR_train], DCR_synthetic]), 
+#                           "NNDR" : np.concatenate([[NNDR_train], NNDR_synthetic])}))
+
 #########################################################################################################
 #########################################################################################################
 #########################################################################################################
@@ -169,13 +242,13 @@ def privacy_metrics(train_data, synthetic_datasets, type_of_synthetic, delta):
 # function to calculate IMS specifically
 def ims_calc(train_data, synthetic_data, delta, synthetic_is_train=False):
     
-    scaler = preprocessing.StandardScaler()
+    scaler = preprocessing.StandardScaler().fit(X=synthetic_data)
     
-    train_data_scaled = scaler.fit_transform(X=train_data)
+    train_data_scaled = scaler.transform(X=train_data)
     
     training_tree = KDTree(train_data_scaled)
     
-    synthetic_data_scaled = scaler.fit(X=train_data).transform(X=synthetic_data)
+    synthetic_data_scaled = scaler.transform(X=synthetic_data)
     
     synthetic_dists, synthetic_neighbors = training_tree.query(x=synthetic_data_scaled, k=2, p=2)
 
@@ -199,7 +272,9 @@ def ims_apply(train_data, synthetic_data_sets, delta_vals, synthetic_is_train=Fa
 #########################################################################################################
 #########################################################################################################
 
-def attribute_disclosure_reduction(original_data, synthetic_data, continuous_vars, categorical_vars, sensitive_var, mixture_model, deltas, c, prior_prob):
+def attribute_disclosure_reduction(original_data, synthetic_data, continuous_vars, categorical_vars, sensitive_var, num_mixture_components, deltas, c, prior_prob):
+
+    # assume the original and synthetic data are passed on their original scales
 
     # number of original records
     num_records = original_data.shape[0]
@@ -210,12 +285,24 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
     # copy the synthetic dataset
     new_sX = synthetic_data.copy()
 
-    # tree of synthetic records (continuous values only)
-    sX_tree = KDTree(new_sX[continuous_vars])
+    # normalizer
+    # normalize synthetic data
+    scaler = preprocessing.StandardScaler().fit(X=new_sX.loc[:, continuous_vars])
+    new_sX.loc[:, continuous_vars] = scaler.transform(X=new_sX.loc[:, continuous_vars])
+
+    # normalize original data
+    original_scaled = original_data.copy()
+    original_scaled.loc[:, continuous_vars] = scaler.transform(X=original_scaled.loc[:, continuous_vars])
+
+    # fit a new GMM to the original_scaled data (use optimal parameters from synthesis)
+    mixture_model = GaussianMixture(num_mixture_components, n_init=2, covariance_type='full', init_params="k-means++").fit(original_scaled.loc[:, continuous_vars])
 
     # store mixture component parameters
     mus = mixture_model.means_
     sigmas = mixture_model.covariances_
+
+    # tree of synthetic records (continuous values only)
+    sX_tree = KDTree(new_sX[continuous_vars])
 
     # temporary count of the number of rows that violate one or more conditions
     violator_count = num_records
@@ -235,10 +322,17 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
         # loop over delta values
         for delta in deltas:
 
-            # split original records to preserve memory when doing nearest neighbor searches - do computations on each portion
-            original_data = original_data.sample(frac=1.0).reset_index(drop=True)
+            # shuffle the original data
+            original_scaled = original_scaled.sample(frac=1.0, ignore_index=True)
+            # # order the non-normalized original data the same way
+            # original_data = original_data.loc[original_scaled.index,:]
 
-            for subset_id, subset in enumerate(np.array_split(original_data, 5)):
+            # reset the indexes
+            # original_scaled = original_scaled.reset_index(drop=True)
+            # original_data = original_data.reset_index(drop=True)
+
+            # split original records to preserve memory when doing nearest neighbor searches - do computations on each portion
+            for subset_id, subset in enumerate(np.array_split(original_scaled, 5)):
 
                 # compute the neighbors within radius delta based on continuous variables only
                 neighbor_indices = sX_tree.query_ball_point(subset[continuous_vars], r=delta, p=2.0)
@@ -282,11 +376,11 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
 
                         # variables names
                         original_record = subset.iloc[j,:]
-                        original_continuous = original_record[continuous_vars]
+                        original_continuous = pd.DataFrame(original_record[continuous_vars]).T
                         original_cat = original_record[all_categorical]
 
                         # find the component with the highest responsibility for the violating record
-                        component_index = np.argmax(mixture_model.predict_proba(pd.DataFrame(original_continuous).T), axis = 1)[0]
+                        component_index = np.argmax(mixture_model.predict_proba(pd.DataFrame(original_continuous, columns=continuous_vars)), axis = 1)[0]
                         current_mu = mus[component_index,:]
                         current_sigma = sigmas[component_index,:,:]
 
@@ -297,10 +391,15 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
                         # as long as we have fewer new records than needed
                         while valid_candidates.shape[0] < num_needed[i]:
                             # generate a bunch of candidate points
-                            candidate_points = rng.multivariate_normal(current_mu, current_sigma, size=100000)
+                            candidate_points = pd.DataFrame(rng.multivariate_normal(current_mu, current_sigma, size=100000), columns=continuous_vars)
+                            # check for IPUMS years_of_educ variable - round if exists
+                            if 'years_of_educ' in continuous_vars:
+                                candidate_points = pd.DataFrame(scaler.inverse_transform(X=candidate_points), columns=continuous_vars)
+                                candidate_points.loc[:, ['years_of_educ']] = np.round(candidate_points.loc[:, ['years_of_educ']], 0)
+                                candidate_points = pd.DataFrame(scaler.transform(X=candidate_points), columns=continuous_vars)
                             candidate_tree = KDTree(candidate_points)
-                            valid_indices = candidate_tree.query_ball_point(original_continuous, delta, p=2.0, return_sorted=True)
-                            valid_candidates = np.vstack([valid_candidates, candidate_points[valid_indices,:]])
+                            valid_indices = candidate_tree.query_ball_point(original_continuous, delta, p=2.0, return_sorted=True)[0]
+                            valid_candidates = np.vstack([valid_candidates, candidate_points.iloc[valid_indices,:]])
                             num_candidate_loops += 1
                             if num_candidate_loops > 100:
                                 print('Stuck in inference loop.')
@@ -328,6 +427,9 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
         num_loops += 1
 
     print('Completed AD reduction.')
+
+    new_sX.loc[:, continuous_vars] = scaler.inverse_transform(X=new_sX.loc[:, continuous_vars])
+
     return new_sX
 
 # # function to apply attribute disclosure prevention algorithm
@@ -458,46 +560,63 @@ def attribute_disclosure_reduction(original_data, synthetic_data, continuous_var
 # function to assess risk of attribute disclosure for IPUMS data
 def attribute_disclosure_evaluation(original_data, synthetic_data, continuous_vars, categorical_vars, sensitive_var, prior_prob, deltas):
     
+    # list for all attribute disclosure conditions
     full_ad_conds = []
-    full_indices = []
-    
-    # tree for original locations
-    orig_tree = KDTree(original_data[continuous_vars])
+
+    # fit scaler to synthetic data
+    # scale synthetic data
+    scaler = preprocessing.StandardScaler().fit(X=synthetic_data.loc[:, continuous_vars])
+    synthetic_scaled = synthetic_data.copy() 
+    synthetic_scaled.loc[:, continuous_vars] = scaler.transform(X=synthetic_data.loc[:, continuous_vars])
+
+    # scale original data using statistics from synthetic data
+    original_scaled = original_data.copy() 
+    original_scaled.loc[:, continuous_vars] = scaler.transform(X=original_data.loc[:, continuous_vars])
     
     # tree for synthetic locations
-    sX_tree = KDTree(synthetic_data[continuous_vars])
+    sX_tree = KDTree(synthetic_scaled[continuous_vars])
     
+    # for each value of delta
     for d in deltas:
-        
-        # lists to store the inference condition for each original row and the indices of those rows that violate
+
+        # lists to store the inference condition for each original row in the subset
         ad_conds = []
+
+        # split original records to preserve memory when doing nearest neighbor searches - do computations on each portion
+        for subset_id, subset in enumerate(np.array_split(original_scaled, 7)):
+
+            # reset row indexes for interation
+            subset = subset.reset_index(drop=True)
+
+            # tree for original locations
+            orig_subset_tree = KDTree(subset[continuous_vars])
     
-        # find synthetic neighbors of each original point
-        location_neighbors = orig_tree.query_ball_tree(sX_tree, r=d, p=2.0)
+            # find synthetic neighbors of each original point
+            location_neighbors = orig_subset_tree.query_ball_tree(sX_tree, r=d, p=2.0)
     
-        # for each original record
-        for i, row in original_data.iterrows():
+            # for each original record
+            for i, row in subset.iterrows():
         
-            # matches on categorical attributes from location neighbors
-            categorical_matches = (synthetic_data.loc[location_neighbors[i], categorical_vars] == row[categorical_vars]).all(1)
+                # matches on categorical attributes from location neighbors
+                categorical_matches = (synthetic_scaled.loc[location_neighbors[i], categorical_vars] == row[categorical_vars]).all(1)
             
-            matching_rows = synthetic_data.loc[location_neighbors[i],:].loc[categorical_matches.values,:]
+                matching_rows = synthetic_scaled.loc[location_neighbors[i],:].loc[categorical_matches.values,:]
             
-            if matching_rows.shape[0] > 0:
+                if matching_rows.shape[0] > 0:
                 
-                if row[sensitive_var] == 1.0:
-                    prior = prior_prob
+                    if row[sensitive_var] == 1.0:
+                        prior = prior_prob
+                    else:
+                        prior = 1 - prior_prob
+            
+                    cond = np.mean(matching_rows[sensitive_var] == row[sensitive_var])/prior
+                
                 else:
-                    prior = 1 - prior_prob
-            
-                cond = np.mean(matching_rows[sensitive_var] == row[sensitive_var])/prior
                 
-            else:
-                
-                cond = 1
+                    cond = 1
         
-            # store number of matches and their indices
-            ad_conds.append(cond)
+                # store condition
+                ad_conds.append(cond)
         
         ad_conds = pd.Series(ad_conds)
         
@@ -506,6 +625,65 @@ def attribute_disclosure_evaluation(original_data, synthetic_data, continuous_va
     print("Dataset completed.")
         
     return full_ad_conds
+
+# # function to assess risk of attribute disclosure for IPUMS data
+# def attribute_disclosure_evaluation(original_data, synthetic_data, continuous_vars, categorical_vars, sensitive_var, prior_prob, deltas):
+    
+#     full_ad_conds = []
+#     full_indices = []
+
+#     scaler = preprocessing.StandardScaler().fit(X=synthetic_data.loc[:, continuous_vars])
+#     synthetic_scaled = synthetic_data.copy() 
+#     synthetic_scaled.loc[:, continuous_vars] = scaler.transform(X=synthetic_data.loc[:, continuous_vars])
+
+#     original_scaled = original_data.copy() 
+#     original_scaled.loc[:, continuous_vars] = scaler.transform(X=original_data.loc[:, continuous_vars])
+    
+#     # tree for original locations
+#     orig_tree = KDTree(original_scaled[continuous_vars])
+    
+#     # tree for synthetic locations
+#     sX_tree = KDTree(synthetic_scaled[continuous_vars])
+    
+#     for d in deltas:
+        
+#         # lists to store the inference condition for each original row and the indices of those rows that violate
+#         ad_conds = []
+    
+#         # find synthetic neighbors of each original point
+#         location_neighbors = orig_tree.query_ball_tree(sX_tree, r=d, p=2.0)
+    
+#         # for each original record
+#         for i, row in original_scaled.iterrows():
+        
+#             # matches on categorical attributes from location neighbors
+#             categorical_matches = (synthetic_scaled.loc[location_neighbors[i], categorical_vars] == row[categorical_vars]).all(1)
+            
+#             matching_rows = synthetic_scaled.loc[location_neighbors[i],:].loc[categorical_matches.values,:]
+            
+#             if matching_rows.shape[0] > 0:
+                
+#                 if row[sensitive_var] == 1.0:
+#                     prior = prior_prob
+#                 else:
+#                     prior = 1 - prior_prob
+            
+#                 cond = np.mean(matching_rows[sensitive_var] == row[sensitive_var])/prior
+                
+#             else:
+                
+#                 cond = 1
+        
+#             # store number of matches and their indices
+#             ad_conds.append(cond)
+        
+#         ad_conds = pd.Series(ad_conds)
+        
+#         full_ad_conds.append(ad_conds)
+        
+#     print("Dataset completed.")
+        
+#     return full_ad_conds
 
 # return point estimates, estimated variance of coefficients, and confidence intervals from OLS
 def ols_param_fetcher(data, y, X):
