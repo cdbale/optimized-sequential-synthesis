@@ -396,7 +396,7 @@ sk_age_sso_plot <- sk_sso_data %>%
        shape="Sign, Significance Match, and Overlap",
        title="Age")
 
-combined_sk_sso_plot <- grid.arrange(sk_lat_sso_plot, sk_age_sso_plot, nrow=2, top=textGrob("Sign, Signifiance, and Overlap for COVID-19 Data Coefficients",gp=gpar(fontsize=17)))
+combined_sk_sso_plot <- grid.arrange(sk_lat_sso_plot, sk_age_sso_plot, nrow=2, top=textGrob("Sign, Significance, and Overlap for COVID-19 Data Coefficients",gp=gpar(fontsize=17)))
 
 ggsave(filename="../Images/sk_sso.pdf", plot=combined_sk_sso_plot)
 
@@ -442,7 +442,7 @@ sk_sex_sso_plot <- sk_sso_data %>%
        shape="Sign, Significance Match, and Overlap",
        title="Sex")
 
-full_sk_sso_plot <- grid.arrange(sk_int_sso_plot, sk_long_sso_plot, sk_sex_sso_plot, nrow=3, top=textGrob("Sign, Signifiance, and Overlap for COVID-19 Data Coefficients",gp=gpar(fontsize=17)))
+full_sk_sso_plot <- grid.arrange(sk_int_sso_plot, sk_long_sso_plot, sk_sex_sso_plot, nrow=3, top=textGrob("Sign, Significance, and Overlap for COVID-19 Data Coefficients",gp=gpar(fontsize=17)))
 
 ggsave(filename="../Images/full_sk_sso.pdf", plot=full_sk_sso_plot, height=9.5)
 
@@ -555,7 +555,7 @@ ipums_non_white_sso_plot <- ipums_sso_data %>%
        shape="Sign, Significance Match, and Overlap",
        title="Non-white")
 
-combined_ipums_sso_plot <- grid.arrange(ipums_educ_plot, ipums_non_white_sso_plot, nrow=2, top=textGrob("Sign, Signifiance, and Overlap for CPS ASEC Data Coefficients (Female)",gp=gpar(fontsize=17)))
+combined_ipums_sso_plot <- grid.arrange(ipums_educ_plot, ipums_non_white_sso_plot, nrow=2, top=textGrob("Sign, Significance, and Overlap for CPS ASEC Data Coefficients (Female)",gp=gpar(fontsize=17)))
 
 ggsave(filename="../Images/female_ipums_sso.pdf", plot=combined_ipums_sso_plot)
 
@@ -617,7 +617,7 @@ ipums_exp3_sso_plot <- ipums_sso_data %>%
        shape="Sign, Significance Match, and Overlap",
        title="Potential Experience Cubed")
 
-full_sk_sso_plot <- grid.arrange(ipums_int_sso_plot, ipums_exp_sso_plot, ipums_exp2_sso_plot, ipums_exp3_sso_plot, nrow=4, top=textGrob("Sign, Signifiance, and Overlap for CPS ASEC Data Coefficients (Female)", gp=gpar(fontsize=17)))
+full_sk_sso_plot <- grid.arrange(ipums_int_sso_plot, ipums_exp_sso_plot, ipums_exp2_sso_plot, ipums_exp3_sso_plot, nrow=4, top=textGrob("Sign, Significance, and Overlap for CPS ASEC Data Coefficients (Female)", gp=gpar(fontsize=17)))
 
 ggsave(filename="../Images/female_full_ipums_sso.pdf", plot=full_sk_sso_plot, height=9.5)
 
@@ -722,7 +722,7 @@ ipums_non_white_sso_plot <- ipums_sso_data %>%
        shape="Sign, Significance Match, and Overlap",
        title="Non-white")
 
-combined_ipums_sso_plot <- grid.arrange(ipums_educ_plot, ipums_non_white_sso_plot, nrow=2, top=textGrob("Sign, Signifiance, and Overlap for CPS ASEC Data Coefficients (Male)",gp=gpar(fontsize=17)))
+combined_ipums_sso_plot <- grid.arrange(ipums_educ_plot, ipums_non_white_sso_plot, nrow=2, top=textGrob("Sign, Significance, and Overlap for CPS ASEC Data Coefficients (Male)",gp=gpar(fontsize=17)))
 
 ggsave(filename="../Images/male_ipums_sso.pdf", plot=combined_ipums_sso_plot)
 
@@ -784,7 +784,7 @@ ipums_exp3_sso_plot <- ipums_sso_data %>%
        shape="Sign, Significance Match, and Overlap",
        title="Potential Experience Cubed")
 
-full_sk_sso_plot <- grid.arrange(ipums_int_sso_plot, ipums_exp_sso_plot, ipums_exp2_sso_plot, ipums_exp3_sso_plot, nrow=4, top=textGrob("Sign, Signifiance, and Overlap for CPS ASEC Data Coefficients (Male)", gp=gpar(fontsize=17)))
+full_sk_sso_plot <- grid.arrange(ipums_int_sso_plot, ipums_exp_sso_plot, ipums_exp2_sso_plot, ipums_exp3_sso_plot, nrow=4, top=textGrob("Sign, Significance, and Overlap for CPS ASEC Data Coefficients (Male)", gp=gpar(fontsize=17)))
 
 ggsave(filename="../Images/male_full_ipums_sso.pdf", plot=full_sk_sso_plot, height=9.5)
 
