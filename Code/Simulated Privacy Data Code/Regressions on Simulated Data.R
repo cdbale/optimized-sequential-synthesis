@@ -3,27 +3,31 @@ library(tidymodels)
 
 set.seed(100)
 
-source("Simulate Data - 6 Variables + Churn.R")
+# source("Simulate Data - 6 Variables + Churn.R")
 
-synthesized_data <- read_csv("synthesized_data.csv")
+original_data <- read_csv("../../Data/Simulations/Churn/churn_simulated.csv")
+synthesized_data <- read_csv("../../Data/Simulations/Churn/mnl_0.csv")
+
+# Prep
+original_data <- original_data |>
+  select(-id) |>
+  mutate(churn = as.factor(churn),
+         hiking_int = as.factor(hiking_int),
+         sustain_int = as.factor(sustain_int),
+         online_int = as.factor(online_int))
 
 # Prep
 synthesized_data <- synthesized_data |>
-  mutate(churn = ifelse(churn >= .5, 1, 0)) |>
-  mutate(id = `...1` + 1001) |>
-  select(-`...1`) |>
   mutate(churn = as.factor(churn),
-        hiking_int = as.factor(hiking_int),
-        sustain_int = as.factor(sustain_int),
-        online_int = as.factor(online_int))
+         hiking_int = as.factor(hiking_int),
+         sustain_int = as.factor(sustain_int),
+         online_int = as.factor(online_int))
 
-# Clean
-synthesized_data <- synthesized_data |>
-  mutate(amount_spent = ifelse(amount_spent < 43.7, 43.7, amount_spent)) |>
-  mutate(num_visits = ifelse(num_visits < 1, 1, num_visits))
+# summary statistics
+summary(synthesized_data)
 
 # Prep Everything - Simulated
-split <- initial_split(simulated_data, prop = .9)
+split <- initial_split(original_data, prop = .9)
 
 training <- training(split)
 testing <- testing(split)
@@ -88,11 +92,55 @@ cv_results_full <- workflow_full |>
 # Compute model accuracy - Threshold at .5
 collect_metrics(cv_results_full)
 
+# examine model coefficients ----------------------------------------------
 
+full_model_results <- logistic_reg() |>
+  fit(churn ~ ., data = original_data) |>
+  tidy(conf.int = TRUE) |>
+  mutate(Type = "Original")
 
+full_synth_model_results <- logistic_reg() |>
+  fit(churn ~ ., data = synthesized_data) |>
+  tidy(conf.int = TRUE) |>
+  mutate(Type = "Synthetic")
 
-# Amount spent and age into mixture model, round age
-# Prob don't need mixture model, focus first on MNL and get it running
+# Compare parameter estimates.
+full_model_results |> 
+  bind_rows(full_synth_model_results) |>
+  ggplot(aes(y = term, color = Type)) + 
+  geom_point(aes(x = estimate)) + 
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = .1) +
+  geom_vline(xintercept = 0, color = "red") +
+  labs(x = "Parameter Estimate",
+       y = "Variable",
+       color = "Data Type",
+       title = "Coefficient Comparison - Original vs. Synthetic Data")
 
-# Set up 3 cart/logit models to predict each variable based on the other four/5/6, sequentially
+# implement differentially private logistic regression --------------------
 
+library(DPpack)
+
+?LogisticRegressionDP
+
+# define regularization function and constant
+reg_func <- function(coeff) coeff%*%coeff/2
+reg_func_grad <- function(coeff) coeff
+
+# define upper and lower bounds for X variables
+upper_bounds <- c(max(original_data$amount_spent),
+                  max(original_data$num_visits),
+                  max(original_data$age),
+                  1,
+                  1,
+                  1)
+lower_bounds <- c(0, 0, 0, 0, 0, 0)
+
+dp_X <- original_data[, 2:ncol(original_data)]
+dp_Y <- original_data[, 1]
+
+lrdp <- LogisticRegressionDP$new(regularizer = reg_func,
+                                 regularizer.gr = reg_func_grad,
+                                 gamma = 0,
+                                 eps = 5)
+
+lrdp$fit(dp_X, dp_Y, upper_bounds, lower_bounds)

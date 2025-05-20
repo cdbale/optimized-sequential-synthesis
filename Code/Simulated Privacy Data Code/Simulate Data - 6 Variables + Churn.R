@@ -210,6 +210,17 @@ simulated_data <- tibble(
   id = customer_id
 )
 
+# save simulated data
+
+path_to_save <- "../../Data/Simulations/"
+
+if (!dir.exists(path_to_save)){
+  dir.create(path_to_save, recursive=TRUE)
+  write.csv(simulated_data, paste0(path_to_save, "churn_simulated.csv"), row.names=FALSE)
+} else {
+  write.csv(simulated_data, paste0(path_to_save, "churn_simulated.csv"), row.names=FALSE)
+}
+
 
 # Check Relationships -----------------------------------------------------
 
