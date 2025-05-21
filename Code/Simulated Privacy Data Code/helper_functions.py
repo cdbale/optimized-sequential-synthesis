@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import math
 
 from sklearn import preprocessing
 from sklearn.mixture import GaussianMixture
@@ -17,8 +18,29 @@ rng = np.random.RandomState(42)
 #########################################################################################################
 #########################################################################################################
 
+def num_terms_with_synthetic(p, s, d):
+    """
+    Calculate the number of transformed variables involving at least one synthetic variable
+    after polynomial expansion of degree d.
+
+    Parameters:
+    p (int): total number of original variables
+    s (int): number of synthetic variables
+    d (int): maximum degree of polynomial terms
+
+    Returns:
+    int: number of terms involving at least one synthetic variable
+    """
+    def binomial(n, k):
+        return math.comb(n, k) if n >= k else 0
+
+    total_terms = sum(binomial(p + i - 1, i) for i in range(1, d + 1))
+    nonsynthetic_terms = sum(binomial(p - s + i - 1, i) for i in range(1, d + 1))
+    return total_terms - nonsynthetic_terms
+
 # function to compute the pMSE ratio from a given original and synthetic data set
-def pmse_ratio(original_data, synthetic_data, num_synth):
+def pmse_ratio(original_data, synthetic_data, num_synth_vars, poly_degree_pmse):
+    
     ###
     # original data: dataframe containing original data
     # synthetic data: dataframe containing synthetic version of original data - ensure
@@ -34,7 +56,7 @@ def pmse_ratio(original_data, synthetic_data, num_synth):
     full_X = pd.concat([original_data, synthetic_data], axis=0).reset_index(drop=True)
     
     # generate second degree interactions and polynomials
-    poly = PolynomialFeatures(2, interaction_only=False, include_bias=False)
+    poly = PolynomialFeatures(poly_degree_pmse, interaction_only=False, include_bias=False)
     full_X = poly.fit_transform(full_X)
 
     # scale the stacked dataset
@@ -56,8 +78,9 @@ def pmse_ratio(original_data, synthetic_data, num_synth):
     # compute propensity score mean-squared error
     pMSE = 1/(N_synth+N_orig) * np.sum((probs[:,1] - c)**2)
 
-    # compute the degrees of freedom, or the number of features that involve synthesized variables
-    deg_free = 2*num_synth + np.sum([original_data.shape[1] - i for i in range(1, num_synth+1)])
+    # compute degrees of freedom
+    # and add one for the intercept
+    deg_free = num_terms_with_synthetic(p=original_data.shape[1], s=num_synth_vars, d=poly_degree_pmse) + 1
 
     # compute the expected pMSE (null pMSE)
     e_pMSE = (deg_free-1)*(1-c)**2 * c/(N_synth+N_orig)

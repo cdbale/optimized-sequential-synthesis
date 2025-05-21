@@ -5,23 +5,39 @@ set.seed(100)
 
 # source("Simulate Data - 6 Variables + Churn.R")
 
-original_data <- read_csv("../../Data/Simulations/Churn/churn_simulated.csv")
+original_data <- read_csv("../../Data/Simulations/Churn/churn_simulated.csv") |>
+  select(-id)
 synthesized_data <- read_csv("../../Data/Simulations/Churn/mnl_0.csv")
 
 # Prep
+
+# numeric version for DP
+original_numeric <- original_data
+
 original_data <- original_data |>
-  select(-id) |>
   mutate(churn = as.factor(churn),
          hiking_int = as.factor(hiking_int),
          sustain_int = as.factor(sustain_int),
          online_int = as.factor(online_int))
 
 # Prep
+
+# numeric version for DP
+synthesized_numeric <- synthesized_data
+
 synthesized_data <- synthesized_data |>
   mutate(churn = as.factor(churn),
          hiking_int = as.factor(hiking_int),
          sustain_int = as.factor(sustain_int),
          online_int = as.factor(online_int))
+
+# Create train-test for DP
+
+# Prep Everything - Simulated
+split_dp <- initial_split(original_numeric, prop = .9)
+
+training_dp <- training(split_dp)
+testing_dp <- testing(split_dp)
 
 # summary statistics
 summary(synthesized_data)
@@ -122,25 +138,68 @@ library(DPpack)
 
 ?LogisticRegressionDP
 
-# define regularization function and constant
-reg_func <- function(coeff) coeff%*%coeff/2
-reg_func_grad <- function(coeff) coeff
-
 # define upper and lower bounds for X variables
-upper_bounds <- c(max(original_data$amount_spent),
-                  max(original_data$num_visits),
-                  max(original_data$age),
+upper_bounds <- c(max(training_dp$amount_spent),
+                  max(training_dp$num_visits),
+                  max(training_dp$age),
                   1,
                   1,
                   1)
+
 lower_bounds <- c(0, 0, 0, 0, 0, 0)
 
-dp_X <- original_data[, 2:ncol(original_data)]
-dp_Y <- original_data[, 1]
+dp_X <- training_dp[, 2:ncol(training_dp)]
+dp_Y <- training_dp[, 1]
 
-lrdp <- LogisticRegressionDP$new(regularizer = reg_func,
-                                 regularizer.gr = reg_func_grad,
+lrdp <- LogisticRegressionDP$new(regularizer = "l2",
                                  gamma = 0,
-                                 eps = 5)
+                                 eps = 1)
 
-lrdp$fit(dp_X, dp_Y, upper_bounds, lower_bounds)
+lrdp$fit(dp_X, dp_Y, upper_bounds, lower_bounds, add.bias=TRUE)
+
+# generate predictions from differentially private model
+
+dp_preds <- lrdp$predict(testing_dp[, 2:ncol(testing_dp)], add.bias=TRUE)
+
+mean(dp_preds == testing_dp[, 1])
+
+# Table of all predictive accuracies
+
+accuracy_table <- tibble(
+  Method = c("Partial", "Full", "Synthetic_Full", "DP_Full"),
+  Accuracy = c(pull(collect_metrics(cv_results_partial)[1, 'mean']),
+               pull(collect_metrics(cv_results_full)[1, 'mean']),
+               pull(collect_metrics(cv_results_synth)[1, 'mean']),
+               mean(dp_preds == testing_dp[, 1])
+  )
+)
+
+# plot coefficients from all methods
+
+dp_results <- tibble(
+  term = c("(Intercept)", colnames(training_dp)[-1]),
+  estimate = lrdp$coeff,
+  Type = "Differentially Private"
+)
+
+dp_results |>
+  bind_rows(full_model_results, full_synth_model_results) |>
+  ggplot(aes(y = term, color = Type)) + 
+  geom_point(aes(x = estimate, size = 3)) + 
+  geom_vline(xintercept = 0, color = "red") +
+  labs(x = "Parameter Estimate",
+       y = "Variable",
+       color = "Data Type",
+       title = "Coefficient Comparison - Original vs. Synthetic Data")
+
+colnames(dp_X)
+dp_coefs
+
+full_model_results
+
+full_synth_model_results
+
+
+
+
+

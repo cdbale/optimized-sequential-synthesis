@@ -43,7 +43,8 @@ def pmse_ratio(original_data, synthetic_data):
     probs = pMSE_model.predict_proba(full_X)
     
     pMSE = 1/(N_synth+N_orig) * np.sum((probs[:,1] - c)**2)
-    
+
+    # didn't subtract one from degrees of freedom to account for the intercept
     e_pMSE = 2*(full_X.shape[1])*(1-c)**2 * c/(N_synth+N_orig)
         
     return pMSE/e_pMSE
