@@ -12,6 +12,7 @@ Results/
 Sources/
 Submission/
 Images/
+*.csv
 
 # Distribution / packaging
 .Python
