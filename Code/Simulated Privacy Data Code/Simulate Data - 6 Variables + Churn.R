@@ -187,7 +187,7 @@ for (i in 1:num_cust) {
     6 * hiking_int[i] +
     10 * sustain_int[i] +
     4 * online_int[i] +
-    rnorm(1, mean = 0, sd = 5)
+    rnorm(1, mean = 0, sd = 2.5)
 }
 
 ## Check Distribution
@@ -195,13 +195,12 @@ tibble(churn = churn) |>
   ggplot(mapping = aes(x = churn)) +
   geom_density()
 
-# churn_binomial <- ifelse(churn < median(churn), 1, 0)
 
-churn_binary <- 1 - rbinom(num_cust, size=1, prob=exp(churn)/(1 + exp(churn)))
+churn_binomial <- ifelse(churn < median(churn), 1, 0)
 
 ## Create a Dataframe
 simulated_data <- tibble(
-  churn = churn_binary,
+  churn = churn_binomial,
   amount_spent = amount_spent,
   num_visits = num_visits,
   age = age,
@@ -211,16 +210,6 @@ simulated_data <- tibble(
   id = customer_id
 )
 
-# save simulated data
-
-path_to_save <- "../../Data/Simulations/Churn/"
-
-if (!dir.exists(path_to_save)){
-  dir.create(path_to_save, recursive=TRUE)
-  write.csv(simulated_data, paste0(path_to_save, "churn_simulated.csv"), row.names=FALSE)
-} else {
-  write.csv(simulated_data, paste0(path_to_save, "churn_simulated.csv"), row.names=FALSE)
-}
 
 # Check Relationships -----------------------------------------------------
 
@@ -246,9 +235,9 @@ simulated_data |>
   facet_wrap(~churn)
 
 # Region
-# simulated_data |>
-#   ggplot(mapping = aes(x = churn, fill = as.character(region))) +
-#   geom_bar(position = "fill")
+simulated_data |>
+  ggplot(mapping = aes(x = churn, fill = as.character(region))) +
+  geom_bar(position = "fill")
 
 # Amount Spent
 simulated_data |>
@@ -268,4 +257,5 @@ simulated_data |>
   geom_density() +
   facet_wrap(~churn)
 
-rm(list = setdiff(ls(), "simulated_data"))
+# rm(list = setdiff(ls(), "simulated_data"))
+
