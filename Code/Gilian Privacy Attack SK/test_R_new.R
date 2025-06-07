@@ -1,8 +1,45 @@
 # Load required libraries
 library(tidyverse)
 library(magrittr)
+#install.packages("ks")
+#install.packages("KernSmooth")
 library(KernSmooth)
 library(ks)
+
+# Read public churn data
+url <- 'https://raw.githubusercontent.com/albayraktaroglu/Datasets/master/churn.csv'
+churn <- read.csv(url)
+
+# Select some variables
+churn <- churn[, 7:15]
+samples <- 300 # Select the number of observations
+churn <- churn[!duplicated(churn), ] # Drop duplicates
+
+# Create the train, adversary, and outside_training set
+set.seed(42)
+train_indices <- sample(1:nrow(churn), size = samples*2/3)
+train <- churn[train_indices, ]
+adversary_training <- churn[-train_indices, ]
+
+# Define the data protected method: Swapping 25% of the observations
+swapping <- function(percent, data) {
+  set.seed(42)
+  idx <- sample(1:ncol(data), 1) # Pick a random variable
+  variable <- data[, idx] # Select variable from data
+  ix_size <- percent * length(variable) * 0.5 # Select proportion to shuffle
+  ix_1 <- sample(seq_along(variable), size = ix_size, replace = FALSE) # Select rows to shuffle
+  ix_2 <- sample(seq_along(variable), size = ix_size, replace = FALSE) # Select rows to shuffle
+  b1 <- variable[ix_1] # Take rows from variable and create b
+  b2 <- variable[ix_2] # Take rows from variable and create b
+  variable[ix_2] <- b1 # Swap 1
+  variable[ix_1] <- b2 # Swap 2
+  data[, idx] <- variable  # Place variable back in original data
+  return(data)
+}
+
+# Apply protection to train and adversary
+swap25_train <- swapping(percent = 0.25, data = train) # Apply swapping 25% to train
+swap25_adversary_training <- swapping(percent = 0.25, data = adversary_training)  # Apply swapping 25% to adv
 
 # Define function for cross-validation to find optimal bandwidth
 find_optimal_bandwidth <- function(data) {
@@ -11,7 +48,7 @@ find_optimal_bandwidth <- function(data) {
     cv_result <- c(cv_result, sum(bkde(data, bandwidth = bw)$y))
   }
   optimal_bandwidth <- (which.max(cv_result) - 1) * 0.1 + 0.1
-  return(optimal_bandwidth) # nolint: return_linter.
+  return(optimal_bandwidth)
 }
 
 # Define privacy attack
@@ -105,67 +142,7 @@ privacy_attack <- function(seed,
   return(list(epsilons = epsilons, FPR = FPR, TNR = TNR, FNR = FNR, TPR = TPR))
 }
 
-# here we import the external data, train data and adversary training data (unprotected)
-evaluation_outside_training <- read.csv("external_data.csv")
-train <- read.csv("train_data.csv")
-adversary_training <- read.csv("adv_data.csv")
-
 # Apply privacy attack
-privacy_attack(seed = 1, 
-               simulations = 10, 
-               train = train, 
-               adversary = adversary_training, 
-               outside_training = evaluation_outside_training, 
-               protected_training = train, 
-               protected_adversary = adversary_training)
-
-##################################################
-##################################################
-
-# apply privacy attack to synthpop data sets
-# Initialize an empty vector to store results
-results_synthpop <- c()
-
-for (i in 0:4) {  # R uses 1-based indexing, but since the files are 0-based, we use 0:4
-    # Read the synthetic data files
-    synth_train <- read.csv(paste0("synthetic_train/synthpop_", i, ".csv"))
-    synth_adversary_training <- read.csv(paste0("synthetic_adv/synthpop_", i, ".csv"))
-    
-    # Assuming attacks is an R object with a privacy_attack function
-    result <- privacy_attack(
-        seed = 1,
-        simulations = 10,
-        train = train,
-        adversary = adversary_training,
-        outside_training = evaluation_outside_training,
-        protected_training = synth_train,
-        protected_adversary = synth_adversary_training
-    )
-    
-    # Append the mean of the first element of result to results_synthpop
-    results_synthpop <- c(results_synthpop, result[[1]])
-}
-
-# apply privacy attack to synthpop data sets
-# Initialize an empty vector to store results
-results_bayes <- c()
-  
-for (i in 0:4) {  # R uses 1-based indexing, but since the files are 0-based, we use 0:4
-    # Read the synthetic data files
-    synth_train <- read.csv(paste0("synthetic_train/sd_", i, ".csv"))
-    synth_adversary_training <- read.csv(paste0("synthetic_adv/sd_", i, ".csv"))
-    
-    # Assuming attacks is an R object with a privacy_attack function
-    result <- privacy_attack(
-        seed = 1,
-        simulations = 10,
-        train = train,
-        adversary = adversary_training,
-        outside_training = evaluation_outside_training,
-        protected_training = synth_train,
-        protected_adversary = synth_adversary_training
-    )
-    
-    # Append the mean of the first element of result to results_synthpop
-    results_bayes <- c(results_bayes, result[[1]])
-}
+privacy_attack(seed = 1, simulations = 10, train = train, adversary = adversary_training, 
+               outside_training = adversary_training, protected_training = swap25_train, 
+               protected_adversary = swap25_adversary_training)
