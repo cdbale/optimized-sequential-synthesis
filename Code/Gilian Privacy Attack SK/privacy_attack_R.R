@@ -4,14 +4,60 @@ library(magrittr)
 library(KernSmooth)
 library(ks)
 
-# Define function for cross-validation to find optimal bandwidth
-find_optimal_bandwidth <- function(data) {
-  cv_result <- numeric()
-  for (bw in seq(0.2, 1, by = 0.1)) {
-    cv_result <- c(cv_result, sum(bkde(data, bandwidth = bw)$y))
+# Function to compute multivariate KDE
+compute_mvkde <- function(data, method = "hpi") {
+  # Remove any rows with NA or infinite values
+  if (!is.matrix(data)) data <- as.matrix(data)
+  valid_rows <- apply(is.finite(data), 1, all)
+  
+  if (!all(valid_rows)) {
+    warning(sum(!valid_rows), " rows with non-finite values removed from data")
+    data <- data[valid_rows, , drop = FALSE]
   }
-  optimal_bandwidth <- (which.max(cv_result) - 1) * 0.1 + 0.1
-  return(optimal_bandwidth) # nolint: return_linter.
+  
+  if (nrow(data) < 2) {
+    stop("Insufficient valid data points for KDE estimation")
+  }
+  
+  tryCatch({
+    # Compute bandwidth matrix
+    if (method == "hpi") {
+      H <- Hpi(data, binned = FALSE, bgridsize = min(100, nrow(data)))
+    } else if (method == "lscv") {
+      H <- Hscv(data, binned = FALSE, bgridsize = min(50, nrow(data)))
+    } else {
+      stop("Invalid method. Use 'hpi' or 'lscv'")
+    }
+    
+    # Compute KDE
+    kde <- kde(x = data, H = H, eval.points = data)
+    
+    # Return a function that evaluates the KDE at new points
+    function(newdata) {
+      if (!is.matrix(newdata)) newdata <- as.matrix(newdata)
+      predict(kde, x = newdata)
+    }
+  }, error = function(e) {
+    warning("Error in multivariate KDE: ", e$message)
+    # Fallback to product of univariate KDEs
+    warning("Falling back to product of univariate KDEs")
+    
+    # Compute univariate KDEs for each dimension
+    univ_kdes <- lapply(1:ncol(data), function(i) {
+      kde_1d <- bkde(data[, i], bandwidth = dpik(data[, i]))
+      approxfun(kde_1d$x, kde_1d$y, yleft = 0, yright = 0)
+    })
+    
+    # Return product of marginals
+    function(newdata) {
+      if (!is.matrix(newdata)) newdata <- as.matrix(newdata)
+      densities <- matrix(1, nrow = nrow(newdata))
+      for (i in 1:ncol(newdata)) {
+        densities <- densities * pmax(0, univ_kdes[[i]](newdata[, i]))
+      }
+      as.numeric(densities)
+    }
+  })
 }
 
 # Define privacy attack
@@ -25,6 +71,7 @@ privacy_attack <- function(seed,
 
   set.seed(seed)
   epsilons <- c() # To store results
+  bw_estimation_method <- "hpi"
 
   for (iter in 1:simulations) {
     set.seed(iter) # Again for reproducibility
@@ -34,32 +81,19 @@ privacy_attack <- function(seed,
     N <- nrow(train) / 10
 
     # Step 1, 2, and 3 from paper
-    # bandwidths <- 10^seq(-1, 1, length.out = 20) # Vary the bandwidth
     
     density_train <- numeric(nrow(train)) # Initialize vector to store densities for train data
     density_adversary <- numeric(nrow(train)) # Initialize vector to store densities for adversary data
     
-    # Loop over each column of the dataset
-    for (i in 1:ncol(protected_training)) {
-      # Perform cross-validation to find optimal bandwidth
-      optimal_bandwidth <- find_optimal_bandwidth(protected_training[, i])
-      
-      # Estimate pdf from train data using optimal bandwidth
-      kde_train <- bkde(protected_training[, i], bandwidth = optimal_bandwidth)
-      kde_adversary <- bkde(protected_adversary[, i], bandwidth = optimal_bandwidth)
-
-      # Evaluate train data points using the densities
-      univ_density_train <- approxfun(kde_train$x, kde_train$y, rule = 2)(protected_training[, i])
-      univ_density_adversary <- approxfun(kde_adversary$x, kde_adversary$y, rule = 2)(protected_training[, i])
-      
-      # Accumulate densities
-      density_train <- density_train + univ_density_train # Accumulate densities for train data
-      density_adversary <- density_adversary + univ_density_adversary # Accumulate densities for adversary data
-    }
+    # Create multivariate KDE functions
+    kde_train_fn <- compute_mvkde(protected_training, method = bw_estimation_method)
+    kde_adv_fn <- compute_mvkde(protected_adversary, method = bw_estimation_method)
     
-    # Calculate average densities
-    density_train <- density_train / ncol(protected_training)
-    density_adversary <- density_adversary / ncol(protected_adversary)
+    # Calculate densities using multivariate KDE
+    density_train <- kde_train_fn(train)
+    density_adversary <- kde_adv_fn(train)
+    
+    # No need to average for multivariate KDE as it already handles the full space
     
     # Calculate TPR
     TPR <- sum(density_train > density_adversary) / length(density_train)
@@ -68,27 +102,11 @@ privacy_attack <- function(seed,
     density_train_new <- numeric(nrow(outside_training)) # Initialize vector to store densities for outside training data
     density_adversary_new <- numeric(nrow(outside_training)) # Initialize vector to store densities for outside adversary data
     
-    # Loop over each column of the dataset
-    for (i in 1:ncol(protected_training)) {
-
-      # Perform cross-validation to find optimal bandwidth
-      optimal_bandwidth <- find_optimal_bandwidth(protected_training[, i])
-
-      # Estimate pdf from outside training data using optimal bandwidth
-      kde_train_new <- bkde(protected_training[, i], bandwidth = optimal_bandwidth, gridsize = 1000)
-      kde_adversary_new <- bkde(protected_adversary[, i], bandwidth = optimal_bandwidth, gridsize = 1000)
-
-      # Use approxfun to evaluate the density of outside training points
-      univ_density_train_new <- approxfun(kde_train_new$x, kde_train_new$y, rule = 2)(outside_training[, i])
-      univ_density_adversary_new <- approxfun(kde_adversary_new$x, kde_adversary_new$y, rule = 2)(outside_training[, i])
-      
-      density_train_new <- density_train_new + univ_density_train_new # Accumulate densities for outside training data
-      density_adversary_new <- density_adversary_new + univ_density_adversary_new # Accumulate densities for outside adversary data
-    }
+    # Evaluate outside training data using multivariate KDE
+    density_train_new <- kde_train_fn(outside_training)
+    density_adversary_new <- kde_adv_fn(outside_training)
     
-    # Calculate average densities
-    density_train_new <- density_train_new / ncol(outside_training)
-    density_adversary_new <- density_adversary_new / ncol(outside_training)
+    # No need to average for multivariate KDE as it already handles the full space
     
     # Calculate FPR
     FPR <- sum(density_train_new > density_adversary_new) / length(density_train_new)
