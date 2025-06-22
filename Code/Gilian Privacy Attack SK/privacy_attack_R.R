@@ -14,49 +14,32 @@ compute_mvkde <- function(data, method = "hpi") {
     warning(sum(!valid_rows), " rows with non-finite values removed from data")
     data <- data[valid_rows, , drop = FALSE]
   }
-  
-  if (nrow(data) < 2) {
-    stop("Insufficient valid data points for KDE estimation")
-  }
-  
+
   tryCatch({
     # Compute bandwidth matrix
     if (method == "hpi") {
-      H <- Hpi(data, binned = FALSE, bgridsize = min(100, nrow(data)))
+      # Note: this function is valid for 1 to 6 dimensional data
+      H <- Hpi(data, binned = FALSE, bgridsize = min(20, nrow(data)))
     } else if (method == "lscv") {
-      H <- Hscv(data, binned = FALSE, bgridsize = min(50, nrow(data)))
+      # Note: this function is valid for 1 to 6 dimensional data
+      H <- Hscv(data, binned = FALSE, bgridsize = min(20, nrow(data)))
     } else {
       stop("Invalid method. Use 'hpi' or 'lscv'")
     }
     
     # Compute KDE
-    kde <- kde(x = data, H = H, eval.points = data)
+    de <- kde(x = data, H = H, binned = FALSE, eval.points = data, density=TRUE)
     
     # Return a function that evaluates the KDE at new points
     function(newdata) {
       if (!is.matrix(newdata)) newdata <- as.matrix(newdata)
-      predict(kde, x = newdata)
+      destimates <- predict(de, x = newdata)
+      # replace NA values in destimates with 0
+      destimates[is.na(destimates)] <- 0
+      return(destimates)
     }
   }, error = function(e) {
     warning("Error in multivariate KDE: ", e$message)
-    # Fallback to product of univariate KDEs
-    warning("Falling back to product of univariate KDEs")
-    
-    # Compute univariate KDEs for each dimension
-    univ_kdes <- lapply(1:ncol(data), function(i) {
-      kde_1d <- bkde(data[, i], bandwidth = dpik(data[, i]))
-      approxfun(kde_1d$x, kde_1d$y, yleft = 0, yright = 0)
-    })
-    
-    # Return product of marginals
-    function(newdata) {
-      if (!is.matrix(newdata)) newdata <- as.matrix(newdata)
-      densities <- matrix(1, nrow = nrow(newdata))
-      for (i in 1:ncol(newdata)) {
-        densities <- densities * pmax(0, univ_kdes[[i]](newdata[, i]))
-      }
-      as.numeric(densities)
-    }
   })
 }
 
@@ -73,52 +56,49 @@ privacy_attack <- function(seed,
   epsilons <- c() # To store results
   bw_estimation_method <- "hpi"
 
+  # Pre-compute constants
+  N <- nrow(train) / 10  # To prevent a naive model
+  one_minus_1_over_N <- 1 - (1/N)
+  
   for (iter in 1:simulations) {
-    set.seed(iter) # Again for reproducibility
-    cat("iteration is ", iter, "\n")
-
-    # To prevent a naive model
-    N <- nrow(train) / 10
-
-    # Step 1, 2, and 3 from paper
+    set.seed(iter)  # For reproducibility
+    cat("\n--- Iteration", iter, "---\n")
     
-    density_train <- numeric(nrow(train)) # Initialize vector to store densities for train data
-    density_adversary <- numeric(nrow(train)) # Initialize vector to store densities for adversary data
-    
-    # Create multivariate KDE functions
+    # Step 1-3: Train KDE models and compute densities
     kde_train_fn <- compute_mvkde(protected_training, method = bw_estimation_method)
     kde_adv_fn <- compute_mvkde(protected_adversary, method = bw_estimation_method)
     
-    # Calculate densities using multivariate KDE
+    # Compute densities for training data
     density_train <- kde_train_fn(train)
     density_adversary <- kde_adv_fn(train)
     
-    # No need to average for multivariate KDE as it already handles the full space
+    # Calculate True Positive Rate (TPR)
+    TPR <- mean(density_train > density_adversary)
     
-    # Calculate TPR
-    TPR <- sum(density_train > density_adversary) / length(density_train)
-    
-    # Step 5
-    density_train_new <- numeric(nrow(outside_training)) # Initialize vector to store densities for outside training data
-    density_adversary_new <- numeric(nrow(outside_training)) # Initialize vector to store densities for outside adversary data
-    
-    # Evaluate outside training data using multivariate KDE
+    # Step 5: Evaluate on outside training data
     density_train_new <- kde_train_fn(outside_training)
     density_adversary_new <- kde_adv_fn(outside_training)
     
-    # No need to average for multivariate KDE as it already handles the full space
+    # Calculate False Positive Rate (FPR)
+    FPR <- mean(density_train_new > density_adversary_new)
     
-    # Calculate FPR
-    FPR <- sum(density_train_new > density_adversary_new) / length(density_train_new)
-    
+    # Compute derived metrics
     TNR <- 1 - FPR
     FNR <- 1 - TPR
-    epsilons <- c(epsilons, max(log((1 - (1/N) - FPR) / FNR), log((1 - (1/N) - FNR) / FPR))) # Append resulting epsilon to epsilons
-    cat("FPR is ", FPR, "\n")
-    cat("FNR is ", FNR, "\n")
-    cat("TPR is ", TPR, "\n")
-    cat("TNR is ", TNR, "\n")
-    cat("empirical epsilon = ", max(log((1 - (1/N) - FPR) / FNR), log((1 - (1/N) - FNR) / FPR)), "\n")
+    
+    # Compute epsilon (differential privacy parameter)
+    epsilon <- max(
+      log((one_minus_1_over_N - FPR) / FNR),
+      log((one_minus_1_over_N - FNR) / FPR)
+    )
+    epsilons <- c(epsilons, epsilon)
+    
+    # Print metrics
+    metrics <- data.frame(
+      Metric = c("FPR", "FNR", "TPR", "TNR", "epsilon"),
+      Value = c(FPR, FNR, TPR, TNR, epsilon)
+    )
+    print(metrics, row.names = FALSE)
   }
   return(list(epsilons = epsilons, FPR = FPR, TNR = TNR, FNR = FNR, TPR = TPR))
 }
