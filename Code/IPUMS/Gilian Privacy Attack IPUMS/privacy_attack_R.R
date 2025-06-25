@@ -48,8 +48,6 @@ privacy_attack <- function(seed, simulations, train, adversary, outside_training
     # Calculate average densities
     density_train <- density_train / ncol(protected_training)
     density_adversary <- density_adversary / ncol(protected_adversary)
-
-    # import a new csv file called data.csv
     
     # Calculate TPR
     TPR <- sum(density_train > density_adversary) / length(density_train)
