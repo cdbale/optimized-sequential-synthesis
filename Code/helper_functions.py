@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import math
 
 from sklearn import preprocessing
 from sklearn.mixture import GaussianMixture
@@ -17,9 +18,39 @@ rng = np.random.RandomState(42)
 #########################################################################################################
 #########################################################################################################
 
+# function to compute the number of features/covariates that are a function of synthetic variables
+# this includes standalone features and their polynomials and interactions (even with non-synthesized variables)
+def num_terms_with_synthetic(p, s, d):
+    """
+    Calculate the number of transformed variables involving at least one synthetic variable
+    after polynomial expansion of degree d.
+
+    Parameters:
+    p (int): total number of original variables
+    s (int): number of synthetic variables
+    d (int): maximum degree of polynomial terms
+
+    Returns:
+    int: number of terms involving at least one synthetic variable
+    """
+    def binomial(n, k):
+        return math.comb(n, k) if n >= k else 0
+
+    total_terms = sum(binomial(p + i - 1, i) for i in range(1, d + 1))
+    nonsynthetic_terms = sum(binomial(p - s + i - 1, i) for i in range(1, d + 1))
+    return total_terms - nonsynthetic_terms
+
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+
 # function to compute the pMSE ratio from a given original and synthetic data set
-def pmse_ratio(original_data, synthetic_data):
+def pmse_ratio(original_data, synthetic_data, num_synthetic_vars, poly_degree):
     
+    # number of features/covariates that are a function of synthetic variables
+    k = num_terms_with_synthetic(p=synthetic_data.shape[1], s=num_synthetic_vars, d=poly_degree)
+
+    # observation counts
     N_synth = synthetic_data.shape[0]
     N_orig = original_data.shape[0]
     
@@ -27,7 +58,7 @@ def pmse_ratio(original_data, synthetic_data):
     full_X = pd.concat([original_data, synthetic_data], axis=0).reset_index(drop=True)
     
     # generate interactions and powers of variables
-    poly = PolynomialFeatures(3, interaction_only=False, include_bias=False)
+    poly = PolynomialFeatures(poly_degree, interaction_only=False, include_bias=False)
     
     full_X = poly.fit_transform(full_X)
 
@@ -44,7 +75,10 @@ def pmse_ratio(original_data, synthetic_data):
     
     pMSE = 1/(N_synth+N_orig) * np.sum((probs[:,1] - c)**2)
     
-    e_pMSE = 2*(full_X.shape[1])*(1-c)**2 * c/(N_synth+N_orig)
+    # the formula uses (k - 1) in the paper because k includes the intercept
+    # we compute k using the dimensionality of the predictor matrix excluding the
+    # intercept
+    e_pMSE = 2*(k)*(1-c)**2 * c/(N_synth+N_orig)
         
     return pMSE/e_pMSE
 
