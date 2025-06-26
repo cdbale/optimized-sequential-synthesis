@@ -5,6 +5,7 @@ import math
 from sklearn import preprocessing
 from sklearn.mixture import GaussianMixture
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import PolynomialFeatures
 from numpy.random import default_rng
 from scipy.spatial import KDTree
@@ -14,8 +15,137 @@ from statsmodels.regression.linear_model import OLS
 
 rng = np.random.RandomState(42)
 
-#########################################################################################################
-#########################################################################################################
+def _synthesize_with_gmm(train_data, num_datasets, num_samples, num_components, n_init=5, random_state=None):
+    """
+    Helper function to synthesize data using Gaussian Mixture Model.
+    
+    Parameters:
+    -----------
+    train_data : pd.DataFrame
+        Training data to fit the GMM
+    num_samples : int
+        Number of samples to generate
+    num_components : int
+        Number of mixture components
+    n_init : int, default=5
+        Number of initializations to perform
+    random_state : int, default=None
+        Random state for reproducibility
+        
+    Returns:
+    --------
+    list: sXs
+        sXs: list of generated synthetic data frames
+    """
+    if random_state is not None:
+        np.random.seed(random_state)
+    
+    # Standardize the data for GMM
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(train_data)
+    
+    # Fit GMM
+    gmm = GaussianMixture(
+        n_components=num_components,
+        covariance_type='full',
+        n_init=n_init,
+        random_state=random_state
+    )
+    gmm.fit(X_scaled)
+    
+    # Generate synthetic data
+    sXs = []
+    for i in range(num_datasets):
+        synth_data, _ = gmm.sample(n_samples=num_samples)
+        synth_data = scaler.inverse_transform(synth_data)
+        sXs.append(pd.DataFrame(synth_data, columns=train_data.columns))
+    
+    return sXs
+
+####################################################################################
+
+def _synthesize_with_multinomial(X, y, num_samples, synthetic_datasets, C=1.0, poly_degree=3, interaction_only=False, random_state=None):
+    """
+    Helper function to synthesize categorical data using multinomial logistic regression.
+    
+    Parameters:
+    -----------
+    X : pd.DataFrame or None
+        Features for multinomial regression. If None, samples from prior.
+    y : pd.Series
+        Target variable to predict
+    num_samples : int
+        Number of samples to generate
+    synthetic_datasets : list of pd.DataFrame or int
+        Either a list of synthetic datasets or an integer specifying the number of synthetic datasets to generate
+    C : float, default=1.0
+        Inverse of regularization strength
+    poly_degree : int, default=3
+        Degree of polynomial features
+    interaction_only : bool, default=False
+        If true, only main effects and interactions are included
+    random_state : int, default=None
+        Random state for reproducibility
+        
+    Returns:
+    --------
+    list: sXs
+        sXs: list of generated synthetic data frames
+    """
+    if random_state is not None:
+        np.random.seed(random_state)
+    
+    # Code used if this is the first variable being synthesized in the data set
+    if X is None or X.shape[1] == 0:
+        # If no features, sample from prior distribution
+        sXs = []
+        for i in range(synthetic_datasets):
+            counts = y.value_counts(normalize=True)
+            synth_data = np.random.choice(
+                counts.index,
+                size=num_samples,
+                p=counts.values
+            )
+            sXs.append(pd.Series(synth_data, name=y.name))
+        return sXs
+    
+    # Generate polynomial features
+    poly = PolynomialFeatures(degree=poly_degree, interaction_only=interaction_only, include_bias=False)
+    X_poly = poly.fit_transform(X)
+    
+    # Scale features
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X_poly)
+    
+    # Fit multinomial model
+    model = LogisticRegression(
+        penalty='l1',
+        C=C,
+        solver='saga',
+        max_iter=1000,
+        multi_class='multinomial',
+        random_state=random_state
+    )
+    model.fit(X_scaled, y)
+    
+    # loop over synthetic datasets
+    for i, sX in enumerate(synthetic_datasets):
+        sX_poly = poly.transform(sX)
+        sX_scaled = scaler.transform(sX_poly)
+        # Get predicted probabilities
+        probs = model.predict_proba(sX_scaled)
+        
+        # Sample from multinomial distribution
+        synth_data = [
+            np.argmax(np.random.multinomial(n=1, pvals=p, size=1)) 
+            for p in probs
+            ]
+        synth_data = model.classes_[synth_data]
+        synthetic_datasets[i] = pd.concat([synthetic_datasets[i], pd.Series(synth_data, name=y.name)], axis=1)
+    
+    return synthetic_datasets
+
+
 #########################################################################################################
 
 # function to compute the number of features/covariates that are a function of synthetic variables
@@ -40,8 +170,6 @@ def num_terms_with_synthetic(p, s, d):
     nonsynthetic_terms = sum(binomial(p - s + i - 1, i) for i in range(1, d + 1))
     return total_terms - nonsynthetic_terms
 
-#########################################################################################################
-#########################################################################################################
 #########################################################################################################
 
 # function to compute the pMSE ratio from a given original and synthetic data set
@@ -83,7 +211,277 @@ def pmse_ratio(original_data, synthetic_data, num_synthetic_vars, poly_degree):
     return pMSE/e_pMSE
 
 #########################################################################################################
-#########################################################################################################
+
+def perform_synthesis(
+    train_data,
+    number_synthetic_datasets,
+    # New parameters with defaults for backward compatibility
+    synthesis_steps=None,
+    # New parameter for optimization bounds
+    param_values=None,
+    random_state=None
+):
+    """
+    Generate synthetic datasets using specified synthesis methods for each variable.
+    
+    Parameters:
+    -----------
+    train_data : pd.DataFrame
+        The training data to synthesize
+    number_synthetic_datasets : int
+        Number of synthetic datasets to generate
+    synthesis_steps : list of tuples
+        List of (variables, method) tuples specifying synthesis order.
+        Variables can be a single variable name (str) or list of variable names.
+        Method can be 'gmm', 'multinomial', or 'cart'.
+        Example:
+            [
+                (['var1', 'var2'], 'gmm'),  # First synthesize these with GMM
+                ('var3', 'multinomial'),     # Then var3 using previously synthesized vars
+                ('var4', 'multinomial')      # Then var4 using all previous vars
+            ]
+    param_values : dict
+        Bounds for optimization parameters.
+        Example:
+            {
+                'gmm': {'num_components': 25,
+                        'n_init': 5},
+                'multinomial': {
+                    'var3': {'C_var3': 1.0}  # Specific for var3
+                }
+            }
+    random_state : int, optional
+        Random state for reproducibility
+        
+    Returns:
+    --------
+    tuple: (pmse_ratios, synthetic_datasets)
+        pmse_ratios: List of pMSE ratio for each synthetic dataset
+        synthetic_datasets: List of synthetic datasets
+    """
+    # Set random state
+    if random_state is not None:
+        np.random.seed(random_state)
+    
+    # Initialize data structures
+    num_samples = train_data.shape[0]
+
+    # Track which variables have been synthesized
+    synthesized_vars = []
+    
+    # Process each synthesis step
+    for step_idx, (step_vars, method) in enumerate(synthesis_steps):
+        if isinstance(step_vars, str):
+            step_vars = [step_vars]
+            
+        # Get dependencies (all previously synthesized variables)
+        dependencies = []
+        for prev_vars, _ in synthesis_steps[:step_idx]:
+            if isinstance(prev_vars, str):
+                prev_vars = [prev_vars]
+            dependencies.extend(prev_vars)
+        
+        # Remove duplicates and variables being synthesized in this step
+        dependencies = [v for v in dependencies if v not in step_vars]
+        
+        if method == 'gmm':
+            if dependencies:
+                raise ValueError("GMM synthesis cannot depend on previously synthesized variables. "
+                               "It should be the first synthesis step.")
+            
+            # Get parameters for GMM
+            gmm_params = param_values.get('gmm', {})
+            num_components = gmm_params.get('num_components', {})
+            
+            # Synthesize with GMM
+            # returns a list of synthetic data sets
+            synthetic_datasets = _synthesize_with_gmm(
+                train_data[step_vars],
+                num_datasets=number_synthetic_datasets,
+                num_samples=num_samples,
+                num_components=num_components,
+                random_state=random_state
+            )
+                
+        elif method == 'multinomial':
+            # Process each variable in this step
+            for var in step_vars:
+                # Get parameters for this variable
+                var_params = {}
+                if param_values and 'multinomial' in param_values:
+                    # Get variable-specific params
+                    if var in param_values['multinomial']:
+                        var_params.update(param_values['multinomial'][var])
+                
+                C = var_params.get('C', {})
+                
+                # Get features (dependencies)
+                X = train_data[dependencies] if dependencies else None
+
+                print(X.iloc[:10,:])
+                
+                # For each synthetic dataset, generate this variable
+                for i in range(number_synthetic_datasets):
+                    
+                    # if synthetic data sets exist from previous steps, use them
+                    if synthetic_datasets:
+
+                        # Generate synthetic data for this variable
+                        synthetic_datasets = _synthesize_with_multinomial(
+                            X=X,
+                            y=train_data[var],
+                            num_samples=num_samples,
+                            synthetic_datasets=synthetic_datasets,
+                            C=C,
+                            random_state=random_state
+                        )
+        
+        # Update list of synthesized variables
+        synthesized_vars.extend(step_vars)
+    
+    # Calculate pMSE ratios
+    pmse_ratios = [
+        pmse_ratio(
+            train_data, 
+            synth_df, 
+            len(synthesized_vars), 
+            poly_degree=3
+        )
+        for synth_df in synthetic_datasets
+    ]
+    
+    return pmse_ratios, synthetic_datasets
+
+######################################################################################################
+
+def optimize_models(train_data,
+                   number_synthetic_datasets,
+                   synthesis_steps,
+                   param_bounds,
+                   random_state=None):
+    """
+    Optimize synthesis model parameters using Bayesian optimization.
+    
+    Parameters:
+    -----------
+    train_data : pd.DataFrame
+        The training data to synthesize
+    number_synthetic_datasets : int
+        Number of synthetic datasets to generate
+    synthesis_steps : list of tuples
+        List of (variables, method) tuples specifying synthesis order.
+    param_bounds : dict
+        Dictionary specifying parameter bounds for optimization.
+        Example:
+            {
+                'gmm': {
+                    'num_components': (10, 200),
+                    'n_init': (1, 10)
+                },
+                'multinomial': {
+                    'C': (0.001, 3),  # Global default
+                    'var1': {'C': (0.1, 5)}  # Specific for var1
+                }
+            }
+    random_state : int, optional
+        Random state for reproducibility
+    """
+    # Process parameter bounds for Bayesian optimization
+    dimensions = []
+    param_mapping = []
+    
+    # Track which parameters we need to optimize
+    for step_vars, method in synthesis_steps:
+        if isinstance(step_vars, str):
+            step_vars = [step_vars]
+            
+        if method == 'gmm' and 'gmm' in param_bounds:
+            for param, bounds in param_bounds['gmm'].items():
+                if isinstance(bounds, (list, tuple)) and len(bounds) == 2:
+                    # Add dimension for this parameter
+                    dim_name = f"gmm_{param}"
+                    dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
+                    param_mapping.append(('gmm', param))
+                    
+        elif method == 'multinomial':
+            for var in step_vars:
+                # Check for variable-specific parameters
+                var_params = param_bounds.get('multinomial', {}).get(var, {})
+                for param, bounds in var_params.items():
+                    if isinstance(bounds, (list, tuple)) and len(bounds) == 2:
+                        dim_name = f"multinomial_{var}_{param}"
+                        dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
+                        param_mapping.append(('multinomial', var, param))
+                
+                # Check for global multinomial parameters
+                global_params = param_bounds.get('multinomial', {})
+                for param, bounds in global_params.items():
+                    if (isinstance(bounds, (list, tuple)) and len(bounds) == 2 and 
+                        not any(isinstance(v, dict) for v in global_params.values())):
+                        dim_name = f"multinomial_global_{param}"
+                        dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
+                        param_mapping.append(('multinomial', 'global', param))
+    
+    def evaluate_models(**kwargs):
+        # Reconstruct the param_values structure from the flat parameter space
+        param_values = {'gmm': {}, 'multinomial': {}}
+        
+        for i, (param_type, *rest) in enumerate(param_mapping):
+            param_name = f"x{i}"
+            if param_name in kwargs:
+                if param_type == 'gmm':
+                    param, = rest
+                    param_values['gmm'][param] = int(kwargs[param_name])
+                else:  # multinomial
+                    var, param = rest
+                    if var not in param_values['multinomial']:
+                        param_values['multinomial'][var] = {}
+                    param_values['multinomial'][var][param] = kwargs[param_name]
+        
+        # Run synthesis with current parameters
+        pmse_ratios, _ = perform_synthesis(
+            train_data=train_data,
+            number_synthetic_datasets=number_synthetic_datasets,
+            synthesis_steps=synthesis_steps,
+            param_values=param_values,
+            random_state=random_state
+        )
+        
+        # Return negative of mean squared pMSE ratio error (we want to maximize this)
+        return -1 * ((1 - np.mean(pmse_ratios)) ** 2)
+    
+    # Create parameter bounds for Bayesian optimization
+    pbounds = {f"x{i}": (low, high) for i, (low, high, _, _) in enumerate(dimensions)}
+    
+    # Run optimization
+    optimizer = BayesianOptimization(
+        f=evaluate_models,
+        pbounds=pbounds,
+        random_state=random_state
+    )
+    
+    utility = UtilityFunction(kind="ei", xi=1e-02)
+    optimizer.maximize(init_points=5, n_iter=25, acquisition_function=utility)
+    
+    # Process results
+    best_params = {'gmm': {}, 'multinomial': {}}
+    for i, (param_type, *rest) in enumerate(param_mapping):
+        param_name = f"x{i}"
+        if param_type == 'gmm':
+            param, = rest
+            best_params['gmm'][param] = int(optimizer.max['params'][param_name])
+        else:  # multinomial
+            var, param = rest
+            if var not in best_params['multinomial']:
+                best_params['multinomial'][var] = {}
+            best_params['multinomial'][var][param] = optimizer.max['params'][param_name]
+    
+    return {
+        'best_params': best_params,
+        'best_score': -optimizer.max['target'],  # Convert back to positive pMSE
+        'optimizer': optimizer
+    }
+
 #########################################################################################################
 
 # function to generate polynomial features and standardize a given data set
@@ -97,8 +495,6 @@ def polynomial_and_standardize(dataset, poly_degree=3, interaction_only=False):
     
     return scaled_X
 
-#########################################################################################################
-#########################################################################################################
 #########################################################################################################
 
 # function to synthesize a variable using logistic regression model
@@ -121,13 +517,11 @@ def multinomial_synthesizer(orig_data, synth_data_sets, target, penalty_param, p
         probs = mn_model.predict_proba(Y)
     
         v = [np.argmax(rng_mn.multinomial(n=1, pvals=p, size=1)==1) for p in probs]
-    
+        
         vals.append(pd.Series(v, name=target.name))
     
     return vals
 
-#########################################################################################################
-#########################################################################################################
 #########################################################################################################
 
 # function to calculate privacy metrics IMS and 5th percentiles of DCR and NNDR distributions
@@ -201,74 +595,6 @@ def privacy_metrics(train_data, synthetic_datasets, type_of_synthetic, delta):
                           "DCR" : np.concatenate([[DCR_train], DCR_synthetic]), 
                           "NNDR" : np.concatenate([[NNDR_train], NNDR_synthetic])}))
 
-
-# # function to calculate privacy metrics IMS and 5th percentiles of DCR and NNDR distributions
-# def privacy_metrics(train_data, synthetic_datasets, type_of_synthetic, delta):
-
-#     # create scaler
-#     scaler = preprocessing.StandardScaler()
-
-#     # scale training data
-#     train_scaled = scaler.fit_transform(X=train_data)
-
-#     # create tree for nearest neighbor searching
-#     training_tree = KDTree(train_scaled)
-
-#     # calculate nearest neighbor distances within training data
-#     train_dists, train_neighbors = training_tree.query(x=train_scaled, k=6, p=2)
-
-#     # calculate identical match share
-#     # using the second column because we know there is at least one identical record (the record itself)
-#     # so we care about the next most similar record (the second nearest neighbor)
-#     IMS_train = np.mean(train_dists[:,1] <= delta)
-
-#     # calculate 5th percentile of DCR distribution for synthetic and train data
-#     DCR_train = np.percentile(train_dists[:,1], q=5)
-
-#     # calculate nearest neighbor distance ratios
-#     ratios_train = train_dists[:,1]/train_dists[:,-1]
-
-#     # we can encounter division by zero in the above ratios. If this occurs, neighbors 1-5 have the same distance (0)
-#     # and the ratio can be set to one.
-#     ratios_train = np.nan_to_num(ratios_train, nan=1.0)
-
-#     # calculate 5th percentile of nearest neighbor distance ratios
-#     NNDR_train = np.percentile(ratios_train, q=5)
-
-#     IMS_synthetic, DCR_synthetic, NNDR_synthetic = [], [], []
-    
-#     for Z in synthetic_datasets:
-        
-#         # create scaler
-#         scaler = preprocessing.StandardScaler()
-        
-#         # scale synthetic data using means and standard deviations 
-#         synthetic_scaled = scaler.fit(X=train_data).transform(X=Z)
-
-#         # calculate the nearest neighbor distances between synthetic and training data
-#         synthetic_dists, synthetic_neighbors = training_tree.query(x=synthetic_scaled, k=5, p=2)
-
-#         # calculate identical match share
-#         IMS_synthetic.append(np.mean(synthetic_dists[:,0] <= delta))
-
-#         # calculate 5th percentile of DCR distribution for synthetic and train data
-#         DCR_synthetic.append(np.percentile(synthetic_dists[:,0], q=5))
-
-#         # calculate nearest neighbor distance ratios
-#         ratios_synthetic = synthetic_dists[:,0]/synthetic_dists[:,-1]
-
-#         # we can encounter division by zero in the above ratios. If this occurs, neighbors 1-5 have the same distance (0)
-#         # and the ratio can be set to one.
-#         ratios_synthetic = np.nan_to_num(ratios_synthetic, nan=1.0)
-
-#         # calculate 5th percentile of nearest neighbor distance ratios
-#         NNDR_synthetic.append(np.percentile(ratios_synthetic, q=5))
-
-#     return (pd.DataFrame({"Type" : np.concatenate([["Train"], np.repeat(type_of_synthetic, len(synthetic_datasets))]), 
-#                           "IMS" : np.concatenate([[IMS_train], IMS_synthetic]), 
-#                           "DCR" : np.concatenate([[DCR_train], DCR_synthetic]), 
-#                           "NNDR" : np.concatenate([[NNDR_train], NNDR_synthetic])}))
-
 #########################################################################################################
 #########################################################################################################
 #########################################################################################################
@@ -303,421 +629,6 @@ def ims_apply(train_data, synthetic_data_sets, delta_vals, synthetic_is_train=Fa
         return avg_ims
 
 #########################################################################################################
-#########################################################################################################
-#########################################################################################################
-
-def attribute_disclosure_reduction(original_data, synthetic_data, continuous_vars, categorical_vars, sensitive_var, num_mixture_components, deltas, c, prior_prob):
-
-    # assume the original and synthetic data are passed on their original scales
-
-    # number of original records
-    num_records = original_data.shape[0]
-
-    # random number generator
-    rng = default_rng()
-
-    # copy the synthetic dataset
-    new_sX = synthetic_data.copy()
-
-    # normalizer
-    # normalize synthetic data
-    scaler = preprocessing.StandardScaler().fit(X=new_sX.loc[:, continuous_vars])
-    new_sX.loc[:, continuous_vars] = scaler.transform(X=new_sX.loc[:, continuous_vars])
-
-    # normalize original data
-    original_scaled = original_data.copy()
-    original_scaled.loc[:, continuous_vars] = scaler.transform(X=original_scaled.loc[:, continuous_vars])
-
-    # fit a new GMM to the original_scaled data (use optimal parameters from synthesis)
-    mixture_model = GaussianMixture(num_mixture_components, n_init=2, covariance_type='full', init_params="k-means++").fit(original_scaled.loc[:, continuous_vars])
-
-    # store mixture component parameters
-    mus = mixture_model.means_
-    sigmas = mixture_model.covariances_
-
-    # tree of synthetic records (continuous values only)
-    sX_tree = KDTree(new_sX[continuous_vars])
-
-    # temporary count of the number of rows that violate one or more conditions
-    violator_count = num_records
-
-    # number of anonymization loops required
-    num_loops = 1
-
-    # list all categorical variables including sensitive variable
-    all_categorical = categorical_vars + [sensitive_var]
-
-    # as long as the last loop had a violator, we need to recheck all records
-    while violator_count > 0:
-
-        # reset violator count
-        violator_count = 0
-
-        # loop over delta values
-        for delta in deltas:
-
-            # shuffle the original data
-            original_scaled = original_scaled.sample(frac=1.0, ignore_index=True)
-            # # order the non-normalized original data the same way
-            # original_data = original_data.loc[original_scaled.index,:]
-
-            # reset the indexes
-            # original_scaled = original_scaled.reset_index(drop=True)
-            # original_data = original_data.reset_index(drop=True)
-
-            # split original records to preserve memory when doing nearest neighbor searches - do computations on each portion
-            for subset_id, subset in enumerate(np.array_split(original_scaled, 5)):
-
-                # compute the neighbors within radius delta based on continuous variables only
-                neighbor_indices = sX_tree.query_ball_point(subset[continuous_vars], r=delta, p=2.0)
-
-                # store the neighbors for each original record
-                neighbor_records = [new_sX.loc[y, all_categorical] for y in neighbor_indices]
-
-                # calculate the proportion of non-white observations amongst the synthetic neighbors
-                # replace NA values (there were no neighbors) with the prior probability
-                prop_pos_sensitive = np.nan_to_num([np.mean(y.loc[y.loc[:, categorical_vars].eq(subset.loc[:, categorical_vars].iloc[x,:]).all(axis=1), sensitive_var]) for x,y in enumerate(neighbor_records)], nan=prior_prob)
-
-                # compute the updated probability based on the proportion of neighborhood records that match the sensitive value
-                updated_probs = np.where(subset.loc[:, sensitive_var] == 1, np.array(prop_pos_sensitive), 1-np.array(prop_pos_sensitive))
-
-                # vector of prior probability for each record
-                prior_probs = np.where(subset.loc[:, sensitive_var] == 1, prior_prob, 1-prior_prob)
-
-                # compute the attribute disclosure prevention condition
-                condition = updated_probs/prior_probs
-
-                # indexes of records that violate the condition
-                violator_indices = list(np.where(condition > c)[0])
-
-                # if we have violating records
-                if len(violator_indices) > 0:
-
-                    # increment the count of violating records
-                    violator_count += len(violator_indices)
-
-                    # for each violating record, how many neighbors match on the non-sensitive variables
-                    num_matching_non_sensitive = np.array([np.sum(neighbor_records[x].loc[:, categorical_vars].eq(subset.loc[:, categorical_vars].iloc[x,:]).all(axis=1)) for x in violator_indices])
-
-                    # for each violating record, how many neighbors match on all variables
-                    num_matching_all = np.array([np.sum(neighbor_records[x].loc[:, all_categorical].eq(subset.loc[:, all_categorical].iloc[x,:]).all(axis=1)) for x in violator_indices])
-
-                    # how many new records in the neighborhood are needed to meet the condition
-                    num_needed = np.ceil(num_matching_all/(prior_prob*c) - num_matching_non_sensitive).astype(int)
-
-                    # loop over the indices of violating records
-                    for i,j in enumerate(violator_indices):
-
-                        # variables names
-                        original_record = subset.iloc[j,:]
-                        original_continuous = pd.DataFrame(original_record[continuous_vars]).T
-                        original_cat = original_record[all_categorical]
-
-                        # find the component with the highest responsibility for the violating record
-                        component_index = np.argmax(mixture_model.predict_proba(pd.DataFrame(original_continuous, columns=continuous_vars)), axis = 1)[0]
-                        current_mu = mus[component_index,:]
-                        current_sigma = sigmas[component_index,:,:]
-
-                        # numpy array for storing new records
-                        valid_candidates = np.zeros((0,len(continuous_vars)))
-                        # track number of while loops needed to generate enough new records
-                        num_candidate_loops = 0
-                        # as long as we have fewer new records than needed
-                        while valid_candidates.shape[0] < num_needed[i]:
-                            # generate a bunch of candidate points
-                            candidate_points = pd.DataFrame(rng.multivariate_normal(current_mu, current_sigma, size=100000), columns=continuous_vars)
-                            # check for IPUMS years_of_educ variable - round if exists
-                            if 'years_of_educ' in continuous_vars:
-                                candidate_points = pd.DataFrame(scaler.inverse_transform(X=candidate_points), columns=continuous_vars)
-                                candidate_points.loc[:, ['years_of_educ']] = np.round(candidate_points.loc[:, ['years_of_educ']], 0)
-                                candidate_points = pd.DataFrame(scaler.transform(X=candidate_points), columns=continuous_vars)
-                            candidate_tree = KDTree(candidate_points)
-                            valid_indices = candidate_tree.query_ball_point(original_continuous, delta, p=2.0, return_sorted=True)[0]
-                            valid_candidates = np.vstack([valid_candidates, candidate_points.iloc[valid_indices,:]])
-                            num_candidate_loops += 1
-                            if num_candidate_loops > 100:
-                                print('Stuck in inference loop.')
-
-                        # select the number of needed candidates and create the new records
-                        new_locations = valid_candidates[:num_needed[i],:]
-                        new_categorical = np.vstack([np.array(original_cat).reshape(1,-1) for k in range(num_needed[i])])
-                        new_records = pd.DataFrame(np.hstack([new_locations, new_categorical]), columns=new_sX.columns)
-
-                        # edit sensitive variable value to meet the condition
-                        new_records[sensitive_var] = 1.0 - original_cat[sensitive_var]
-
-                        # add new records to synthetic data
-                        new_sX = pd.concat([new_sX, new_records], axis=0).reset_index(drop=True)
-                    
-                        # rebuild the tree for synthetic locations
-                        sX_tree = KDTree(new_sX[continuous_vars])
-
-                print('Subset ' + str(subset_id) + ' done.')
-
-            print('Completed for delta = ' + str(delta))
-
-        print("Full anonymization loop " + str(num_loops) + " completed.")
-        
-        num_loops += 1
-
-    print('Completed AD reduction.')
-
-    new_sX.loc[:, continuous_vars] = scaler.inverse_transform(X=new_sX.loc[:, continuous_vars])
-
-    return new_sX
-
-# # function to apply attribute disclosure prevention algorithm
-# def attribute_disclosure_reduction(original_data, synthetic_data, continuous_vars, categorical_vars, sensitive_var, mixture_model, deltas, c, prior_prob):
-    
-#     # # number of original records
-#     # num_records = original_data.shape[0]
-    
-#     # # record percentages
-#     # print_nums = [int(np.ceil(i*num_records)) for i in [0.25, 0.5, 0.75]]
-    
-#     # # random number generator
-#     # rng = default_rng()
-    
-#     # # copy the synthetic dataset
-#     # new_sX = synthetic_data
-    
-#     # # tree for synthetic locations
-#     # sX_tree = KDTree(new_sX[continuous_vars])
-    
-#     # # store mixture component parameters
-#     # mus = mixture_model.means_
-#     # sigmas = mixture_model.covariances_
-    
-#     # temporary count of the number of rows that violate one or more conditions
-#     violator_count = num_records
-    
-#     # # number of anonymization loops required
-#     # num_loops = 1
-
-#     # all_categorical = categorical_vars.copy()
-#     # all_categorical.append(sensitive_var)
-    
-#     # while we have any violator rows
-#     while violator_count > 0:
-        
-#         # # reset violator count
-#         # violator_count = 0
-        
-#         # for each original record
-#         # we shuffle the records each time so that the violating records are fixed in a random order
-#         for i, original_record in original_data.sample(frac=1.0).reset_index(drop=True).iterrows():
-            
-#             original_location = original_record.loc[continuous_vars]
-#             original_categorical = original_record.loc[all_categorical]
-            
-#             # for each delta
-#             for delta in deltas:
-                    
-#                 ##### Test the Inference Criterion
-                
-#                 # # find synthetic neighbors based on location
-#                 # location_neighbors = sX_tree.query_ball_point(original_location, r=delta, p=2.0)
-                
-#                 # # matches on categorical attributes from location neighbors
-#                 # categorical_matches = (new_sX.loc[location_neighbors, categorical_vars] == original_categorical[categorical_vars]).all(1)
-                
-#                 # matching_rows = new_sX.loc[location_neighbors,:].loc[categorical_matches.values,:]
-                
-#                 # if there are any records in the location neighborhood that match on sex and age
-                
-#                 # if matching_rows.shape[0] > 0:
-                
-#                 #     if original_categorical[sensitive_var] == 1.0:
-#                 #         prior = prior_prob
-#                 #     else:
-#                 #         prior = 1-prior_prob
-                        
-#                 #     num_matching = np.sum(matching_rows[sensitive_var] == original_categorical[sensitive_var])
-            
-#                 #     cond = num_matching/matching_rows.shape[0] * 1/prior
-                
-#                     # if cond > c:
-                        
-#                     #     # add one to number of violators
-#                     #     violator_count += 1
-                        
-#                     #     # number of records with non-matching sensitive variable needed to meet inference
-#                     #     num_needed = int(np.ceil(num_matching/(prior*c) - matching_rows.shape[0]))
-                        
-#                         # find the component with the highest responsibility for the confidential record
-#                         component_index = np.argmax(mixture_model.predict_proba(pd.DataFrame(original_location).T), axis = 1)[0]
-#                         current_mu = mus[component_index,:]
-#                         current_sigma = sigmas[component_index,:,:]
-            
-#                         valid_candidates = np.zeros((0,len(continuous_vars)))
-#                         num_candidate_loops = 0
-#                         while valid_candidates.shape[0] < num_needed:
-                        
-#                             # generate a bunch of candidate points
-#                             candidate_points = rng.multivariate_normal(current_mu, current_sigma, size=100000)
-#                             candidate_tree = KDTree(candidate_points)
-#                             valid_indices = candidate_tree.query_ball_point(original_location, delta, p=2.0, return_sorted=True)
-#                             valid_candidates = np.vstack([valid_candidates, candidate_points[valid_indices,:]])
-#                             num_candidate_loops += 1
-#                             if num_candidate_loops > 100:
-#                                 print('Stuck in inference loop.')
-                    
-#                         # select the number of needed candidates
-#                         new_locations = valid_candidates[:num_needed,:]
-                    
-#                         new_categorical = np.vstack([np.array(original_categorical).reshape(1,-1) for k in range(num_needed)])
-                    
-#                         new_records = pd.DataFrame(np.hstack([new_locations, new_categorical]))
-                    
-#                         new_records.columns = new_sX.columns
-                        
-#                         new_records[sensitive_var] = 1.0 - original_categorical[sensitive_var]
-                    
-#                         new_sX = pd.concat([new_sX, new_records], axis=0).reset_index(drop=True)
-                    
-#                         # rebuild the tree for synthetic locations
-#                         sX_tree = KDTree(new_sX[continuous_vars])
-    
-#             if int(i) in print_nums:
-#                 print("Record " + str(i) + " completed.")
-                
-#         print("Full anonymization loop " + str(num_loops) + " completed.")
-        
-#         num_loops += 1
-                    
-#     return new_sX
-
-#########################################################################################################
-#########################################################################################################
-#########################################################################################################
-
-# function to assess risk of attribute disclosure for IPUMS data
-def attribute_disclosure_evaluation(original_data, synthetic_data, continuous_vars, categorical_vars, sensitive_var, prior_prob, deltas):
-    
-    # list for all attribute disclosure conditions
-    full_ad_conds = []
-
-    # fit scaler to synthetic data
-    # scale synthetic data
-    scaler = preprocessing.StandardScaler().fit(X=synthetic_data.loc[:, continuous_vars])
-    synthetic_scaled = synthetic_data.copy() 
-    synthetic_scaled.loc[:, continuous_vars] = scaler.transform(X=synthetic_data.loc[:, continuous_vars])
-
-    # scale original data using statistics from synthetic data
-    original_scaled = original_data.copy() 
-    original_scaled.loc[:, continuous_vars] = scaler.transform(X=original_data.loc[:, continuous_vars])
-    
-    # tree for synthetic locations
-    sX_tree = KDTree(synthetic_scaled[continuous_vars])
-    
-    # for each value of delta
-    for d in deltas:
-
-        # lists to store the inference condition for each original row in the subset
-        ad_conds = []
-
-        # split original records to preserve memory when doing nearest neighbor searches - do computations on each portion
-        for subset_id, subset in enumerate(np.array_split(original_scaled, 7)):
-
-            # reset row indexes for interation
-            subset = subset.reset_index(drop=True)
-
-            # tree for original locations
-            orig_subset_tree = KDTree(subset[continuous_vars])
-    
-            # find synthetic neighbors of each original point
-            location_neighbors = orig_subset_tree.query_ball_tree(sX_tree, r=d, p=2.0)
-    
-            # for each original record
-            for i, row in subset.iterrows():
-        
-                # matches on categorical attributes from location neighbors
-                categorical_matches = (synthetic_scaled.loc[location_neighbors[i], categorical_vars] == row[categorical_vars]).all(1)
-            
-                matching_rows = synthetic_scaled.loc[location_neighbors[i],:].loc[categorical_matches.values,:]
-            
-                if matching_rows.shape[0] > 0:
-                
-                    if row[sensitive_var] == 1.0:
-                        prior = prior_prob
-                    else:
-                        prior = 1 - prior_prob
-            
-                    cond = np.mean(matching_rows[sensitive_var] == row[sensitive_var])/prior
-                
-                else:
-                
-                    cond = 1
-        
-                # store condition
-                ad_conds.append(cond)
-        
-        ad_conds = pd.Series(ad_conds)
-        
-        full_ad_conds.append(ad_conds)
-        
-    print("Dataset completed.")
-        
-    return full_ad_conds
-
-# # function to assess risk of attribute disclosure for IPUMS data
-# def attribute_disclosure_evaluation(original_data, synthetic_data, continuous_vars, categorical_vars, sensitive_var, prior_prob, deltas):
-    
-#     full_ad_conds = []
-#     full_indices = []
-
-#     scaler = preprocessing.StandardScaler().fit(X=synthetic_data.loc[:, continuous_vars])
-#     synthetic_scaled = synthetic_data.copy() 
-#     synthetic_scaled.loc[:, continuous_vars] = scaler.transform(X=synthetic_data.loc[:, continuous_vars])
-
-#     original_scaled = original_data.copy() 
-#     original_scaled.loc[:, continuous_vars] = scaler.transform(X=original_data.loc[:, continuous_vars])
-    
-#     # tree for original locations
-#     orig_tree = KDTree(original_scaled[continuous_vars])
-    
-#     # tree for synthetic locations
-#     sX_tree = KDTree(synthetic_scaled[continuous_vars])
-    
-#     for d in deltas:
-        
-#         # lists to store the inference condition for each original row and the indices of those rows that violate
-#         ad_conds = []
-    
-#         # find synthetic neighbors of each original point
-#         location_neighbors = orig_tree.query_ball_tree(sX_tree, r=d, p=2.0)
-    
-#         # for each original record
-#         for i, row in original_scaled.iterrows():
-        
-#             # matches on categorical attributes from location neighbors
-#             categorical_matches = (synthetic_scaled.loc[location_neighbors[i], categorical_vars] == row[categorical_vars]).all(1)
-            
-#             matching_rows = synthetic_scaled.loc[location_neighbors[i],:].loc[categorical_matches.values,:]
-            
-#             if matching_rows.shape[0] > 0:
-                
-#                 if row[sensitive_var] == 1.0:
-#                     prior = prior_prob
-#                 else:
-#                     prior = 1 - prior_prob
-            
-#                 cond = np.mean(matching_rows[sensitive_var] == row[sensitive_var])/prior
-                
-#             else:
-                
-#                 cond = 1
-        
-#             # store number of matches and their indices
-#             ad_conds.append(cond)
-        
-#         ad_conds = pd.Series(ad_conds)
-        
-#         full_ad_conds.append(ad_conds)
-        
-#     print("Dataset completed.")
-        
-#     return full_ad_conds
 
 # return point estimates, estimated variance of coefficients, and confidence intervals from OLS
 def ols_param_fetcher(data, y, X):
@@ -816,52 +727,3 @@ def coef_L1_calc(original_data, synthetic_datasets, synthetic_data_type, target_
 
     return pd.concat([l1_frame, CI_ratio_frame, sign_frame, sig_frame, overlap_frame], axis=0), p_and_i_full
 
-# # function to combine point estimates and confidence intervals across synthetic data sets and 
-# # compare them to those from the original data
-# def combined_estimates(synthetic_estimates, original_estimates, type, num_synthetic_datasets, n, nsynth):
-    
-#     # number of synthetic datasets
-#     m = num_synthetic_datasets
-
-#     # the combined point estimate (q-bar_m)
-#     qms = []
-#     for i in ['const', 'latitude', 'longitude', 'sex', 'age']:
-#         qms.append(np.mean([j['params'][i] for j in synthetic_estimates]))
-
-#     # the values for b_m
-#     bms = []
-#     for i, j in enumerate(['const', 'latitude', 'longitude', 'sex', 'age']):
-#         bms.append(np.sum([(1/(m-1))*(k['params'][j]-qms[i])**2 for k in synthetic_estimates]))
-
-#     # the values for u-bar_m
-#     ums = []
-#     for i, j in enumerate(['const', 'latitude', 'longitude', 'sex', 'age']):
-#         ums.append(np.mean([j['l_var'][i] for j in synthetic_estimates]))
-
-#     # calculate variance of qms estimates
-#     Tf = (1 + 1/m) * np.array(bms) - np.array(ums)
-#     delta = 1*(Tf<0)
-#     Tfstar = (Tf>0) * Tf + delta*((nsynth/n) * np.array(ums))
-
-#     # calculate degrees of freedom
-#     vf = (m - 1) * (1 - np.array(ums)/((1 + 1/m) * np.array(bms)))**2
-
-#     # upper and lower CI bounds
-#     upper = pd.Series(np.array(qms) + t.ppf(q=0.975, df=vf)*np.sqrt(Tfstar))
-#     lower = pd.Series(np.array(qms) - t.ppf(q=0.975, df=vf)*np.sqrt(Tfstar))
-
-#     cis = pd.concat([pd.Series(qms), lower, upper], axis=1)
-
-#     cis.columns = ['Point Estimate', 'Lower', 'Upper']
-
-#     cis['Type'] = type
-
-#     # calculate the L1 distance for the point estimates
-#     cis['L1 Point Estimate'] = np.abs(cis['Point Estimate'] - original_estimates['params'].reset_index(drop=True))
-
-#     # calculate the confidence interval ratio (synthetic width / original width)
-#     cis['Synthetic CI Width'] = cis['Upper'] - cis['Lower']
-#     cis['Original CI Width'] = original_estimates['CI'].iloc[:,1] - original_estimates['CI'].iloc[:,0]
-#     cis['CI Ratio'] = cis['Synthetic CI Width'] / cis['Original CI Width']
-
-#     return cis

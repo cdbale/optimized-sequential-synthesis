@@ -5,6 +5,176 @@ import math
 from sklearn import preprocessing
 from sklearn.mixture import GaussianMixture
 from sklearn.linear_model import LogisticRegression
+
+def _synthesize_with_gmm(train_data, num_samples, num_components, n_init=10, random_state=None):
+    """
+    Helper function to synthesize data using Gaussian Mixture Model.
+    
+    Parameters:
+    -----------
+    train_data : pd.DataFrame
+        Training data to fit the GMM
+    num_samples : int
+        Number of samples to generate
+    num_components : int
+        Number of mixture components
+    n_init : int, default=10
+        Number of initializations to perform
+    random_state : int, default=None
+        Random state for reproducibility
+        
+    Returns:
+    --------
+    tuple: (synthetic_data, gmm_model)
+        synthetic_data: Generated synthetic data
+        gmm_model: Fitted GMM model
+    """
+    # Standardize the data for GMM
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(train_data)
+    
+    # Fit GMM
+    gmm = GaussianMixture(
+        n_components=num_components,
+        covariance_type='full',
+        n_init=n_init,
+        random_state=random_state
+    )
+    gmm.fit(X_scaled)
+    
+    # Generate synthetic data
+    synth_data, _ = gmm.sample(n_samples=num_samples)
+    synth_data = scaler.inverse_transform(synth_data)
+    
+    # Convert to DataFrame with original column names
+    synthetic_data = pd.DataFrame(synth_data, columns=train_data.columns)
+    
+    return synthetic_data, gmm
+
+def _synthesize_with_multinomial(X, y, num_samples, C=1.0, poly_degree=3, interaction_only=False, random_state=None):
+    """
+    Helper function to synthesize categorical data using multinomial logistic regression.
+    
+    Parameters:
+    -----------
+    X : pd.DataFrame or None
+        Features for multinomial regression. If None, generates from prior.
+    y : pd.Series
+        Target variable to predict
+    num_samples : int
+        Number of samples to generate
+    C : float, default=1.0
+        Inverse of regularization strength
+    poly_degree : int, default=3
+        Degree of polynomial features
+    interaction_only : bool, default=False
+        If true, only interaction features are produced
+    random_state : int, default=None
+        Random state for reproducibility
+        
+    Returns:
+    --------
+    tuple: (synthetic_data, model)
+        synthetic_data: Generated synthetic data
+        model: Fitted logistic regression model
+    """
+    rng = np.random.RandomState(random_state)
+    
+    if X is None or X.shape[1] == 0:
+        # If no features, sample from prior distribution
+        counts = y.value_counts(normalize=True)
+        synth_data = rng.choice(
+            counts.index,
+            size=num_samples,
+            p=counts.values
+        )
+        return pd.Series(synth_data, name=y.name), None
+    
+    # Generate polynomial features
+    poly = PolynomialFeatures(degree=poly_degree, interaction_only=interaction_only, include_bias=False)
+    X_poly = poly.fit_transform(X)
+    
+    # Scale features
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X_poly)
+    
+    # Fit multinomial model
+    model = LogisticRegression(
+        penalty='l1',
+        C=C,
+        solver='saga',
+        max_iter=1000,
+        multi_class='multinomial',
+        random_state=random_state
+    )
+    model.fit(X_scaled, y)
+    
+    # Generate synthetic data
+    if num_samples > 0:
+        # Sample from the same distribution as training data
+        X_synth = X.sample(n=num_samples, replace=True, random_state=random_state)
+        X_synth_poly = poly.transform(X_synth)
+        X_synth_scaled = scaler.transform(X_synth_poly)
+        
+        # Get predicted probabilities
+        probs = model.predict_proba(X_synth_scaled)
+        
+        # Sample from multinomial distribution
+        synth_data = [
+            np.argmax(rng.multinomial(n=1, pvals=p, size=1)) 
+            for p in probs
+        ]
+        synth_data = model.classes_[synth_data]
+    else:
+        synth_data = np.array([])
+    
+    return pd.Series(synth_data, name=y.name), model
+
+def _synthesize_with_gmm(train_data, num_samples, num_components, n_init=10, random_state=None):
+    """
+    Helper function to synthesize data using Gaussian Mixture Model.
+    
+    Parameters:
+    -----------
+    train_data : pd.DataFrame
+        Training data to fit the GMM
+    num_samples : int
+        Number of samples to generate
+    num_components : int
+        Number of mixture components
+    n_init : int, default=10
+        Number of initializations to perform
+    random_state : int, default=None
+        Random state for reproducibility
+        
+    Returns:
+    --------
+    tuple: (synthetic_data, gmm_model)
+        synthetic_data: Generated synthetic data
+        gmm_model: Fitted GMM model
+    """
+    # Standardize the data for GMM
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(train_data)
+    
+    # Fit GMM
+    gmm = GaussianMixture(
+        n_components=num_components,
+        covariance_type='full',
+        n_init=n_init,
+        random_state=random_state
+    )
+    gmm.fit(X_scaled)
+    
+    # Generate synthetic data
+    synth_data, _ = gmm.sample(n_samples=num_samples)
+    synth_data = scaler.inverse_transform(synth_data)
+    
+    # Convert to DataFrame with original column names
+    synthetic_data = pd.DataFrame(synth_data, columns=train_data.columns)
+    
+    return synthetic_data, gmm
+from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import PolynomialFeatures
 from numpy.random import default_rng
 from scipy.spatial import KDTree
@@ -18,6 +188,8 @@ rng = np.random.RandomState(42)
 #########################################################################################################
 #########################################################################################################
 
+# function to compute the number of features/covariates that are a function of synthetic variables
+# this includes standalone features and their polynomials and interactions (even with non-synthesized variables)
 def num_terms_with_synthetic(p, s, d):
     """
     Calculate the number of transformed variables involving at least one synthetic variable
@@ -38,52 +210,45 @@ def num_terms_with_synthetic(p, s, d):
     nonsynthetic_terms = sum(binomial(p - s + i - 1, i) for i in range(1, d + 1))
     return total_terms - nonsynthetic_terms
 
-# function to compute the pMSE ratio from a given original and synthetic data set
-def pmse_ratio(original_data, synthetic_data, num_synth_vars, poly_degree_pmse):
-    
-    ###
-    # original data: dataframe containing original data
-    # synthetic data: dataframe containing synthetic version of original data - ensure
-    ##### that column names are the same
-    # num_synth: the number of variables being synthesized
-    # (assumes a polynomial of two for computing degrees of freedom)
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
 
-    # compute number of observations in original and synthetic data sets
+# function to compute the pMSE ratio from a given original and synthetic data set
+def pmse_ratio(original_data, synthetic_data, num_synthetic_vars, poly_degree):
+    
+    # number of features/covariates that are a function of synthetic variables
+    k = num_terms_with_synthetic(p=synthetic_data.shape[1], s=num_synthetic_vars, d=poly_degree)
+
+    # observation counts
     N_synth = synthetic_data.shape[0]
     N_orig = original_data.shape[0]
     
-    # stack original and synthetic datasets
+    # combine original and synthetic datasets
     full_X = pd.concat([original_data, synthetic_data], axis=0).reset_index(drop=True)
     
-    # generate second degree interactions and polynomials
-    poly = PolynomialFeatures(poly_degree_pmse, interaction_only=False, include_bias=False)
+    # generate interactions and powers of variables
+    poly = PolynomialFeatures(poly_degree, interaction_only=False, include_bias=False)
+    
     full_X = poly.fit_transform(full_X)
 
-    # scale the stacked dataset
+    # scale the combined dataset
     full_X = preprocessing.StandardScaler().fit_transform(full_X)
-
-    # compute proportion of synthetic records
+    
     c = N_synth/(N_synth+N_orig)
 
-    # create target variable - whether a record is synthetic
     y = np.repeat([0, 1], repeats=[N_orig, N_synth])
-
-    # define discriminative logistic regression model
-    # predicting whether a record is synthetic or not
+    
     pMSE_model = LogisticRegression(penalty=None, max_iter=1000).fit(full_X, y)
-
-    # compute in-sample predicted probabilities of each record being synthetic 
+    
     probs = pMSE_model.predict_proba(full_X)
-
-    # compute propensity score mean-squared error
+    
     pMSE = 1/(N_synth+N_orig) * np.sum((probs[:,1] - c)**2)
-
-    # compute degrees of freedom
-    # and add one for the intercept
-    deg_free = num_terms_with_synthetic(p=original_data.shape[1], s=num_synth_vars, d=poly_degree_pmse) + 1
-
-    # compute the expected pMSE (null pMSE)
-    e_pMSE = (deg_free-1)*(1-c)**2 * c/(N_synth+N_orig)
+    
+    # the formula uses (k - 1) in the paper because k includes the intercept
+    # we compute k using the dimensionality of the predictor matrix excluding the
+    # intercept
+    e_pMSE = 2*(k)*(1-c)**2 * c/(N_synth+N_orig)
         
     return pMSE/e_pMSE
 
@@ -91,8 +256,116 @@ def pmse_ratio(original_data, synthetic_data, num_synth_vars, poly_degree_pmse):
 #########################################################################################################
 #########################################################################################################
 
+def perform_synthesis(#overall parameters
+                      train_data,
+                      number_synthetic_datasets,
+                      # hyperparameters for GMM, end with underscore means Bayesian optimization will choose
+                      number_gmm_initializations,
+                      num_components_,
+                      # hyperparameters for CART, end with underscore means Bayesian optimization will choose
+                      C_non_white_,
+                      C_sex_):
+
+    """
+    Detail arguments and function purpose here.
+    """
+
+    num_samples = train_data.shape[0]
+
+    # normalized version of training data
+    scaler = StandardScaler().fit(train_data.loc[:,['incwage', 'years_of_educ', 'potential_experience']])
+    norm_train = train_data.copy()
+    norm_train.loc[:,['incwage', 'years_of_educ', 'potential_experience']] = scaler.transform(norm_train.loc[:,['incwage', 'years_of_educ', 'potential_experience']])
+    
+    ########## Code for GMM ############
+    
+    # fit GMM model
+    GMM = GaussianMixture(num_components_, n_init=number_gmm_initializations, covariance_type='full', init_params="k-means++", random_state=rng).fit(norm_train.loc[:,["incwage", "years_of_educ", "potential_experience"]])
+    
+    # list for synthetic datasets
+    sXs = []
+    
+    # generate and store number_synthetic_datasets synthetic datasets
+    for i in range(number_synthetic_datasets):
+        sX = GMM.sample(num_samples)[0]
+        sX = pd.DataFrame(sX, columns=['incwage', 'years_of_educ', 'potential_experience'])
+        sXs.append(sX)
+        
+    ####################################################################################################
+        
+    ########### Code for non-white MN ##########
+    
+    synth_non_white_vars = multinomial_synthesizer(orig_data=norm_train.loc[:,["incwage", "years_of_educ", "potential_experience"]], 
+                                                   synth_data_sets=sXs, 
+                                                   target=norm_train.non_white, 
+                                                   penalty_param=C_non_white_)
+    
+    sXs = [pd.concat([Y, synth_non_white_vars[i]], axis=1) for i,Y in enumerate(sXs)]
+        
+    ####################################################################################################
+        
+    ########### Code for sex MN ##########
+    
+    synth_sex_vars = multinomial_synthesizer(orig_data=norm_train.loc[:,["incwage", "years_of_educ", "potential_experience", "non_white"]], 
+                                             synth_data_sets=sXs, 
+                                             target=norm_train.sex, 
+                                             penalty_param=C_sex_)
+    
+    sXs = [pd.concat([Y, synth_sex_vars[i]], axis=1) for i,Y in enumerate(sXs)]
+        
+    ####################################################################################################
+        
+    ###### Calculate pMSE ratios ######
+    pmse_ratios = [pmse_ratio(norm_train, Y) for Y in sXs]
+
+    # convert sXs to original scale (un-normalize?)
+    for i, Z in enumerate(sXs):
+        H = train_data.sample(frac=1.0, replace=True, ignore_index=True).loc[:,['incwage', 'years_of_educ', 'potential_experience']]
+        scaler = StandardScaler().fit(H)
+        Z.loc[:,['incwage', 'years_of_educ', 'potential_experience']] = scaler.inverse_transform(Z.loc[:,['incwage', 'years_of_educ', 'potential_experience']])
+        Z.loc[:, ['years_of_educ']] = np.round(Z.loc[:, ['years_of_educ']], 0)
+    
+    return pmse_ratios, sXs, GMM
+
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+
+def optimize_models_mn(train_data,
+                       number_synthetic_datasets,
+                       number_gmm_initializations,
+                       random_state):
+
+    def evaluate_models(num_components_, C_non_white_, C_sex_):
+
+        pmse_ratios, _, _ = train_models_mn(train_data=train_data,
+                                            number_synthetic_datasets=number_synthetic_datasets,
+                                            number_gmm_initializations=number_gmm_initializations,
+                                            num_components_=int(num_components_),
+                                            C_non_white_=C_non_white_,
+                                            C_sex_=C_sex_)
+        
+        return -1 * ((1 - np.mean(pmse_ratios))**2)
+
+    optimizer = BayesianOptimization(
+        f=evaluate_models,
+        pbounds={
+            "num_components_": (10, 200.99),
+            "C_non_white_": (0.001, 3),
+            "C_sex_": (0.001, 3)
+        },
+        random_state=random_state)
+    
+    utility = UtilityFunction(kind="ei", xi=1e-02)
+    optimizer.maximize(init_points=5, n_iter=25, acquisition_function=utility)
+    print("Final Result: ", optimizer.max)
+    return optimizer.max, optimizer
+
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+
 # function to generate polynomial features and standardize a given data set
-# used by the multinomial_synthesizer function below
 def polynomial_and_standardize(dataset, poly_degree=3, interaction_only=False):
     
     poly = PolynomialFeatures(degree=poly_degree, interaction_only=interaction_only, include_bias=False)
@@ -110,7 +383,7 @@ def polynomial_and_standardize(dataset, poly_degree=3, interaction_only=False):
 # function to synthesize a variable using logistic regression model
 def multinomial_synthesizer(orig_data, synth_data_sets, target, penalty_param, poly_degree=3, interaction_only=False):
     
-    mn_model = LogisticRegression(penalty='l1', C=penalty_param, solver='saga', max_iter=1000, random_state=rng)
+    mn_model = LogisticRegression(penalty='l1', C=penalty_param, solver='saga', max_iter=1000, multi_class='multinomial', random_state=rng)
     
     X = polynomial_and_standardize(dataset=orig_data, poly_degree=poly_degree, interaction_only=interaction_only)
     
@@ -127,7 +400,7 @@ def multinomial_synthesizer(orig_data, synth_data_sets, target, penalty_param, p
         probs = mn_model.predict_proba(Y)
     
         v = [np.argmax(rng_mn.multinomial(n=1, pvals=p, size=1)==1) for p in probs]
-    
+        
         vals.append(pd.Series(v, name=target.name))
     
     return vals
