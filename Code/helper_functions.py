@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import math
+import os
 
 from sklearn import preprocessing
 from sklearn.mixture import GaussianMixture
@@ -12,10 +13,43 @@ from scipy.spatial import KDTree
 from scipy.stats import t
 from statsmodels.tools.tools import add_constant
 from statsmodels.regression.linear_model import OLS
+from bayes_opt import BayesianOptimization
+from bayes_opt import acquisition
 
 rng = np.random.RandomState(42)
 
-def _synthesize_with_gmm(train_data, num_datasets, num_samples, num_components, n_init=5, random_state=None):
+# set number of cores for parallel processing
+def configure_parallel_environment(verbose=True):
+    """
+    Configure parallel settings for joblib/loky and OpenMP.
+    - Limits OpenMP threads per process to 1.
+    - Sets LOKY_MAX_CPU_COUNT to physical cores if possible.
+
+    Call this BEFORE importing sklearn/joblib!
+    """
+    # 1) Limit OpenMP threads per process
+    os.environ['OMP_NUM_THREADS'] = '1'
+    if verbose:
+        print("OMP_NUM_THREADS set to 1")
+
+    # 2) Detect physical cores and set LOKY_MAX_CPU_COUNT
+    try:
+        import psutil
+        cores = psutil.cpu_count(logical=False)
+        if cores is None:
+            cores = psutil.cpu_count(logical=True)
+    except ImportError:
+        cores = os.cpu_count()
+
+    os.environ['LOKY_MAX_CPU_COUNT'] = str(cores)
+
+    if verbose:
+        print(f"LOKY_MAX_CPU_COUNT set to {cores} cores")
+
+    return cores
+
+# function to synthesize data using Gaussian Mixture Model
+def _synthesize_with_gmm(train_data, num_datasets, num_samples, num_components, n_init=3, random_state=None):
     """
     Helper function to synthesize data using Gaussian Mixture Model.
     
@@ -30,32 +64,33 @@ def _synthesize_with_gmm(train_data, num_datasets, num_samples, num_components, 
     n_init : int, default=5
         Number of initializations to perform
     random_state : int, default=None
-        Random state for reproducibility
+        Base random state for reproducibility
         
     Returns:
     --------
     list: sXs
         sXs: list of generated synthetic data frames
     """
-    if random_state is not None:
-        np.random.seed(random_state)
-    
     # Standardize the data for GMM
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(train_data)
     
-    # Fit GMM
+    # Fit GMM with a unique random state if provided
+    gmm_random_state = random_state if random_state is not None else None
     gmm = GaussianMixture(
         n_components=num_components,
         covariance_type='full',
         n_init=n_init,
-        random_state=random_state
+        random_state=gmm_random_state
     )
     gmm.fit(X_scaled)
     
-    # Generate synthetic data
+    # Generate synthetic data with unique random seed for each dataset
     sXs = []
     for i in range(num_datasets):
+        # Create a unique random state for each dataset
+        dataset_random_state = None if random_state is None else random_state + i
+        gmm.random_state = dataset_random_state
         synth_data, _ = gmm.sample(n_samples=num_samples)
         synth_data = scaler.inverse_transform(synth_data)
         sXs.append(pd.DataFrame(synth_data, columns=train_data.columns))
@@ -112,7 +147,7 @@ def _synthesize_with_multinomial(X, y, num_samples, synthetic_datasets, C=1.0, p
     # Generate polynomial features
     poly = PolynomialFeatures(degree=poly_degree, interaction_only=interaction_only, include_bias=False)
     X_poly = poly.fit_transform(X)
-    
+
     # Scale features
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X_poly)
@@ -123,11 +158,10 @@ def _synthesize_with_multinomial(X, y, num_samples, synthetic_datasets, C=1.0, p
         C=C,
         solver='saga',
         max_iter=1000,
-        multi_class='multinomial',
         random_state=random_state
     )
     model.fit(X_scaled, y)
-    
+
     # loop over synthetic datasets
     for i, sX in enumerate(synthetic_datasets):
         sX_poly = poly.transform(sX)
@@ -318,23 +352,15 @@ def perform_synthesis(
                 # Get features (dependencies)
                 X = train_data[dependencies] if dependencies else None
 
-                print(X.iloc[:10,:])
-                
-                # For each synthetic dataset, generate this variable
-                for i in range(number_synthetic_datasets):
-                    
-                    # if synthetic data sets exist from previous steps, use them
-                    if synthetic_datasets:
-
-                        # Generate synthetic data for this variable
-                        synthetic_datasets = _synthesize_with_multinomial(
-                            X=X,
-                            y=train_data[var],
-                            num_samples=num_samples,
-                            synthetic_datasets=synthetic_datasets,
-                            C=C,
-                            random_state=random_state
-                        )
+                # Generate synthetic data for this variable
+                synthetic_datasets = _synthesize_with_multinomial(
+                    X=X,
+                    y=train_data[var],
+                    num_samples=num_samples,
+                    synthetic_datasets=synthetic_datasets,
+                    C=C,
+                    random_state=random_state
+                )
         
         # Update list of synthesized variables
         synthesized_vars.extend(step_vars)
@@ -355,10 +381,12 @@ def perform_synthesis(
 ######################################################################################################
 
 def optimize_models(train_data,
-                   number_synthetic_datasets,
-                   synthesis_steps,
-                   param_bounds,
-                   random_state=None):
+                    number_synthetic_datasets,
+                    synthesis_steps,
+                    param_bounds,
+                    random_state=None,
+                    num_iter_optimization=25,
+                    num_init_optimization=5):
     """
     Optimize synthesis model parameters using Bayesian optimization.
     
@@ -452,16 +480,16 @@ def optimize_models(train_data,
     
     # Create parameter bounds for Bayesian optimization
     pbounds = {f"x{i}": (low, high) for i, (low, high, _, _) in enumerate(dimensions)}
-    
-    # Run optimization
+
     optimizer = BayesianOptimization(
         f=evaluate_models,
         pbounds=pbounds,
-        random_state=random_state
+        verbose=2,
+        random_state=random_state,
+        acquisition_function=acquisition.ExpectedImprovement(xi=1e-02)
     )
     
-    utility = UtilityFunction(kind="ei", xi=1e-02)
-    optimizer.maximize(init_points=5, n_iter=25, acquisition_function=utility)
+    optimizer.maximize(init_points=num_init_optimization, n_iter=num_iter_optimization)
     
     # Process results
     best_params = {'gmm': {}, 'multinomial': {}}
