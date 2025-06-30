@@ -249,6 +249,8 @@ def pmse_ratio(original_data, synthetic_data, num_synthetic_vars, poly_degree):
 def perform_synthesis(
     train_data,
     number_synthetic_datasets,
+    poly_degree_mnl=3,
+    poly_degree_pmse=3,
     # New parameters with defaults for backward compatibility
     synthesis_steps=None,
     # New parameter for optimization bounds
@@ -357,6 +359,7 @@ def perform_synthesis(
                     X=X,
                     y=train_data[var],
                     num_samples=num_samples,
+                    poly_degree=poly_degree_mnl,
                     synthetic_datasets=synthetic_datasets,
                     C=C,
                     random_state=random_state
@@ -371,7 +374,7 @@ def perform_synthesis(
             train_data, 
             synth_df, 
             len(synthesized_vars), 
-            poly_degree=3
+            poly_degree=poly_degree_pmse
         )
         for synth_df in synthetic_datasets
     ]
@@ -384,6 +387,8 @@ def optimize_models(train_data,
                     number_synthetic_datasets,
                     synthesis_steps,
                     param_bounds,
+                    poly_degree_mnl=3,
+                    poly_degree_pmse=3,
                     random_state=None,
                     num_iter_optimization=25,
                     num_init_optimization=5):
@@ -471,6 +476,8 @@ def optimize_models(train_data,
             train_data=train_data,
             number_synthetic_datasets=number_synthetic_datasets,
             synthesis_steps=synthesis_steps,
+            poly_degree_mnl=poly_degree_mnl,
+            poly_degree_pmse=poly_degree_pmse,
             param_values=param_values,
             random_state=random_state
         )
