@@ -18,38 +18,38 @@ from bayes_opt import acquisition
 
 rng = np.random.RandomState(42)
 
-# set number of cores for parallel processing
-def configure_parallel_environment(verbose=True):
-    """
-    Configure parallel settings for joblib/loky and OpenMP.
-    - Limits OpenMP threads per process to 1.
-    - Sets LOKY_MAX_CPU_COUNT to physical cores if possible.
+# # set number of cores for parallel processing
+# def configure_parallel_environment(verbose=True):
+#     """
+#     Configure parallel settings for joblib/loky and OpenMP.
+#     - Limits OpenMP threads per process to 1.
+#     - Sets LOKY_MAX_CPU_COUNT to physical cores if possible.
 
-    Call this BEFORE importing sklearn/joblib!
-    """
-    # 1) Limit OpenMP threads per process
-    os.environ['OMP_NUM_THREADS'] = '1'
-    if verbose:
-        print("OMP_NUM_THREADS set to 1")
+#     Call this BEFORE importing sklearn/joblib!
+#     """
+#     # 1) Limit OpenMP threads per process
+#     os.environ['OMP_NUM_THREADS'] = '1'
+#     if verbose:
+#         print("OMP_NUM_THREADS set to 1")
 
-    # 2) Detect physical cores and set LOKY_MAX_CPU_COUNT
-    try:
-        import psutil
-        cores = psutil.cpu_count(logical=False)
-        if cores is None:
-            cores = psutil.cpu_count(logical=True)
-    except ImportError:
-        cores = os.cpu_count()
+#     # 2) Detect physical cores and set LOKY_MAX_CPU_COUNT
+#     try:
+#         import psutil
+#         cores = psutil.cpu_count(logical=False)
+#         if cores is None:
+#             cores = psutil.cpu_count(logical=True)
+#     except ImportError:
+#         cores = os.cpu_count()
 
-    os.environ['LOKY_MAX_CPU_COUNT'] = str(cores)
+#     os.environ['LOKY_MAX_CPU_COUNT'] = str(cores)
 
-    if verbose:
-        print(f"LOKY_MAX_CPU_COUNT set to {cores} cores")
+#     if verbose:
+#         print(f"LOKY_MAX_CPU_COUNT set to {cores} cores")
 
-    return cores
+#     return cores
 
 # function to synthesize data using Gaussian Mixture Model
-def _synthesize_with_gmm(train_data, num_datasets, num_samples, num_components, n_init=3, random_state=None):
+def _synthesize_with_gmm(train_data, num_datasets, num_samples, num_components, covariance_type, n_init, random_state=None):
     """
     Helper function to synthesize data using Gaussian Mixture Model.
     
@@ -79,7 +79,7 @@ def _synthesize_with_gmm(train_data, num_datasets, num_samples, num_components, 
     gmm_random_state = random_state if random_state is not None else None
     gmm = GaussianMixture(
         n_components=num_components,
-        covariance_type='full',
+        covariance_type=covariance_type,
         n_init=n_init,
         random_state=gmm_random_state
     )
@@ -99,7 +99,7 @@ def _synthesize_with_gmm(train_data, num_datasets, num_samples, num_components, 
 
 ####################################################################################
 
-def _synthesize_with_multinomial(X, y, num_samples, synthetic_datasets, C=1.0, poly_degree=3, interaction_only=False, random_state=None):
+def _synthesize_with_multinomial(X, y, num_samples, synthetic_datasets, C, poly_degree, interaction_only, random_state=None):
     """
     Helper function to synthesize categorical data using multinomial logistic regression.
     
@@ -129,20 +129,27 @@ def _synthesize_with_multinomial(X, y, num_samples, synthetic_datasets, C=1.0, p
     """
     if random_state is not None:
         np.random.seed(random_state)
+
+    # Code to use if target variable is constant, i.e., it doesn't have more than once class
+    if len(y.unique()) == 1:
+        for i, sX in enumerate(synthetic_datasets):
+            synth_data = np.repeat(y.iloc[0], num_samples)
+            synthetic_datasets[i] = pd.concat([synthetic_datasets[i], pd.Series(synth_data, name=y.name)], axis=1)
+        return synthetic_datasets
     
-    # Code used if this is the first variable being synthesized in the data set
-    if X is None or X.shape[1] == 0:
-        # If no features, sample from prior distribution
-        sXs = []
-        for i in range(synthetic_datasets):
-            counts = y.value_counts(normalize=True)
-            synth_data = np.random.choice(
-                counts.index,
-                size=num_samples,
-                p=counts.values
-            )
-            sXs.append(pd.Series(synth_data, name=y.name))
-        return sXs
+    # # Code used if this is the first variable being synthesized in the data set
+    # if X is None or X.shape[1] == 0:
+    #     # If no features, sample from prior distribution
+    #     sXs = []
+    #     for i in range(synthetic_datasets):
+    #         counts = y.value_counts(normalize=True)
+    #         synth_data = np.random.choice(
+    #             counts.index,
+    #             size=num_samples,
+    #             p=counts.values
+    #         )
+    #         sXs.append(pd.Series(synth_data, name=y.name))
+    #     return sXs
     
     # Generate polynomial features
     poly = PolynomialFeatures(degree=poly_degree, interaction_only=interaction_only, include_bias=False)
@@ -207,7 +214,7 @@ def num_terms_with_synthetic(p, s, d):
 #########################################################################################################
 
 # function to compute the pMSE ratio from a given original and synthetic data set
-def pmse_ratio(original_data, synthetic_data, num_synthetic_vars, poly_degree):
+def pmse_ratio(original_data, synthetic_data, num_synthetic_vars, poly_degree, interaction_only):
     
     # number of features/covariates that are a function of synthetic variables
     k = num_terms_with_synthetic(p=synthetic_data.shape[1], s=num_synthetic_vars, d=poly_degree)
@@ -220,7 +227,7 @@ def pmse_ratio(original_data, synthetic_data, num_synthetic_vars, poly_degree):
     full_X = pd.concat([original_data, synthetic_data], axis=0).reset_index(drop=True)
     
     # generate interactions and powers of variables
-    poly = PolynomialFeatures(poly_degree, interaction_only=False, include_bias=False)
+    poly = PolynomialFeatures(poly_degree, interaction_only=interaction_only, include_bias=False)
     
     full_X = poly.fit_transform(full_X)
 
@@ -231,7 +238,7 @@ def pmse_ratio(original_data, synthetic_data, num_synthetic_vars, poly_degree):
 
     y = np.repeat([0, 1], repeats=[N_orig, N_synth])
     
-    pMSE_model = LogisticRegression(penalty=None, max_iter=1000).fit(full_X, y)
+    pMSE_model = LogisticRegression(penalty=None, max_iter=1000, solver='saga').fit(full_X, y)
     
     probs = pMSE_model.predict_proba(full_X)
     
@@ -249,8 +256,11 @@ def pmse_ratio(original_data, synthetic_data, num_synthetic_vars, poly_degree):
 def perform_synthesis(
     train_data,
     number_synthetic_datasets,
-    poly_degree_mnl=3,
-    poly_degree_pmse=3,
+    poly_degree_mnl,
+    poly_degree_pmse,
+    interaction_only,
+    covariance_type,
+    gmm_n_init,
     # New parameters with defaults for backward compatibility
     synthesis_steps=None,
     # New parameter for optimization bounds
@@ -336,6 +346,8 @@ def perform_synthesis(
                 num_datasets=number_synthetic_datasets,
                 num_samples=num_samples,
                 num_components=num_components,
+                covariance_type=covariance_type,
+                n_init=gmm_n_init,
                 random_state=random_state
             )
                 
@@ -360,6 +372,7 @@ def perform_synthesis(
                     y=train_data[var],
                     num_samples=num_samples,
                     poly_degree=poly_degree_mnl,
+                    interaction_only=interaction_only,
                     synthetic_datasets=synthetic_datasets,
                     C=C,
                     random_state=random_state
@@ -374,7 +387,8 @@ def perform_synthesis(
             train_data, 
             synth_df, 
             len(synthesized_vars), 
-            poly_degree=poly_degree_pmse
+            poly_degree=poly_degree_pmse,
+            interaction_only=interaction_only
         )
         for synth_df in synthetic_datasets
     ]
@@ -387,8 +401,11 @@ def optimize_models(train_data,
                     number_synthetic_datasets,
                     synthesis_steps,
                     param_bounds,
-                    poly_degree_mnl=3,
-                    poly_degree_pmse=3,
+                    poly_degree_mnl,
+                    poly_degree_pmse,
+                    interaction_only,
+                    covariance_type,
+                    gmm_n_init,
                     random_state=None,
                     num_iter_optimization=25,
                     num_init_optimization=5):
@@ -446,14 +463,14 @@ def optimize_models(train_data,
                         dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
                         param_mapping.append(('multinomial', var, param))
                 
-                # Check for global multinomial parameters
-                global_params = param_bounds.get('multinomial', {})
-                for param, bounds in global_params.items():
-                    if (isinstance(bounds, (list, tuple)) and len(bounds) == 2 and 
-                        not any(isinstance(v, dict) for v in global_params.values())):
-                        dim_name = f"multinomial_global_{param}"
-                        dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
-                        param_mapping.append(('multinomial', 'global', param))
+                # # Check for global multinomial parameters
+                # global_params = param_bounds.get('multinomial', {})
+                # for param, bounds in global_params.items():
+                #     if (isinstance(bounds, (list, tuple)) and len(bounds) == 2 and 
+                #         not any(isinstance(v, dict) for v in global_params.values())):
+                #         dim_name = f"multinomial_global_{param}"
+                #         dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
+                #         param_mapping.append(('multinomial', 'global', param))
     
     def evaluate_models(**kwargs):
         # Reconstruct the param_values structure from the flat parameter space
@@ -478,6 +495,9 @@ def optimize_models(train_data,
             synthesis_steps=synthesis_steps,
             poly_degree_mnl=poly_degree_mnl,
             poly_degree_pmse=poly_degree_pmse,
+            interaction_only=interaction_only,
+            covariance_type=covariance_type,
+            gmm_n_init=gmm_n_init,
             param_values=param_values,
             random_state=random_state
         )
@@ -519,246 +539,246 @@ def optimize_models(train_data,
 
 #########################################################################################################
 
-# function to generate polynomial features and standardize a given data set
-def polynomial_and_standardize(dataset, poly_degree=3, interaction_only=False):
+# # function to generate polynomial features and standardize a given data set
+# def polynomial_and_standardize(dataset, poly_degree=3, interaction_only=False):
     
-    poly = PolynomialFeatures(degree=poly_degree, interaction_only=interaction_only, include_bias=False)
+#     poly = PolynomialFeatures(degree=poly_degree, interaction_only=interaction_only, include_bias=False)
     
-    X = poly.fit_transform(dataset)
+#     X = poly.fit_transform(dataset)
     
-    scaled_X = preprocessing.StandardScaler().fit_transform(X)
+#     scaled_X = preprocessing.StandardScaler().fit_transform(X)
     
-    return scaled_X
+#     return scaled_X
 
 #########################################################################################################
 
-# function to synthesize a variable using logistic regression model
-def multinomial_synthesizer(orig_data, synth_data_sets, target, penalty_param, poly_degree=3, interaction_only=False):
+# # function to synthesize a variable using logistic regression model
+# def multinomial_synthesizer(orig_data, synth_data_sets, target, penalty_param, poly_degree=3, interaction_only=False):
     
-    mn_model = LogisticRegression(penalty='l1', C=penalty_param, solver='saga', max_iter=1000, multi_class='multinomial', random_state=rng)
+#     mn_model = LogisticRegression(penalty='l1', C=penalty_param, solver='saga', max_iter=1000, multi_class='multinomial', random_state=rng)
     
-    X = polynomial_and_standardize(dataset=orig_data, poly_degree=poly_degree, interaction_only=interaction_only)
+#     X = polynomial_and_standardize(dataset=orig_data, poly_degree=poly_degree, interaction_only=interaction_only)
     
-    sXs = [polynomial_and_standardize(dataset=Y, poly_degree=poly_degree, interaction_only=interaction_only) for Y in synth_data_sets]
+#     sXs = [polynomial_and_standardize(dataset=Y, poly_degree=poly_degree, interaction_only=interaction_only) for Y in synth_data_sets]
     
-    vals = []
+#     vals = []
     
-    mn_model.fit(X, target)
+#     mn_model.fit(X, target)
     
-    rng_mn = default_rng()
+#     rng_mn = default_rng()
     
-    for Y in sXs:
+#     for Y in sXs:
         
-        probs = mn_model.predict_proba(Y)
+#         probs = mn_model.predict_proba(Y)
     
-        v = [np.argmax(rng_mn.multinomial(n=1, pvals=p, size=1)==1) for p in probs]
+#         v = [np.argmax(rng_mn.multinomial(n=1, pvals=p, size=1)==1) for p in probs]
         
-        vals.append(pd.Series(v, name=target.name))
+#         vals.append(pd.Series(v, name=target.name))
     
-    return vals
+#     return vals
 
 #########################################################################################################
 
-# function to calculate privacy metrics IMS and 5th percentiles of DCR and NNDR distributions
-def privacy_metrics(train_data, synthetic_datasets, type_of_synthetic, delta):
+# # function to calculate privacy metrics IMS and 5th percentiles of DCR and NNDR distributions
+# def privacy_metrics(train_data, synthetic_datasets, type_of_synthetic, delta):
 
-    # create scaler
-    scaler = preprocessing.StandardScaler()
+#     # create scaler
+#     scaler = preprocessing.StandardScaler()
 
-    # scale training data
-    train_scaled = scaler.fit_transform(X=train_data)
+#     # scale training data
+#     train_scaled = scaler.fit_transform(X=train_data)
 
-    # create tree for nearest neighbor searching
-    training_tree = KDTree(train_scaled)
+#     # create tree for nearest neighbor searching
+#     training_tree = KDTree(train_scaled)
 
-    # calculate nearest neighbor distances within training data
-    train_dists, train_neighbors = training_tree.query(x=train_scaled, k=6, p=2)
+#     # calculate nearest neighbor distances within training data
+#     train_dists, train_neighbors = training_tree.query(x=train_scaled, k=6, p=2)
 
-    # calculate identical match share
-    # using the second column because we know there is at least one identical record (the record itself)
-    # so we care about the next most similar record (the second nearest neighbor)
-    IMS_train = np.mean(train_dists[:,1] <= delta)
+#     # calculate identical match share
+#     # using the second column because we know there is at least one identical record (the record itself)
+#     # so we care about the next most similar record (the second nearest neighbor)
+#     IMS_train = np.mean(train_dists[:,1] <= delta)
 
-    # calculate 5th percentile of DCR distribution for synthetic and train data
-    DCR_train = np.percentile(train_dists[:,1], q=5)
+#     # calculate 5th percentile of DCR distribution for synthetic and train data
+#     DCR_train = np.percentile(train_dists[:,1], q=5)
 
-    # calculate nearest neighbor distance ratios
-    ratios_train = train_dists[:,1]/train_dists[:,-1]
+#     # calculate nearest neighbor distance ratios
+#     ratios_train = train_dists[:,1]/train_dists[:,-1]
 
-    # we can encounter division by zero in the above ratios. If this occurs, neighbors 1-5 have the same distance (0)
-    # and the ratio can be set to one.
-    ratios_train = np.nan_to_num(ratios_train, nan=1.0)
+#     # we can encounter division by zero in the above ratios. If this occurs, neighbors 1-5 have the same distance (0)
+#     # and the ratio can be set to one.
+#     ratios_train = np.nan_to_num(ratios_train, nan=1.0)
 
-    # calculate 5th percentile of nearest neighbor distance ratios
-    NNDR_train = np.percentile(ratios_train, q=5)
+#     # calculate 5th percentile of nearest neighbor distance ratios
+#     NNDR_train = np.percentile(ratios_train, q=5)
 
-    IMS_synthetic, DCR_synthetic, NNDR_synthetic = [], [], []
+#     IMS_synthetic, DCR_synthetic, NNDR_synthetic = [], [], []
     
-    for Z in synthetic_datasets:
+#     for Z in synthetic_datasets:
         
-        # create scaler
-        scaler = preprocessing.StandardScaler().fit(X=Z)
+#         # create scaler
+#         scaler = preprocessing.StandardScaler().fit(X=Z)
 
-        # scale synthetic data using means and standard deviations 
-        synthetic_scaled = scaler.transform(X=Z)
-        train_scaled = scaler.transform(X=train_data)
+#         # scale synthetic data using means and standard deviations 
+#         synthetic_scaled = scaler.transform(X=Z)
+#         train_scaled = scaler.transform(X=train_data)
     
-        # create tree for nearest neighbor searching
-        training_tree = KDTree(train_scaled)
+#         # create tree for nearest neighbor searching
+#         training_tree = KDTree(train_scaled)
 
-        # calculate the nearest neighbor distances between synthetic and training data
-        synthetic_dists, synthetic_neighbors = training_tree.query(x=synthetic_scaled, k=5, p=2)
+#         # calculate the nearest neighbor distances between synthetic and training data
+#         synthetic_dists, synthetic_neighbors = training_tree.query(x=synthetic_scaled, k=5, p=2)
 
-        # calculate identical match share
-        IMS_synthetic.append(np.mean(synthetic_dists[:,0] <= delta))
+#         # calculate identical match share
+#         IMS_synthetic.append(np.mean(synthetic_dists[:,0] <= delta))
 
-        # calculate 5th percentile of DCR distribution for synthetic and train data
-        DCR_synthetic.append(np.percentile(synthetic_dists[:,0], q=5))
+#         # calculate 5th percentile of DCR distribution for synthetic and train data
+#         DCR_synthetic.append(np.percentile(synthetic_dists[:,0], q=5))
 
-        # calculate nearest neighbor distance ratios
-        ratios_synthetic = synthetic_dists[:,0]/synthetic_dists[:,-1]
+#         # calculate nearest neighbor distance ratios
+#         ratios_synthetic = synthetic_dists[:,0]/synthetic_dists[:,-1]
 
-        # we can encounter division by zero in the above ratios. If this occurs, neighbors 1-5 have the same distance (0)
-        # and the ratio can be set to one.
-        ratios_synthetic = np.nan_to_num(ratios_synthetic, nan=1.0)
+#         # we can encounter division by zero in the above ratios. If this occurs, neighbors 1-5 have the same distance (0)
+#         # and the ratio can be set to one.
+#         ratios_synthetic = np.nan_to_num(ratios_synthetic, nan=1.0)
 
-        # calculate 5th percentile of nearest neighbor distance ratios
-        NNDR_synthetic.append(np.percentile(ratios_synthetic, q=5))
+#         # calculate 5th percentile of nearest neighbor distance ratios
+#         NNDR_synthetic.append(np.percentile(ratios_synthetic, q=5))
 
-    return (pd.DataFrame({"Type" : np.concatenate([["Train"], np.repeat(type_of_synthetic, len(synthetic_datasets))]), 
-                          "IMS" : np.concatenate([[IMS_train], IMS_synthetic]), 
-                          "DCR" : np.concatenate([[DCR_train], DCR_synthetic]), 
-                          "NNDR" : np.concatenate([[NNDR_train], NNDR_synthetic])}))
+#     return (pd.DataFrame({"Type" : np.concatenate([["Train"], np.repeat(type_of_synthetic, len(synthetic_datasets))]), 
+#                           "IMS" : np.concatenate([[IMS_train], IMS_synthetic]), 
+#                           "DCR" : np.concatenate([[DCR_train], DCR_synthetic]), 
+#                           "NNDR" : np.concatenate([[NNDR_train], NNDR_synthetic])}))
 
 #########################################################################################################
 #########################################################################################################
 #########################################################################################################
 
-# function to calculate IMS specifically
-def ims_calc(train_data, synthetic_data, delta, synthetic_is_train=False):
+# # function to calculate IMS specifically
+# def ims_calc(train_data, synthetic_data, delta, synthetic_is_train=False):
     
-    scaler = preprocessing.StandardScaler().fit(X=synthetic_data)
+#     scaler = preprocessing.StandardScaler().fit(X=synthetic_data)
     
-    train_data_scaled = scaler.transform(X=train_data)
+#     train_data_scaled = scaler.transform(X=train_data)
     
-    training_tree = KDTree(train_data_scaled)
+#     training_tree = KDTree(train_data_scaled)
     
-    synthetic_data_scaled = scaler.transform(X=synthetic_data)
+#     synthetic_data_scaled = scaler.transform(X=synthetic_data)
     
-    synthetic_dists, synthetic_neighbors = training_tree.query(x=synthetic_data_scaled, k=2, p=2)
+#     synthetic_dists, synthetic_neighbors = training_tree.query(x=synthetic_data_scaled, k=2, p=2)
 
-    if synthetic_is_train:
-        IMS_synthetic = np.mean(synthetic_dists[:,1] <= delta)
-    else:
-        IMS_synthetic = np.mean(synthetic_dists[:,0] <= delta)
+#     if synthetic_is_train:
+#         IMS_synthetic = np.mean(synthetic_dists[:,1] <= delta)
+#     else:
+#         IMS_synthetic = np.mean(synthetic_dists[:,0] <= delta)
     
-    return IMS_synthetic
+#     return IMS_synthetic
 
-# function that applies the above ims_calc function over a set of synthetic data sets for a range of delta values and returns the average for each delta value
-def ims_apply(train_data, synthetic_data_sets, delta_vals, synthetic_is_train=False):
-    ims = [[ims_calc(train_data=train_data, synthetic_data=y, delta=x, synthetic_is_train=synthetic_is_train) for x in delta_vals] for y in synthetic_data_sets]
-    if synthetic_is_train:
-        return ims
-    else:
-        avg_ims = np.mean(np.vstack(ims), axis=0)
-        return avg_ims
+# # function that applies the above ims_calc function over a set of synthetic data sets for a range of delta values and returns the average for each delta value
+# def ims_apply(train_data, synthetic_data_sets, delta_vals, synthetic_is_train=False):
+#     ims = [[ims_calc(train_data=train_data, synthetic_data=y, delta=x, synthetic_is_train=synthetic_is_train) for x in delta_vals] for y in synthetic_data_sets]
+#     if synthetic_is_train:
+#         return ims
+#     else:
+#         avg_ims = np.mean(np.vstack(ims), axis=0)
+#         return avg_ims
 
 #########################################################################################################
 
-# return point estimates, estimated variance of coefficients, and confidence intervals from OLS
-def ols_param_fetcher(data, y, X):
-    predictors = data.loc[:, X]
-    predictors = add_constant(predictors)
-    state_ols = OLS(endog=data.loc[:, y], exog=predictors)
-    ols_results = state_ols.fit()
-    return {"params": ols_results.params, 
-            "l_var": np.diag(ols_results.cov_params()),
-            "CI": ols_results.conf_int().reset_index(drop=True)}
+# # return point estimates, estimated variance of coefficients, and confidence intervals from OLS
+# def ols_param_fetcher(data, y, X):
+#     predictors = data.loc[:, X]
+#     predictors = add_constant(predictors)
+#     state_ols = OLS(endog=data.loc[:, y], exog=predictors)
+#     ols_results = state_ols.fit()
+#     return {"params": ols_results.params, 
+#             "l_var": np.diag(ols_results.cov_params()),
+#             "CI": ols_results.conf_int().reset_index(drop=True)}
 
-# function to calculate the L1 distance, confidence interval ratio, and sign, significance, and overlap metrics
-def coef_L1_calc(original_data, synthetic_datasets, synthetic_data_type, target_variable, exog_variables, param_names):
+# # function to calculate the L1 distance, confidence interval ratio, and sign, significance, and overlap metrics
+# def coef_L1_calc(original_data, synthetic_datasets, synthetic_data_type, target_variable, exog_variables, param_names):
 
-    # copy synthetic datasets so they don't get edited on a global scope
-    all_synth = synthetic_datasets.copy()
+#     # copy synthetic datasets so they don't get edited on a global scope
+#     all_synth = synthetic_datasets.copy()
 
-    # train a logistic regression model with state as the target and lat, long, sex, age, and sex*age as predictors
-    # function returns all parameter estimates, standard errors, and confidence intervals for the training data
-    ols_train = ols_param_fetcher(data=original_data, y=target_variable, X=exog_variables)
+#     # train a logistic regression model with state as the target and lat, long, sex, age, and sex*age as predictors
+#     # function returns all parameter estimates, standard errors, and confidence intervals for the training data
+#     ols_train = ols_param_fetcher(data=original_data, y=target_variable, X=exog_variables)
 
-    # estimate the same logistic regression model for all synthetic data sets and save params, standard errors, and CIs
-    ols_synth = [ols_param_fetcher(data=Y, y=target_variable, X=exog_variables) for Y in synthetic_datasets]
+#     # estimate the same logistic regression model for all synthetic data sets and save params, standard errors, and CIs
+#     ols_synth = [ols_param_fetcher(data=Y, y=target_variable, X=exog_variables) for Y in synthetic_datasets]
 
-    # create a dataframe with the L1 distances for each coefficient in the columns, (rows are for each synthetic data set)
-    # and a column identifying the data type
-    l1_frame = pd.DataFrame()
+#     # create a dataframe with the L1 distances for each coefficient in the columns, (rows are for each synthetic data set)
+#     # and a column identifying the data type
+#     l1_frame = pd.DataFrame()
 
-    # calculate L1 distance
-    for i in ols_synth:
-        l1_frame = pd.concat([l1_frame, np.abs(i['params'] - ols_train['params'])], axis=1)
+#     # calculate L1 distance
+#     for i in ols_synth:
+#         l1_frame = pd.concat([l1_frame, np.abs(i['params'] - ols_train['params'])], axis=1)
 
-    l1_frame = l1_frame.T.reset_index(drop=True)
-    l1_frame.columns = param_names
-    l1_frame['Data Type'] = synthetic_data_type
-    l1_frame['Measure'] = 'L1 Distance'
+#     l1_frame = l1_frame.T.reset_index(drop=True)
+#     l1_frame.columns = param_names
+#     l1_frame['Data Type'] = synthetic_data_type
+#     l1_frame['Measure'] = 'L1 Distance'
 
-    # calculate CI ratio (width of synthetic / width of original)
-    # calculate confidence interval ratios
-    CI_ratio_frame = pd.DataFrame()
-    for i in ols_synth:
-        CI_ratio_frame = pd.concat([CI_ratio_frame, (i['CI'].iloc[:,1]-i['CI'].iloc[:,0]) / (ols_train['CI'].iloc[:,1]-ols_train['CI'].iloc[:,0])], axis=1)
+#     # calculate CI ratio (width of synthetic / width of original)
+#     # calculate confidence interval ratios
+#     CI_ratio_frame = pd.DataFrame()
+#     for i in ols_synth:
+#         CI_ratio_frame = pd.concat([CI_ratio_frame, (i['CI'].iloc[:,1]-i['CI'].iloc[:,0]) / (ols_train['CI'].iloc[:,1]-ols_train['CI'].iloc[:,0])], axis=1)
 
-    CI_ratio_frame = CI_ratio_frame.T.reset_index(drop=True)
-    CI_ratio_frame.columns = param_names
-    CI_ratio_frame['Data Type'] = synthetic_data_type
-    CI_ratio_frame['Measure'] = 'CI Ratio'
+#     CI_ratio_frame = CI_ratio_frame.T.reset_index(drop=True)
+#     CI_ratio_frame.columns = param_names
+#     CI_ratio_frame['Data Type'] = synthetic_data_type
+#     CI_ratio_frame['Measure'] = 'CI Ratio'
     
-    # calculate whether the signs of coefficients match
-    sign_frame = pd.DataFrame()
-    for i in ols_synth:
-        sign_frame = pd.concat([sign_frame, abs(ols_train['params']) + abs(i['params']) == abs(ols_train['params'] + i['params'])], axis=1)
+#     # calculate whether the signs of coefficients match
+#     sign_frame = pd.DataFrame()
+#     for i in ols_synth:
+#         sign_frame = pd.concat([sign_frame, abs(ols_train['params']) + abs(i['params']) == abs(ols_train['params'] + i['params'])], axis=1)
 
-    sign_frame = sign_frame.T.reset_index(drop=True)
-    sign_frame.columns = param_names
-    sign_frame['Data Type'] = synthetic_data_type
-    sign_frame['Measure'] = 'Sign Match'
+#     sign_frame = sign_frame.T.reset_index(drop=True)
+#     sign_frame.columns = param_names
+#     sign_frame['Data Type'] = synthetic_data_type
+#     sign_frame['Measure'] = 'Sign Match'
     
-    # check whether the statistical significance of the coefficients matches
-    sig_frame = pd.DataFrame()
-    orig_sig = pd.concat([ols_train['CI'].iloc[:,0] <= 0, 0 <= ols_train['CI'].iloc[:,1]], axis=1).all(axis=1)
-    for i in ols_synth:
-        sig_frame = pd.concat([sig_frame, pd.concat([i['CI'].iloc[:,0] <= 0, 0 <= i['CI'].iloc[:,1]], axis=1).all(axis=1).eq(orig_sig, axis=0)], axis=1)
+#     # check whether the statistical significance of the coefficients matches
+#     sig_frame = pd.DataFrame()
+#     orig_sig = pd.concat([ols_train['CI'].iloc[:,0] <= 0, 0 <= ols_train['CI'].iloc[:,1]], axis=1).all(axis=1)
+#     for i in ols_synth:
+#         sig_frame = pd.concat([sig_frame, pd.concat([i['CI'].iloc[:,0] <= 0, 0 <= i['CI'].iloc[:,1]], axis=1).all(axis=1).eq(orig_sig, axis=0)], axis=1)
 
-    sig_frame = sig_frame.T.reset_index(drop=True)
-    sig_frame.columns = param_names
-    sig_frame['Data Type'] = synthetic_data_type
-    sig_frame['Measure'] = 'Significance Match'
+#     sig_frame = sig_frame.T.reset_index(drop=True)
+#     sig_frame.columns = param_names
+#     sig_frame['Data Type'] = synthetic_data_type
+#     sig_frame['Measure'] = 'Significance Match'
     
-    # check whether confidence intervals overlap
-    overlap_frame = pd.DataFrame()
-    for synth in ols_synth:
-        overlaps = []
-        for i,j in synth['CI'].iterrows():
-            i1 = pd.Interval(ols_train['CI'].iloc[i,0], ols_train['CI'].iloc[i,1], closed='both')
-            i2 = pd.Interval(j[0], j[1], closed='both')
-            overlaps.append(i1.overlaps(i2))
-        overlap_frame = pd.concat([overlap_frame, pd.Series(overlaps)], axis=1)
+#     # check whether confidence intervals overlap
+#     overlap_frame = pd.DataFrame()
+#     for synth in ols_synth:
+#         overlaps = []
+#         for i,j in synth['CI'].iterrows():
+#             i1 = pd.Interval(ols_train['CI'].iloc[i,0], ols_train['CI'].iloc[i,1], closed='both')
+#             i2 = pd.Interval(j[0], j[1], closed='both')
+#             overlaps.append(i1.overlaps(i2))
+#         overlap_frame = pd.concat([overlap_frame, pd.Series(overlaps)], axis=1)
 
-    overlap_frame = overlap_frame.T.reset_index(drop=True)
-    overlap_frame.columns = param_names
-    overlap_frame['Data Type'] = synthetic_data_type
-    overlap_frame['Measure'] = 'CI Overlap'
+#     overlap_frame = overlap_frame.T.reset_index(drop=True)
+#     overlap_frame.columns = param_names
+#     overlap_frame['Data Type'] = synthetic_data_type
+#     overlap_frame['Measure'] = 'CI Overlap'
 
-    # create dataframe with the actual point estimates and confidence intervals
-    p_and_i_full = pd.DataFrame()
+#     # create dataframe with the actual point estimates and confidence intervals
+#     p_and_i_full = pd.DataFrame()
     
-    for i, Z in enumerate(ols_synth):
-        p_and_i = pd.concat([Z['params'].reset_index(), Z['CI']], axis=1)
-        p_and_i.columns = ['Parameter', 'Point Estimate', 'Lower Bound', 'Upper Bound']
-        p_and_i.loc[:,'Type'] = synthetic_data_type
-        p_and_i.loc[:,'index'] = i
-        p_and_i_full = pd.concat([p_and_i_full, p_and_i], axis=0)
+#     for i, Z in enumerate(ols_synth):
+#         p_and_i = pd.concat([Z['params'].reset_index(), Z['CI']], axis=1)
+#         p_and_i.columns = ['Parameter', 'Point Estimate', 'Lower Bound', 'Upper Bound']
+#         p_and_i.loc[:,'Type'] = synthetic_data_type
+#         p_and_i.loc[:,'index'] = i
+#         p_and_i_full = pd.concat([p_and_i_full, p_and_i], axis=0)
 
-    p_and_i_full = p_and_i_full.reset_index(drop=True)
+#     p_and_i_full = p_and_i_full.reset_index(drop=True)
 
-    return pd.concat([l1_frame, CI_ratio_frame, sign_frame, sig_frame, overlap_frame], axis=0), p_and_i_full
+#     return pd.concat([l1_frame, CI_ratio_frame, sign_frame, sig_frame, overlap_frame], axis=0), p_and_i_full
 

@@ -1,0 +1,9 @@
+- define synthesis method
+	GMM and MNL models (leaving CART out for now)
+- conduct privacy analysis using defined synthesis method for multiple values of n, with two types of optimization (the pMSE
+	based and the use case based, e.g., regression-based)
+- move on and apply the defined synthesis method to the real Criteo data
+- apply the differentially private method to the criteo data using a value of epsilon that corresponds to the maximum value from the privacy analysis
+- compute utility loss using the same method as Ponte et al.
+- Conduct a secondary synthesis analysis where the optimization is carried out based on the business use case
+- 
