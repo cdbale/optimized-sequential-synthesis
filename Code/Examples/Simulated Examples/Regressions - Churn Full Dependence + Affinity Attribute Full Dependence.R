@@ -4,14 +4,18 @@ library(tidymodels)
 set.seed(100)
 
 # Churn Data
-source("Simulate Data - 6 Variables + Churn.R")
-synthesized_data <- read_csv("synthesized_data.csv")
+source(here::here("Code/Examples/Simulated Examples", "Simulate Data - Churn Full Dependence + Affinity Attribute Full Dependence.R"))
+synthesized_data <- read_csv(here::here("Data/Simulated", "churnFULL_aaFULL_synthesized.csv"))
 
 # Prep
 synthesized_data <- synthesized_data |>
   mutate(churn = ifelse(churn >= .5, 1, 0)) |>
-  mutate(id = `...1` + 1001) |>
-  select(-`...1`) |>
+  mutate(churn = as.factor(churn),
+         hiking_int = as.factor(hiking_int),
+         sustain_int = as.factor(sustain_int),
+         online_int = as.factor(online_int))
+
+simulated_data <- simulated_data |>
   mutate(churn = as.factor(churn),
          hiking_int = as.factor(hiking_int),
          sustain_int = as.factor(sustain_int),
@@ -44,7 +48,7 @@ training_cv <- vfold_cv(training, v = 10, strata = churn)
 split_synth <- initial_split(synthesized_data, prop = .9)
 
 training_synth <- training(split_synth)
-testing_synth <- testing(split_synth)
+testing_synth <- testing
 
 # v-fold
 training_cv_synth <- vfold_cv(training_synth, v = 10, strata = churn)
@@ -54,59 +58,60 @@ workflow_partial <- workflow() |>
   add_model(logistic_reg()) |>
   add_recipe(recipe_partial)
 
-cv_results_partial <- workflow_partial |>
-  fit_resamples(
-    resamples = training_cv
-  )
-
-# Compute model accuracy - Threshold at .5
-collect_metrics(cv_results_partial)
+# Fit the model, get predictive accuracy
+log_fit_partial <- fit(workflow_partial, data = training)
+preds_partial <- predict(log_fit_partial, new_data = testing, type = "class") |>
+  bind_cols(testing)
+metrics_partial <- preds_partial |>
+  metrics(truth = churn, estimate = .pred_class)
+accuracy_partial <- metrics_partial |>
+  filter(.metric == "accuracy")
 
 # Synthesized Fit: Company has Synthesized Data ---------------------------
 workflow_synth <- workflow() |>
   add_model(logistic_reg()) |>
   add_recipe(recipe_full)
 
-cv_results_synth <- workflow_synth |>
-  fit_resamples(
-    resamples = training_cv_synth
-  )
-
-# Compute model accuracy - Threshold at .5
-collect_metrics(cv_results_synth)
+# Fit the model, get predictive accuracy
+log_fit_synth <- fit(workflow_synth, data = training_synth)
+preds_synth <- predict(log_fit_synth, new_data = testing_synth, type = "class") |>
+  bind_cols(testing_synth)
+metrics_synth <- preds_synth |>
+  metrics(truth = churn, estimate = .pred_class)
+accuracy_synth <- metrics_synth |>
+  filter(.metric == "accuracy")
 
 # Complete Fit: Company has data for all ----------------------------------
 workflow_full <- workflow() |>
   add_model(logistic_reg()) |>
   add_recipe(recipe_full)
 
-cv_results_full <- workflow_full |>
-  fit_resamples(
-    resamples = training_cv
-  )
-
-# Compute model accuracy - Threshold at .5
-collect_metrics(cv_results_full)
-
+# Fit the model, get predictive accuracy
+log_fit_full <- fit(workflow_full, data = training)
+preds_full <- predict(log_fit_full, new_data = testing, type = "class") |>
+  bind_cols(testing)
+metrics_full <- preds_full |>
+  metrics(truth = churn, estimate = .pred_class)
+accuracy_full <- metrics_full |>
+  filter(.metric == "accuracy")
 
 # Save Final Results ------------------------------------------------------
 
-final_results_full <- bind_rows(
-collect_metrics(cv_results_partial)[1,] |>
-  select(-.config) |>
+final_results_churnFULL_aaFULL <- bind_rows(
+  accuracy_partial |>
   mutate(model = "partial"),
-collect_metrics(cv_results_synth)[1,] |>
-  select(-.config) |>
+  accuracy_synth |>
   mutate(model = "synthetic"),
-collect_metrics(cv_results_full)[1,] |>
-  select(-.config) |>
+  accuracy_full |>
   mutate(model = "full")
 ) |>
 rename(
   metric = .metric,
   estimator = .estimator
 ) |>
-  mutate(data = "churn fully dependent, aa based on dems")
+  mutate(data = "churn full dependence, aa full dependence")
+
+
 
 # rm(list = setdiff(ls(), "final_results_full"))
 
@@ -114,4 +119,7 @@ rename(
 # Prob don't need mixture model, focus first on MNL and get it running
 
 # Set up 3 cart/logit models to predict each variable based on the other four/5/6, sequentially
+
+
+
 

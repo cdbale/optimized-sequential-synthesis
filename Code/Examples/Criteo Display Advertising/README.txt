@@ -1,0 +1,5 @@
+This example uses the Criteo Advertising Challenge dataset, provided by Criteo for an online contest in 2014. The goal of the challenge was to benchmark the most accurate ML algorithms for CTR estimation. As such, Criteo provided traffic logs from their own datasets. The variables were hashed and transformed and the variables were obscured.
+
+Reading in the data results in 13 integer variables and 26 hashed character variables. From these, a subset of 6 integers and 6 strings are chosen for the data privacy example. The outcome variable, 'label', was also added which represents a conversion in advertising (presumably a click or purchase). This data is formulated and the strings are dummy coded in the "Read in Criteo Data" R script. Because the Criteo dataset is so large, only a subset of rows was selected. A different subset was chosen to test the data.
+
+Following this, the synthetic data is created in the "Synthesize Criteo Advertising Data" python script. Models consisting of the full data as well as the synthetic data can then be compared in the "Criteo Display Advertising Model Comparison" R script.

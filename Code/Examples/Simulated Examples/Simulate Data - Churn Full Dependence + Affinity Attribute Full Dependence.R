@@ -235,9 +235,9 @@ simulated_data |>
   facet_wrap(~churn)
 
 # Region
-simulated_data |>
-  ggplot(mapping = aes(x = churn, fill = as.character(region))) +
-  geom_bar(position = "fill")
+# simulated_data |>
+#   ggplot(mapping = aes(x = churn, fill = as.character(region))) +
+#   geom_bar(position = "fill")
 
 # Amount Spent
 simulated_data |>
@@ -256,6 +256,10 @@ simulated_data |>
   ggplot(mapping = aes(x = num_visits)) +
   geom_density() +
   facet_wrap(~churn)
+
+# write_csv(simulated_data, "churnFULL_aaFULL.csv")
+
+
 
 # rm(list = setdiff(ls(), "simulated_data"))
 

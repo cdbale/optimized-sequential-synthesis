@@ -1,6 +1,7 @@
 library(tidyverse)
+library(fastDummies)
 
-telco <- read_csv("IBM_Telco.csv")
+telco <- read_csv(here::here("Data/IBM", "IBM_Telco.csv"))
 
 # Gender (0 for Female, 1 for Male)
 telco <- telco |>
@@ -27,11 +28,17 @@ telco <- telco |>
 telco <- telco |>
   mutate(Churn = ifelse(Churn == "Yes", 1, 0))
 
-glimpse(telco)
 
-telco |> write_csv("IBM_Telco_Cleaned.csv")
+# Dummy Code
+telco <- telco |>
+  dummy_cols(select_columns = c("InternetService", "Contract", "PaymentMethod"),
+             remove_first_dummy = TRUE,
+             remove_selected_columns = TRUE) |>
+  select(-customerID)
 
-any(is.na(telco))
+# Remove NAs
+telco <- telco |>
+  filter(if_all(everything(), ~ !is.na(.)))
 
-colSums(is.na(telco)) > 0
+# telco |> write_csv(here::here("Data/IBM", "IBM_Telco_Cleaned.csv"))
 

@@ -102,11 +102,11 @@ tibble(amount_spent = amount_spent) |>
 churn <- c()
 
 for (i in 1:num_cust) {
-  # abs_age <- abs(age[i] - 25)
-  # age_impact <- abs_age/age[i]
-  churn[i] <- age_impact * -5 +
+  abs_age <- abs(age[i] - 25)
+  age_impact <- abs_age/age[i]
+  churn[i] <-
     # region_probs[which(region_options == region[i])] +
-    # (num_visits[i] / -30) +
+    (num_visits[i] / -30) +
     6 * hiking_int[i] +
     10 * sustain_int[i] +
     4 * online_int[i] +
@@ -132,8 +132,7 @@ simulated_data <- tibble(
   id = customer_id
 )
 
-# simulated_data |>
-#   write_csv("part_dependent_aa_churn.csv")
+# write_csv(simulated_data, "churnFULL_aaIND.csv")
 
 # rm(list = setdiff(ls(), "simulated_data"))
 
