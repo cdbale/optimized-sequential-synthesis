@@ -1,0 +1,19 @@
+- Read Bowen tax synthesis paper
+	- i need to pick a simple method to move forward with. The pMSE score takes a long time to compute. Maybe we should just move forward with the following:
+		- CART models for synthesis (cite these as being used in the literature, potentially more accurate than linear models, and less features than a linear model)
+		- Use utility-first approach for optimizing the synthesis (set this up and get it working, then assess whether it achieves acceptably low epsilon values)
+		- this would also allow some distinction between this paper and the paper in JRSS:A - we optimize for the business use case in the marketing article, and optimize for distributional similarity in the JRSS:A article
+- standardize training data as part of PCA synthesis
+- test synthesis using CART - does this speed up the process?
+- run privacy analysis for all methods
+	- check privacy code for correctness
+	- adjust analysis of our method to use proper N for training data size
+- test PCA based synthesis
+	- PCA prior to model, choose a lower number of principal components, use diagonal correlation matrix in GMM
+- choose a utility model for the full data set
+	- causal forest?
+	- start with simple linear/logistic regression?
+- based on the utility model, create another synthesis method that minimizes the deviations in model coefficients
+- run synthesis models on full data set
+- compute utility results
+- explore comparison of differentially private regression in a walled garden
