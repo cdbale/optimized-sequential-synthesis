@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import math
 import os
+import sys
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
@@ -15,6 +16,75 @@ from bayes_opt import acquisition
 
 rng = np.random.RandomState(42)
  
+####################################################################################
+
+def define_synthesis_steps(train_data, current_param_bounds):
+    
+    # compute correlation matrix of the train data
+    # this will be used to determine the synthesis order of the 'f' variables
+    correlation_matrix = train_data.corr()
+
+    # compute the synthesis order by rank-ordering the variables by the sum of absolute values of their cross-correlation coefficients
+    # the stronger the correlations, the earlier we synthesize to avoid introducing noise to the more important variables
+    tree_synthesis_order = list(np.abs(correlation_matrix).sum()[:12].sort_values(ascending=False).index)
+
+    # synthesis steps
+    # written as a list of tuples (features, model)
+    synthesis_steps = [
+        (['treatment', 'exposure', 'visit', 'conversion'], 'joint_categorical'),
+        (tree_synthesis_order, 'tree')]
+
+    # define a list to contain all column names in order of synthesis
+    all_cols = synthesis_steps[0][0].copy()
+
+    # add the remaining column names (the 'f' variables)
+    [all_cols.append(synthesis_steps[1][0][i]) for i in range(len(synthesis_steps[1][0]))]
+    
+    all_leaf_sizes = []
+
+    # loop over column indices from f0 to f11, with the categorical variables placed as the first four variables
+    for id in range(4, len(all_cols)):
+        
+        # define X variables
+        covariates = train_data.loc[:, all_cols[:id]]
+
+        # define Y variable
+        target = train_data.loc[:, all_cols[id]].to_numpy()
+
+        # transform target with Yeo-johnson
+        # pt = PowerTransformer(method='yeo-johnson', standardize=True)
+        # target = pt.fit_transform(target.to_numpy().reshape(-1, 1)).ravel()
+
+        # define and fit CART model
+        # use min_samples_leaf = 1 for a tree unconstrained on leaf size
+        tree = DecisionTreeRegressor(min_samples_leaf=1)
+        tree.fit(covariates, target)
+
+        # compute leaf assignments
+        # obtain leaf assignments for training data
+        train_leaves = tree.apply(covariates)
+        # count the number of samples in each leaf
+        all_leaf_sizes.append(np.unique(train_leaves, return_counts=True)[1])
+
+    # compute the minimum leaf size from each tree
+    min_leaf_sizes = pd.Series([np.min(x) for x in all_leaf_sizes], index=all_cols[4:])
+
+    param_bounds = current_param_bounds.copy()
+
+    # define the optimization parameter bounds using the minimum leaf sizes
+    for i, j in zip(min_leaf_sizes.index, min_leaf_sizes):
+        if j == 1:
+            param_bounds['tree'][i]['min_samples_leaf'] = [5, int(train_data.shape[0]/2)]
+        elif j == train_data.shape[0]:
+            param_bounds['tree'][i]['min_samples_leaf'] = [5, 5]
+        else:
+            if j < int(train_data.shape[0]/2):
+                param_bounds['tree'][i]['min_samples_leaf'] = [int(np.max([5, j])), int(train_data.shape[0]/2)]
+            else:
+                param_bounds['tree'][i]['min_samples_leaf'] = [j, train_data.shape[0]]
+
+    return all_cols, synthesis_steps, param_bounds
+
 ####################################################################################
 
 # function to synthesize the joint distribution of categorical variables
@@ -175,7 +245,7 @@ def ordered_vector_distances(x):
     L1 = x[(i_start-1):(i_end-1+1)]          # x[i-1]
     R1 = x[(i_start+1):(i_end+1+1)]          # x[i+1]
     R2 = x[(i_start+2):(i_end+2+1)]          # x[i+2]
-    center = x[i_start:i_end+1]
+    center = x[i_start:(i_end+1)]
 
     # Stack the 4 absolute diffs as columns (shape: size x 4)
     diffs = np.stack([
@@ -202,7 +272,7 @@ def ordered_vector_distances(x):
     dists[size-1] = np.median(np.abs(x[(size-5):(size-1)] - x[size-1]))
 
     # enforce minimum distance for smoothing
-    dists =np.maximum(dists, 1e-5)
+    dists =np.maximum(dists, 1e-3)
 
     return dists
 
@@ -214,7 +284,6 @@ def synthesize_with_tree_regressor(
     num_samples,
     synthetic_datasets,
     min_samples_leaf,
-    print_min_leaf_size=False,
     random_state=None,
 ):
     """
@@ -224,8 +293,10 @@ def synthesize_with_tree_regressor(
         np.random.seed(random_state)
     
     # 1) Transform y with Yeo-Johnson
-    pt = PowerTransformer(method='yeo-johnson', standardize=True)
-    y_trans = pt.fit_transform(y.to_numpy().reshape(-1, 1)).ravel()
+    # pt = PowerTransformer(method='yeo-johnson', standardize=True)
+    # y_trans = pt.fit_transform(y.to_numpy().reshape(-1, 1)).ravel()
+
+    y_trans = y.to_numpy().copy()
     
     # 2) Fit DecisionTreeRegressor and get leaf assignments
     tree = DecisionTreeRegressor(min_samples_leaf=min_samples_leaf, random_state=random_state)
@@ -234,7 +305,7 @@ def synthesize_with_tree_regressor(
     # Precompute training leaf assignments and values in each leaf
     # note that we are sorting the values in each leaf
     train_leaves = tree.decision_path(X).toarray()
-    # store sorted values in each leaf    
+    # store indexes of values in each leaf    
     leaf_vals = {leaf: np.sort(y_trans[np.where(train_leaves[:, leaf] == 1)[0]]) for leaf in range(train_leaves.shape[1])}
     # compute the median distance to four nearest neighbors by index for each training value in each leaf
     leaf_dists = {leaf: ordered_vector_distances(leaf_vals[leaf]) for leaf in range(train_leaves.shape[1])}
@@ -248,7 +319,7 @@ def synthesize_with_tree_regressor(
         # Get leaf assignments for synthetic data
         s_leaves = tree.apply(sX[X.columns])
         
-        # For each unique leaf, process all its samples at once
+        # find unique leaf indexes and count of observations in each unique leaf
         unique_s_leaves, counts = np.unique(s_leaves, return_counts=True)
         synth_vals = np.empty(num_samples, dtype=float)
         
@@ -267,15 +338,34 @@ def synthesize_with_tree_regressor(
             synth_vals[leaf_mask] = vals[base_samples_indexes] + rs.normal(loc=0, scale=leaf_dists[leaf][base_samples_indexes])
 
         # compute minimum and maximum values found in the real data
-        # clip the new synthetic values by these values, with some random noise added for privacy
+        # clip the new synthetic values by these values
         # results in slightly truncated distributions of synthetic values but improves outlier protection
         # and prevents NA values in the inverse Yeo-Johnson transform
-        min_synth = np.min(y_trans) + np.abs(rs.normal(loc=0, scale=1e-05))
-        max_synth = np.max(y_trans) - np.abs(rs.normal(loc=0, scale=1e-05))
-        synth_vals = np.clip(synth_vals, min_synth, max_synth)
+        # min_val = np.min(y_trans)
+        # max_val = np.max(y_trans)
+        # min_synth = np.min(y_trans) + sys.float_info.epsilon # + np.abs(rs.normal(loc=0, scale=(max_val-min_val)/2))
+        # max_synth = np.max(y_trans) - sys.float_info.epsilon # - np.abs(rs.normal(loc=0, scale=(max_val-min_val)/2))
+        # synth_vals = np.clip(synth_vals, min_synth, max_synth)
+
+        null_sum = pd.Series(synth_vals).isnull().sum()
+        if null_sum > 0:
+            raise ValueError(f"There are {null_sum} missing values in the transformed synthetic variable {y.name}.")
 
         # Inverse transform and store results
-        synth_orig = pt.inverse_transform(synth_vals.reshape(-1, 1)).ravel()
+        # synth_orig = pt.inverse_transform(synth_vals.reshape(-1, 1)).ravel()
+
+        synth_orig = synth_vals.copy()
+
+        null_sum = pd.Series(synth_orig).isnull().sum()
+        if null_sum > 0:
+            raise ValueError(f"There are {null_sum} missing values in the original scale synthetic variable {y.name}.")
+
+        # if we get infinity values in the synthetic variable, replace them with the corresponding min or max value
+        # of that same synthetic variable
+
+        # synth_orig[synth_orig == np.inf] = np.max(synth_orig[synth_orig != np.inf])
+        # synth_orig[synth_orig == -np.inf] = np.min(synth_orig[synth_orig != -np.inf])
+
         results.append(pd.concat([sX, pd.Series(synth_orig, name=y.name)], axis=1))
     
     return results
@@ -300,24 +390,20 @@ def logit_params(X, y):
     """
 
     # Create a pipeline that first standardizes the features and then fits logistic regression
-    model = make_pipeline(
-        StandardScaler(),
-        LogisticRegression(penalty=None, max_iter=1000, solver='lbfgs')
-    )
-    
+    model = LogisticRegression(penalty=None, max_iter=1000, solver='lbfgs')
+
     # Fit the model
     model.fit(X, y)
     
-    # Get the coefficients from the logistic regression step
-    lr = model.named_steps['logisticregression']
-    
     # Get the feature names (excluding the intercept)
-    feature_names = [f'x{i}' for i in range(X.shape[1]+1)]
+    # feature_names = [f'x{i}' for i in range(X.shape[1]+1)]
+    feature_names = ['intercept']
+    feature_names.extend(X.columns)
     
     # Return intercept and coefficients as a series
     return pd.Series(
-        np.concatenate([[lr.intercept_[0]], lr.coef_.flatten()]),
-        index=feature_names  # x0 is intercept
+        np.concatenate([[model.intercept_[0]], model.coef_.flatten()]),
+        index=feature_names
     )
 
 #########################################################################################################
@@ -329,7 +415,6 @@ def perform_synthesis_with_param_target(
     target_params,
     target_variable,
     exog_variables,
-    print_min_leaf_size=False,
     param_values=None,
     random_state=None
 ):
@@ -366,13 +451,9 @@ def perform_synthesis_with_param_target(
     num_samples = train_data.shape[0]
     synthesized_vars = []
     for step_idx, (step_vars, method) in enumerate(synthesis_steps):
-        if isinstance(step_vars, str):
-            step_vars = [step_vars]
 
         dependencies = []
         for prev_vars, _ in synthesis_steps[:step_idx]:
-            if isinstance(prev_vars, str):
-                prev_vars = [prev_vars]
             dependencies.extend(prev_vars)
         dependencies = [v for v in dependencies if v not in step_vars]
 
@@ -402,29 +483,29 @@ def perform_synthesis_with_param_target(
             )
             synthetic_datasets = [df.copy() for df in joint_sets]
 
-        elif method == 'multinomial':
-            for var in step_vars:
-                var_params = {}
-                if param_values and 'multinomial' in param_values and var in param_values['multinomial']:
-                    var_params.update(param_values['multinomial'][var])
-                C = var_params.get('C', {})
-                X = train_data[dependencies] if dependencies else None
-                synthetic_datasets = _synthesize_with_multinomial(
-                    X=X,
-                    y=train_data[var],
-                    num_samples=num_samples,
-                    poly_degree=poly_degree_mnl,
-                    interaction_only=interaction_only,
-                    synthetic_datasets=synthetic_datasets,
-                    C=C,
-                    random_state=random_state,
-                )
+        # elif method == 'multinomial':
+        #     for var in step_vars:
+        #         var_params = {}
+        #         if param_values and 'multinomial' in param_values and var in param_values['multinomial']:
+        #             var_params.update(param_values['multinomial'][var])
+        #         C = var_params.get('C', {})
+        #         X = train_data[dependencies] if dependencies else None
+        #         synthetic_datasets = _synthesize_with_multinomial(
+        #             X=X,
+        #             y=train_data[var],
+        #             num_samples=num_samples,
+        #             poly_degree=poly_degree_mnl,
+        #             interaction_only=interaction_only,
+        #             synthetic_datasets=synthetic_datasets,
+        #             C=C,
+        #             random_state=random_state,
+        #         )
         elif method == 'tree':
             for var in step_vars:
                 var_params = {}
                 if param_values and 'tree' in param_values and var in param_values['tree']:
                     var_params.update(param_values['tree'][var])
-                min_samples_leaf = int(var_params.get('min_samples_leaf', 1))
+                min_samples_leaf = int(var_params.get('min_samples_leaf'))
                 X = train_data[dependencies] if dependencies else None
                 synthetic_datasets = synthesize_with_tree_regressor(
                     X=X,
@@ -432,9 +513,12 @@ def perform_synthesis_with_param_target(
                     num_samples=num_samples,
                     synthetic_datasets=synthetic_datasets,
                     min_samples_leaf=min_samples_leaf,
-                    print_min_leaf_size=print_min_leaf_size,
-                    random_state=random_state,
+                    random_state=random_state
                 )
+                null_sums = [X.isnull().sum() for X in synthetic_datasets]
+                if np.sum(null_sums) > 0:
+                    raise ValueError(f"There are {np.sum(null_sums)} missing values in the synthetic datasets produced for variable {var}.")
+                dependencies.append(var)
         else:
             raise ValueError(f"Unknown synthesis method: {method}")
 
@@ -506,23 +590,23 @@ def optimize_models_with_param_target(
     dimensions = []
     param_mapping = []
 
-    # Flatten param_bounds into dimensions and param_mapping
-    if 'gmm' in param_bounds:
-        for param, bounds in param_bounds['gmm'].items():
-            if isinstance(bounds, (list, tuple)) and len(bounds) == 2:
-                dim_name = f"gmm_{param}"
-                dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
-                param_mapping.append(('gmm', param))
+    # # Flatten param_bounds into dimensions and param_mapping
+    # if 'gmm' in param_bounds:
+    #     for param, bounds in param_bounds['gmm'].items():
+    #         if isinstance(bounds, (list, tuple)) and len(bounds) == 2:
+    #             dim_name = f"gmm_{param}"
+    #             dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
+    #             param_mapping.append(('gmm', param))
     
     # Check for tree parameters
     if 'tree' in param_bounds:
-        # Handle global tree parameters (applied to all variables)
-        if 'global' in param_bounds['tree']:
-            for param, bounds in param_bounds['tree']['global'].items():
-                if isinstance(bounds, (list, tuple)) and len(bounds) == 2:
-                    dim_name = f"tree_global_{param}"
-                    dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
-                    param_mapping.append(('tree', 'global', param))
+        # # Handle global tree parameters (applied to all variables)
+        # if 'global' in param_bounds['tree']:
+        #     for param, bounds in param_bounds['tree']['global'].items():
+        #         if isinstance(bounds, (list, tuple)) and len(bounds) == 2:
+        #             dim_name = f"tree_global_{param}"
+        #             dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
+        #             param_mapping.append(('tree', 'global', param))
         
         # Handle per-variable tree parameters (overrides global if both exist)
         for var, var_bounds in param_bounds['tree'].items():
@@ -533,15 +617,15 @@ def optimize_models_with_param_target(
                         dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
                         param_mapping.append(('tree', var, param))
     
-    # Check for multinomial parameters (if needed)
-    if 'multinomial' in param_bounds:
-        for var, var_bounds in param_bounds['multinomial'].items():
-            if isinstance(var_bounds, dict):
-                for param, bounds in var_bounds.items():
-                    if isinstance(bounds, (list, tuple)) and len(bounds) == 2:
-                        dim_name = f"multinomial_{var}_{param}"
-                        dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
-                        param_mapping.append(('multinomial', var, param))
+    # # Check for multinomial parameters (if needed)
+    # if 'multinomial' in param_bounds:
+    #     for var, var_bounds in param_bounds['multinomial'].items():
+    #         if isinstance(var_bounds, dict):
+    #             for param, bounds in var_bounds.items():
+    #                 if isinstance(bounds, (list, tuple)) and len(bounds) == 2:
+    #                     dim_name = f"multinomial_{var}_{param}"
+    #                     dimensions.append((bounds[0], bounds[1], 'uniform', dim_name))
+    #                     param_mapping.append(('multinomial', var, param))
 
     def evaluate_models(**kwargs):
         pv = {'gmm': {}, 'multinomial': {}, 'tree': {}}
@@ -552,21 +636,10 @@ def optimize_models_with_param_target(
                     param, = rest
                     pv['gmm'][param] = int(kwargs[param_name])
                 elif method in ['multinomial', 'tree']:
-                    var, param = rest
-                    # If this is a global parameter, apply it to all variables in synthesis_steps
-                    if method == 'tree' and var == 'global':
-                        for step_vars, step_method in synthesis_steps:
-                            if step_method == 'tree':
-                                if isinstance(step_vars, str):
-                                    step_vars = [step_vars]
-                                for v in step_vars:
-                                    if v not in pv[method]:
-                                        pv[method][v] = {}
-                                    pv[method][v][param] = kwargs[param_name]
-                    else:
-                        if var not in pv[method]:
-                            pv[method][var] = {}
-                        pv[method][var][param] = kwargs[param_name]
+                    _, param = rest
+                    if synthesis_steps[1][0][i] not in pv[method]:
+                        pv[method][synthesis_steps[1][0][i]] = {}
+                    pv[method][synthesis_steps[1][0][i]][param] = kwargs[param_name]
 
         ssds, _ = perform_synthesis_with_param_target(
             train_data=train_data,

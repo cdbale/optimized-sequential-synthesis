@@ -1,3 +1,9 @@
+- made some progress on debugging the synthesis code. The latest error is that operands could not be broadcast together (the center object for when determining neighbors is empty) --> UPDATE: okay i realized this error could be caused if we had less than 5 observations in a leaf (the indexes wouldn't exist so an empty vector would be returned). However, now we are getting an error about names needing to be in the same order as when they were fit.
+
+- there also seem to be some unusually large values for some of the centers. I need to check that standardization and scaling is appropriate throughout the code.
+
+- figured out that the proportion of conversions is just too small to support the privacy attack in small data sets (e.g., there are only 3 with conversion=1 when using train size of 300 observations) - so do we just synthesize with another variable as the target, or do we oversample on the conversion variable?
+
 - CART synthesis seems to be in a good place
 - Need to run it for the small and full CRITEO data sets
 - Test utility of the small and full CART CRITEO data sets
