@@ -2,50 +2,50 @@
 # run below to get started
 """
 
-import math
-import numpy as np
-import statistics
-from sklearn import metrics
-from __future__ import print_function, division
-from functools import partial
-from sklearn.preprocessing import MinMaxScaler
-import tensorflow as tf
-import argparse
-import keras
-from tensorflow.keras import backend as K
-from google.colab import drive
-from google.colab import files
-from sklearn.linear_model import LinearRegression
-import sys
-import matplotlib.pyplot as plt
-from tensorflow.keras.optimizers import Adam
-import pandas as pd
-import io
-from keras.models import load_model
-import time
-from scipy.stats import pearsonr
-from keras.layers import Input, Dense, Reshape, Flatten, Dropout, multiply, GaussianNoise
-from keras.layers import BatchNormalization, Activation, Embedding, ZeroPadding2D
-from keras.layers import MaxPooling2D, LeakyReLU
-from keras.layers.convolutional import UpSampling2D, Conv2D, Conv1D
-from keras.models import Sequential, Model
-from keras import losses
-import keras.backend as K
-from sklearn.model_selection import GridSearchCV
-from sklearn.neighbors import KernelDensity
-import os
-from sklearn.model_selection import train_test_split
-import random
+# import math
+# import numpy as np
+# import statistics
+# from sklearn import metrics
+# from __future__ import print_function, division
+# from functools import partial
+# from sklearn.preprocessing import MinMaxScaler
+# import tensorflow as tf
+# import argparse
+# import keras
+# from tensorflow.keras import backend as K
+# from google.colab import drive
+# from google.colab import files
+# from sklearn.linear_model import LinearRegression
+# import sys
+# import matplotlib.pyplot as plt
+# from tensorflow.keras.optimizers import Adam
+# import pandas as pd
+# import io
+# from keras.models import load_model
+# import time
+# from scipy.stats import pearsonr
+# from keras.layers import Input, Dense, Reshape, Flatten, Dropout, multiply, GaussianNoise
+# from keras.layers import BatchNormalization, Activation, Embedding, ZeroPadding2D
+# from keras.layers import MaxPooling2D, LeakyReLU
+# from keras.layers.convolutional import UpSampling2D, Conv2D, Conv1D
+# from keras.models import Sequential, Model
+# from keras import losses
+# import keras.backend as K
+# from sklearn.model_selection import GridSearchCV
+# from sklearn.neighbors import KernelDensity
+# import os
+# from sklearn.model_selection import train_test_split
+# import random
 
-# set global seeds
-seed=1
-os.environ['PYTHONHASHSEED'] = str(seed)
-# For working on GPUs from "TensorFlow Determinism"
-os.environ["TF_DETERMINISTIC_OPS"] = str(seed)
-np.random.seed(seed)
-random.seed(seed)
-tf.random.set_seed(seed)
-print(random.random())
+# # set global seeds
+# seed=1
+# os.environ['PYTHONHASHSEED'] = str(seed)
+# # For working on GPUs from "TensorFlow Determinism"
+# os.environ["TF_DETERMINISTIC_OPS"] = str(seed)
+# np.random.seed(seed)
+# random.seed(seed)
+# tf.random.set_seed(seed)
+# print(random.random())
 
 # # define utility
 # def utility(real_data, protected_data):
@@ -322,128 +322,128 @@ np.savetxt("MSE_anand_30000.csv", MSE_col, delimiter=",")
 
 """# GANs with differential privacy"""
 
-!pip install tensorflow_privacy --quiet
+# !pip install tensorflow_privacy --quiet
 
-class GAN():
-    def __init__(self, privacy):
-      self.img_rows = 1
-      self.img_cols = 9
-      self.img_shape = (self.img_cols,)
-      self.latent_dim = (9)
-      lr = 0.001
+# class GAN():
+#     def __init__(self, privacy):
+#       self.img_rows = 1
+#       self.img_cols = 9
+#       self.img_shape = (self.img_cols,)
+#       self.latent_dim = (9)
+#       lr = 0.001
 
-      optimizer = keras.optimizers.Adam()
-      self.discriminator = self.build_discriminator()
-      self.discriminator.compile(loss='binary_crossentropy',
-                                 optimizer=optimizer,
-                                 metrics=['accuracy'])
-      if privacy == True:
-        print(noise_multiplier)
-        print("using differential privacy")
-        # Build and compile the discriminator
-        self.discriminator = self.build_discriminator()
-        self.discriminator.compile(optimizer=DPKerasAdamOptimizer(
-            l2_norm_clip=4,
-            noise_multiplier=noise_multiplier,
-            num_microbatches=num_microbatches,
-            learning_rate=lr),
-            loss= tf.keras.losses.BinaryCrossentropy(from_logits=True, reduction=tf.losses.Reduction.NONE), metrics=['accuracy'])
+#       optimizer = keras.optimizers.Adam()
+#       self.discriminator = self.build_discriminator()
+#       self.discriminator.compile(loss='binary_crossentropy',
+#                                  optimizer=optimizer,
+#                                  metrics=['accuracy'])
+#       if privacy == True:
+#         print(noise_multiplier)
+#         print("using differential privacy")
+#         # Build and compile the discriminator
+#         self.discriminator = self.build_discriminator()
+#         self.discriminator.compile(optimizer=DPKerasAdamOptimizer(
+#             l2_norm_clip=4,
+#             noise_multiplier=noise_multiplier,
+#             num_microbatches=num_microbatches,
+#             learning_rate=lr),
+#             loss= tf.keras.losses.BinaryCrossentropy(from_logits=True, reduction=tf.losses.Reduction.NONE), metrics=['accuracy'])
 
-      # Build the generator
-      self.generator = self.build_generator()
+#       # Build the generator
+#       self.generator = self.build_generator()
 
-      # The generator takes noise as input and generates imgs
-      z = Input(shape=(self.latent_dim,))
-      img = self.generator(z)
+#       # The generator takes noise as input and generates imgs
+#       z = Input(shape=(self.latent_dim,))
+#       img = self.generator(z)
 
-      # For the combined model we will only train the generator
-      self.discriminator.trainable = False
+#       # For the combined model we will only train the generator
+#       self.discriminator.trainable = False
 
-      # The discriminator takes generated images as input and determines validity
-      valid = self.discriminator(img)
+#       # The discriminator takes generated images as input and determines validity
+#       valid = self.discriminator(img)
 
-      # The combined model  (stacked generator and discriminator)
-      # Trains the generator to fool the discriminator
-      self.combined = Model(z, valid)
-      self.combined.compile(loss='binary_crossentropy', optimizer= optimizer)
+#       # The combined model  (stacked generator and discriminator)
+#       # Trains the generator to fool the discriminator
+#       self.combined = Model(z, valid)
+#       self.combined.compile(loss='binary_crossentropy', optimizer= optimizer)
 
 
-    def build_generator(self):
-      model = Sequential()
-      model.add(Dense(self.latent_dim, input_dim=self.latent_dim))
-      model.add(LeakyReLU(alpha=0.2))
-      #model.add(BatchNormalization())
-      model.add(Dense(64, input_shape=self.img_shape))
-      model.add(LeakyReLU(alpha=0.2))
-      #model.add(BatchNormalization())
-      model.add(Dense(self.latent_dim))
-      model.add(Activation("tanh"))
+#     def build_generator(self):
+#       model = Sequential()
+#       model.add(Dense(self.latent_dim, input_dim=self.latent_dim))
+#       model.add(LeakyReLU(alpha=0.2))
+#       #model.add(BatchNormalization())
+#       model.add(Dense(64, input_shape=self.img_shape))
+#       model.add(LeakyReLU(alpha=0.2))
+#       #model.add(BatchNormalization())
+#       model.add(Dense(self.latent_dim))
+#       model.add(Activation("tanh"))
 
-      #model.summary()
+#       #model.summary()
 
-      noise = Input(shape=(self.latent_dim,))
-      img = model(noise)
-      return Model(noise, img)
+#       noise = Input(shape=(self.latent_dim,))
+#       img = model(noise)
+#       return Model(noise, img)
 
-    def build_discriminator(self):
+#     def build_discriminator(self):
 
-        model = Sequential()
+#         model = Sequential()
 
-        model.add(Dense(64, input_shape=self.img_shape))
-        model.add(LeakyReLU(alpha=0.2))
-        model.add(Dense(1, activation='sigmoid'))
+#         model.add(Dense(64, input_shape=self.img_shape))
+#         model.add(LeakyReLU(alpha=0.2))
+#         model.add(Dense(1, activation='sigmoid'))
 
-        #model.summary()
+#         #model.summary()
 
-        img = Input(shape=self.img_shape)
-        validity = model(img)
+#         img = Input(shape=self.img_shape)
+#         validity = model(img)
 
-        return Model(img, validity)
+#         return Model(img, validity)
 
-    def train(self, data, iterations, batch_size, sample_interval, model_name, generator_losses = [], discriminator_acc = [], correlations = [], accuracy = [], MAPD_collect = [],MSE_collect = [], MAE_collect = []):
-      # Adversarial ground truths
-      valid = np.ones((batch_size, 1))
-      fake = np.zeros((batch_size, 1))
-      corr = 0
-      MAPD = 0
-      MSE = 0
-      MAE = 0
-      #fake += 0.05 * np.random.random(fake.shape)
-      #valid += 0.05 * np.random.random(valid.shape)
+#     def train(self, data, iterations, batch_size, sample_interval, model_name, generator_losses = [], discriminator_acc = [], correlations = [], accuracy = [], MAPD_collect = [],MSE_collect = [], MAE_collect = []):
+#       # Adversarial ground truths
+#       valid = np.ones((batch_size, 1))
+#       fake = np.zeros((batch_size, 1))
+#       corr = 0
+#       MAPD = 0
+#       MSE = 0
+#       MAE = 0
+#       #fake += 0.05 * np.random.random(fake.shape)
+#       #valid += 0.05 * np.random.random(valid.shape)
 
-      for epoch in range(iterations):
+#       for epoch in range(iterations):
 
-            # ---------------------
-            #  Train Discriminator
-            # ---------------------
+#             # ---------------------
+#             #  Train Discriminator
+#             # ---------------------
 
-            # Select a random batch of images
-            idx = np.random.randint(0, data.shape[0], batch_size)
-            imgs = data[idx]
+#             # Select a random batch of images
+#             idx = np.random.randint(0, data.shape[0], batch_size)
+#             imgs = data[idx]
 
-            noise = np.random.normal(0, 1, (batch_size, self.latent_dim))
+#             noise = np.random.normal(0, 1, (batch_size, self.latent_dim))
 
-            # Generate a batch of new images
-            gen_imgs = self.generator.predict(noise, verbose = False)
+#             # Generate a batch of new images
+#             gen_imgs = self.generator.predict(noise, verbose = False)
 
-            # Train the discriminator
-            d_loss_real = self.discriminator.train_on_batch(imgs, valid)
-            d_loss_fake = self.discriminator.train_on_batch(gen_imgs, fake)
-            d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
+#             # Train the discriminator
+#             d_loss_real = self.discriminator.train_on_batch(imgs, valid)
+#             d_loss_fake = self.discriminator.train_on_batch(gen_imgs, fake)
+#             d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
 
-            # ---------------------
-            #  Train Generator
-            # ---------------------
-            # Train the generator (to have the discriminator label samples as valid)
+#             # ---------------------
+#             #  Train Generator
+#             # ---------------------
+#             # Train the generator (to have the discriminator label samples as valid)
 
-            noise = np.random.normal(0, 1, (batch_size, self.latent_dim))
-            g_loss = self.combined.train_on_batch(noise, valid)
+#             noise = np.random.normal(0, 1, (batch_size, self.latent_dim))
+#             g_loss = self.combined.train_on_batch(noise, valid)
 
-            if (epoch % 100) == 0:
-              print("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss))
+#             if (epoch % 100) == 0:
+#               print("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100*d_loss[1], g_loss))
 
-      print("save model")
-      self.generator.save(model_name)
+#       print("save model")
+#       self.generator.save(model_name)
 
 """iteraties en batch size hetzelfde houden."""
 
