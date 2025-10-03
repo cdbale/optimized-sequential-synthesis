@@ -1,4 +1,5 @@
-
+- make list of steps of Gilian's method of privacy analysis, including how data is sampled and cleaned, etc.
+- replicate this exact list for my method
 
 - CART synthesis seems to be in a good place
 - Need to run it for the small and full CRITEO data sets
