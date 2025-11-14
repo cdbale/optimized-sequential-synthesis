@@ -1,13 +1,10 @@
-- make list of steps of Gilian's method of privacy analysis, including how data is sampled and cleaned, etc.
-- replicate this exact list for my method
+- Need to go back and make sure multipliers used in privacy attack map to the correct epsilon values
+- Add note to paper that we use the code of Ponte et al. as-is, but we note that the method for computing the theoretical
+epsilon has since been updated to properly account for the sensitivity of microbatching, thus the true theoretical epsilon values
+are likely higher than what is reported.
 
-- CART synthesis seems to be in a good place
-- Need to run it for the small and full CRITEO data sets
-- Test utility of the small and full CART CRITEO data sets
-- Test privacy of new synthesis method
+- Test utility of the full CART CRITEO data sets
 - Compute privacy of Ponte method on Criteo data
 - Generate CART synthetic data sets for random forest as second use case (KL-divergence as optimization?)
 - Further flesh out the use cases - make sure they make sense logically and are applicable
 - Do some literature review and work on my TST presentation - how do we position this paper?
-
-- Need to use Gilian's approach to computing epsilon values and recording undefined Epsilon values in my privacy risk analysis

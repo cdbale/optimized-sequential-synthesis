@@ -18,7 +18,7 @@ rng = np.random.RandomState(42)
  
 ####################################################################################
 
-def define_synthesis_steps(train_data, current_param_bounds):
+def define_synthesis_steps(train_data, current_param_bounds, lower_bound):
     
     # compute correlation matrix of the train data
     # this will be used to determine the synthesis order of the 'f' variables
@@ -49,9 +49,18 @@ def define_synthesis_steps(train_data, current_param_bounds):
         covariates = train_data.loc[:, all_cols[:id]]
 
         # define Y variable
-        target = train_data.loc[:, all_cols[id]].to_numpy()
+        target = train_data.loc[:, all_cols[id]]
+        
+        if target.name == "f11":
+            target = np.exp(target).to_numpy()
+        elif target.name == "f7":
+            target = np.log(target).to_numpy()
+        else:
+            # transform target with Yeo-johnson
+            pt = PowerTransformer(method='yeo-johnson', standardize=True)
+            target = pt.fit_transform(target.to_numpy().reshape(-1, 1)).ravel()
 
-        # transform target with Yeo-johnson
+        # # transform target with Yeo-johnson
         # pt = PowerTransformer(method='yeo-johnson', standardize=True)
         # target = pt.fit_transform(target.to_numpy().reshape(-1, 1)).ravel()
 
@@ -74,12 +83,12 @@ def define_synthesis_steps(train_data, current_param_bounds):
     # define the optimization parameter bounds using the minimum leaf sizes
     for i, j in zip(min_leaf_sizes.index, min_leaf_sizes):
         if j == 1:
-            param_bounds['tree'][i]['min_samples_leaf'] = [5, int(train_data.shape[0]/2)]
+            param_bounds['tree'][i]['min_samples_leaf'] = [lower_bound, int(train_data.shape[0]/2)]
         elif j == train_data.shape[0]:
-            param_bounds['tree'][i]['min_samples_leaf'] = [5, 5]
+            param_bounds['tree'][i]['min_samples_leaf'] = [lower_bound, lower_bound]
         else:
             if j < int(train_data.shape[0]/2):
-                param_bounds['tree'][i]['min_samples_leaf'] = [int(np.max([5, j])), int(train_data.shape[0]/2)]
+                param_bounds['tree'][i]['min_samples_leaf'] = [int(np.max([lower_bound, j])), int(train_data.shape[0]/2)]
             else:
                 param_bounds['tree'][i]['min_samples_leaf'] = [j, train_data.shape[0]]
 
@@ -291,12 +300,21 @@ def synthesize_with_tree_regressor(
     """
     if random_state is not None:
         np.random.seed(random_state)
-    
-    # 1) Transform y with Yeo-Johnson
+
+    if y.name == "f11":
+        y_trans = np.exp(y).to_numpy()
+    elif y.name == "f7":
+        y_trans = np.log(y).to_numpy()
+    else:
+        # 1) Transform y with Yeo-Johnson
+        pt = PowerTransformer(method='yeo-johnson', standardize=True)
+        y_trans = pt.fit_transform(y.to_numpy().reshape(-1, 1)).ravel()
+
+    # # 1) Transform y with Yeo-Johnson
     # pt = PowerTransformer(method='yeo-johnson', standardize=True)
     # y_trans = pt.fit_transform(y.to_numpy().reshape(-1, 1)).ravel()
 
-    y_trans = y.to_numpy().copy()
+    # y_trans = y.to_numpy().copy()
     
     # 2) Fit DecisionTreeRegressor and get leaf assignments
     tree = DecisionTreeRegressor(min_samples_leaf=min_samples_leaf, random_state=random_state)
@@ -341,24 +359,39 @@ def synthesize_with_tree_regressor(
         # clip the new synthetic values by these values
         # results in slightly truncated distributions of synthetic values but improves outlier protection
         # and prevents NA values in the inverse Yeo-Johnson transform
-        # min_val = np.min(y_trans)
-        # max_val = np.max(y_trans)
-        # min_synth = np.min(y_trans) + sys.float_info.epsilon # + np.abs(rs.normal(loc=0, scale=(max_val-min_val)/2))
-        # max_synth = np.max(y_trans) - sys.float_info.epsilon # - np.abs(rs.normal(loc=0, scale=(max_val-min_val)/2))
-        # synth_vals = np.clip(synth_vals, min_synth, max_synth)
+        if (y.name != "f11") and (y.name != "f7"):
+            min_synth = np.min(y_trans) + sys.float_info.epsilon
+            max_synth = np.max(y_trans) - sys.float_info.epsilon
+            synth_vals = np.clip(synth_vals, min_synth, max_synth)
 
         null_sum = pd.Series(synth_vals).isnull().sum()
-        if null_sum > 0:
-            raise ValueError(f"There are {null_sum} missing values in the transformed synthetic variable {y.name}.")
+        inf_sum = np.sum(np.isinf(synth_vals))
+        if (null_sum + inf_sum) > 0:
+            raise ValueError(f"There are {null_sum} missing values and {inf_sum} infinite values in the transformed synthetic variable {y.name}.")
 
-        # Inverse transform and store results
+        if y.name == "f11":
+            synth_vals[synth_vals < np.min(y_trans)] = np.min(y_trans)
+            synth_orig = np.log(synth_vals)
+        elif y.name == "f7":
+            synth_orig = np.exp(synth_vals)
+        else:
+            # Inverse transform and store results
+            synth_orig = pt.inverse_transform(synth_vals.reshape(-1, 1)).ravel()
+
+        # print(synth_vals)
+
+        # # Inverse transform and store results
         # synth_orig = pt.inverse_transform(synth_vals.reshape(-1, 1)).ravel()
 
-        synth_orig = synth_vals.copy()
+        # print(synth_orig)
+
+        # synth_orig = synth_vals.copy()
 
         null_sum = pd.Series(synth_orig).isnull().sum()
-        if null_sum > 0:
-            raise ValueError(f"There are {null_sum} missing values in the original scale synthetic variable {y.name}.")
+        inf_sum = np.sum(np.isinf(synth_orig))
+        if (null_sum + inf_sum) > 0:
+            print(synth_orig)
+            raise ValueError(f"There are {null_sum} missing values and {inf_sum} infinite values in the original scale synthetic variable {y.name}.")
 
         # if we get infinity values in the synthetic variable, replace them with the corresponding min or max value
         # of that same synthetic variable
@@ -677,17 +710,14 @@ def optimize_models_with_param_target(
     best_params = {'gmm': {}, 'multinomial': {}, 'tree': {}}
     for i, (method, *rest) in enumerate(param_mapping):
         param_name = f"x{i}"
-        if method == 'gmm':
-            param, = rest
-            best_params['gmm'][param] = int(optimizer.max['params'][param_name])
-        elif method in ['multinomial', 'tree']:
-            var, param = rest
-            if var not in best_params[method]:
-                best_params[method][var] = {}
-            best_params[method][var][param] = optimizer.max['params'][param_name]
+        if method in ['multinomial', 'tree']:
+            _, param = rest
+            if synthesis_steps[1][0][i] not in best_params[method]:
+                best_params[method][synthesis_steps[1][0][i]] = {}
+            best_params[method][synthesis_steps[1][0][i]][param] = optimizer.max['params'][param_name]
 
     return {
         'best_params': best_params,
         'best_score': -optimizer.max['target'],  # Convert back to positive average SSD
-        'optimizer': optimizer,
+        'optimizer': optimizer
     }
