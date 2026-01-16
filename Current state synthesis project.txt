@@ -1,0 +1,20 @@
+Current state synthesis project:
+
+To Do
+- read up on DP-GAN, especially the guidance in the appendix. Do they tell anything about selecting model fitting hyperparameters like epochs, iterations, etc.?
+- make sure epochs and noise multipliers are correct in all of the DP code
+
+Outline:
+
+- oversampled data
+	- privacy analysis
+	- utility analysis for both methods
+
+- full data
+	- utility analysis for both methods
+
+- train/test on oversampled data
+	- split the oversampled data into train/test and re-synthesize
+	- evaluate OOS performance on uplift distribution prediction and ranking customers on uplift
+	- what proportion of top ranked "uplifters" are also ranked that way based on models from the synthetic data?
+	- what proportion of customers with high uplift make / didn't make a purchase - can we do some sort of counterfactual analysis?

@@ -5,14 +5,13 @@ import os
 import sys
 
 from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import PowerTransformer
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.decomposition import PCA
 from statsmodels.tools.tools import add_constant
 from bayes_opt import BayesianOptimization
 from bayes_opt import acquisition
+from scipy.stats import wasserstein_distance
 
 rng = np.random.RandomState(42)
  
@@ -445,9 +444,10 @@ def perform_synthesis_with_param_target(
     train_data,
     number_synthetic_datasets,
     synthesis_steps,
-    target_params,
     target_variable,
     exog_variables,
+    target_params=None,
+    target_uplift_distribution=None,
     param_values=None,
     random_state=None
 ):
@@ -557,27 +557,67 @@ def perform_synthesis_with_param_target(
 
         synthesized_vars.extend(step_vars)
 
-    # Compute SSD per synthetic dataset
-    # Ensure target_params is aligned to the params index order
-    target_series = pd.Series(target_params)
-    # standardize target_series
-    target_series_std = (target_series - target_series.mean()) / target_series.std()
-    ssds = []
-    for sX in synthetic_datasets:
-        # Get features and target from the synthetic dataset
-        X_synth = sX[exog_variables]
-        y_synth = sX[target_variable]
+    if target_params is not None:
         
-        # Get logistic regression parameters
-        params = logit_params(X_synth, y_synth)
+        # Compute SSD per synthetic dataset
+        # Ensure target_params is aligned to the params index order
+        target_series = pd.Series(target_params)
+        # standardize target_series
+        target_series_std = (target_series - target_series.mean()) / target_series.std()
+        ssds = []
+        for sX in synthetic_datasets:
+            # Get features and target from the synthetic dataset
+            X_synth = sX[exog_variables]
+            y_synth = sX[target_variable]
         
-        # Align indices with target parameters and compute SSD
-        aligned = params.reindex(target_series.index)  # Fill missing with 0
-        # standardize aligned series
-        aligned = (aligned - target_series.mean()) / target_series.std()
-        ssds.append(float(np.sum((aligned.values - target_series_std.values) ** 2)))
+            # Get logistic regression parameters
+            params = logit_params(X_synth, y_synth)
+        
+            # Align indices with target parameters and compute SSD
+            aligned = params.reindex(target_series.index)  # Fill missing with 0
+            # standardize aligned series
+            aligned = (aligned - target_series.mean()) / target_series.std()
+            ssds.append(float(np.sum((aligned.values - target_series_std.values) ** 2)))
 
-    return ssds, synthetic_datasets
+        return ssds, synthetic_datasets
+
+    elif target_uplift_distribution is not None:
+
+        # compute wasserstein distance between confidential and synthetic uplift distributions
+
+        # 1) compute uplift distribution for synthetic data sets
+        # treated model
+        # control model
+        uplift_distributions = []
+        feature_cols = [f"f{i}" for i in range(12)]
+        treatment_col="treatment"
+        outcome_col="conversion"
+
+        for sX in synthetic_datasets:
+            treat_df   = sX[sX[treatment_col] == 1]
+            control_df = sX[sX[treatment_col] == 0]
+            X_treat   = treat_df[feature_cols]
+            y_treat   = treat_df[outcome_col]
+            X_control = control_df[feature_cols]
+            y_control = control_df[outcome_col]
+
+            model_t = LogisticRegression(penalty=None, max_iter=1000)
+            model_c = LogisticRegression(penalty=None, max_iter=1000)
+            model_t.fit(X_treat, y_treat)
+            model_c.fit(X_control, y_control)
+
+            X_all = sX[feature_cols]
+            p_t = model_t.predict_proba(X_all)[:, 1]
+            p_c = model_c.predict_proba(X_all)[:, 1]
+
+            uplift_distributions.append(p_t - p_c)
+
+        # 2) compute wasserstein distances between uplift distribution from original data
+        # and each synthetic data set
+        dists = [wasserstein_distance(uplift_distributions[i], target_uplift_distribution) for i in range(len(synthetic_datasets))]
+
+        # 3) return the wasserstein distances and the synthetic data sets
+        return dists, synthetic_datasets
 
 #########################################################################################################
 
@@ -585,10 +625,11 @@ def optimize_models_with_param_target(
     train_data,
     number_synthetic_datasets,
     synthesis_steps,
-    target_params,
-    target_variable,
-    exog_variables,
     param_bounds,
+    target_variable=None,
+    exog_variables=None,
+    target_params=None,
+    target_uplift_distribution=None,
     random_state=None,
     n_iter=25,
     n_init=5
@@ -674,19 +715,20 @@ def optimize_models_with_param_target(
                         pv[method][synthesis_steps[1][0][i]] = {}
                     pv[method][synthesis_steps[1][0][i]][param] = kwargs[param_name]
 
-        ssds, _ = perform_synthesis_with_param_target(
+        metrics, _ = perform_synthesis_with_param_target(
             train_data=train_data,
             number_synthetic_datasets=number_synthetic_datasets,
             synthesis_steps=synthesis_steps,
-            target_params=target_params,
             target_variable=target_variable,
             exog_variables=exog_variables,
             param_values=pv,
+            target_params=target_params,
+            target_uplift_distribution=target_uplift_distribution,
             random_state=random_state,
         )
 
         # Maximize negative average SSD
-        return -np.mean(ssds)
+        return -np.mean(metrics)
 
     pbounds = {f"x{i}": (low, high) for i, (low, high, _, _) in enumerate(dimensions)}
 

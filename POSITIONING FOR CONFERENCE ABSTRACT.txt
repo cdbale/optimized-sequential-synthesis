@@ -1,0 +1,15 @@
+POSITIONING FOR CONFERENCE ABSTRACT
+
+- need to make it believable that our method will outperform deep-learning.
+- deep learning is best for pattern matching
+- we optimize the synthesis to match a specific pattern so you can use the synthetic data for the decision you want,
+	this decision is likely a somewhat infrequent but high-stakes decision
+- innovation is needed because of privacy laws and concerns, the product is the data itself and a new,
+	we have an innovative method of data sharing that better balances privacy and utility
+- might want to list out some of the decisions we propose
+	allocation of advertising?
+	who to target?
+	what are some decisions that require multivariate data?
+- more clarity on why other methods are unlikely to be optimal
+
+- uplift modeling leaving out visit as a predictor, and rank order out-of-sample customers based on predicted uplift
